@@ -3,7 +3,7 @@ title: The Datagram Transport Layer Security (DTLS) Connection Identifier
 abbrev: DTLS Connection ID
 docname: draft-ietf-tls-dtls-connection-id-latest
 category: std
-obsoletes: 6347
+updates: 6347
 
 ipr: pre5378Trust200902
 area: Security
