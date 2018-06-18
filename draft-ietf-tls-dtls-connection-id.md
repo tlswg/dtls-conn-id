@@ -1,6 +1,6 @@
 ---
-title: The Datagram Transport Layer Security (DTLS) Connection Identifier
-abbrev: DTLS Connection ID
+title: The Datagram Transport Layer Security (DTLS) Connection Identifier for DTLS 1.2
+abbrev: DTLS 1.2 Connection ID
 docname: draft-ietf-tls-dtls-connection-id-latest
 category: std
 obsoletes: 6347
@@ -33,7 +33,7 @@ author:
  -
        ins: H. Tschofenig
        name: Hannes Tschofenig
-       organization: ARM Limited
+       organization: Arm Limited
        role: editor
        email: hannes.tschofenig@arm.com
  -
@@ -51,15 +51,14 @@ author:
 
 normative:
   RFC2119:
-  I-D.ietf-tls-dtls13:
   RFC6347:
-  RFC5246:
 informative:
   RFC6973:
+  
 --- abstract
 
 This document specifies the "Connection ID" concept for the Datagram Transport Layer Security
-(DTLS) protocol, version 1.2 and version 1.3.
+(DTLS) 1.2 protocol. A companion document specifies the concept for DTLS 1.3. 
 
 A Connection ID is an identifier carried in the record layer header that gives the
 recipient additional information for selecting the appropriate security association.
@@ -81,19 +80,17 @@ apply data origin authentication, integrity and confidentiality protection. This
 two-step approach allows to amortize the cost of the initial handshake to subsequent
 application data protection. Ideally, the second phase where application data is
 protected lasts over a longer period of time since the established keys will only
-need to be updated once the key lifetime expires.
+need to be updated once the entropy of the key is exhausted.
 
 In the current version of DTLS, the IP address and port of the peer is used to
 identify the DTLS association. Unfortunately, in some cases, such as NAT rebinding,
 these values are insufficient. This is a particular issue in the Internet of Things
-when the device needs to enter extended sleep periods to increase the battery lifetime
-and is therefore subject to rebinding. This leads to connection failure, with the
-resulting cost of a new handshake.
+when devices enter extended sleep periods to increase their battery lifetime. The 
+NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS to add a connection ID to each
-DTLS record. The presence of the connection ID is negotiated via a DTLS
-extension. It also defines a DTLS 1.3 post-handshake message to change
-connection ids.
+This document defines an extension to DTLS 1.2 to add a connection ID to the DTLS record
+layer. The presence of the connection ID is negotiated via a DTLS
+extension.
 
 # Conventions and Terminology
 
@@ -101,13 +98,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The reader is assumed to be familiar with the DTLS specifications since this
-document defines an extension to DTLS 1.2 and DTLS 1.3.
-
+The reader is assumed to be familiar with DTLS 1.2 {{RFC6347}}.
 
 # The "connection_id" Extension
 
-This document defines a new extension type (connection_id(TBD)), which
+This document defines a new extension type, connection_id(TBD), which
 is used in ClientHello and ServerHello messages.
 
 The extension type is specified as follows.
@@ -132,8 +127,8 @@ the server to use a zero-length CID; the result is the same).
   } ConnectionId;
 ~~~~
 
-A server which is willing to use CIDs will respond with its own
-"connection_id" extension, containing the CID which it wishes the
+A server, which is willing to use CIDs, will respond with its own
+"connection_id" extension containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
 wish the client to use a CID (or again, alternately, to use a
@@ -147,9 +142,8 @@ This is effectively the simplest possible design that will work.
 Previous design ideas for using cryptographically generated session
 ids, either using hash chains or public key encryption, were dismissed
 due to their inefficient designs. Note that a client always has the
-chance to fall-back to a full handshake or more precisely to a
-handshake that uses session resumption (DTLS 1.2 language) or to a
-PSK-based handshake using the ticket-based approach.
+chance to fall back to a full handshake or more precisely to a
+handshake that uses session resumption.
 
 Because each party sends in the extension_data the value that it will
 receive as a connection identifier in encrypted records, it is possible
@@ -162,74 +156,20 @@ connection identifiers to other parties.
 In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
 session only. There is no dedicated "connection id update" message
 that allows new connection ids to be established mid-session, because
-DTLS 1.2 in general does not allow post-handshake messages that do not
-themselves begin other handshakes. In DTLS 1.3, which does allow such
-messages, we use post-handshake message to update the connection ID
-{{post-handshake-messages}} and to request new IDs.
-
-DTLS 1.2 peers switch to the new record layer format when encryption
-is enabled. The same is true for DTLS 1.3 but since the DTLS 1.3
-enables encryption early in the handshake phase the connection ID will
-be enabled earlier. For this reason, the connection ID needs to go in
-the DTLS 1.3 ServerHello.
-
-
-# Post-Handshake Messages
-
-In DTLS 1.3, if the client and server have negotiated the "connection_id" extension,
-either side can send a new connection ID which it wishes the other side to use
-in a NewConnectionId message:
-
-~~~
-   enum {
-       cid_immediate(0), cid_spare(1), (255)
-   } ConnectionIdUsage;
-
-   struct {
-       opaque cid<0..2^8-1>;
-       ConnectionIdUsage usage;
-   } NewConnectionId;
-~~~
-
-cid
-: Indicates the CID which the sender wishes the peer to use.
-
-usage
-: Indicates whether the new CID should be used immediately or is a spare.
-If usage is set to "cid_immediate", then the new CID MUST be used immediately
-for all future records. If it is set to "cid_spare", then either CID MAY
-be used, as described in {{sec-cons}}.
-{:br}
-
-If the client and server have negotiated the "connection_id" extension,
-either side can request a new CID using the RequestConnectionId message.
-
-~~~
-   struct {
-   } RequestConnectionId;
-~~~
-
-Endpoints SHOULD respond to RequestConnectionId by sending a NewConnectionId
-with usage "cid_spare" as soon as possible. Note that an endpoint MAY ignore
-requests which it considers excessive (though they MUST be ACKed as usual).
-
+DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages 
+that do not themselves begin other handshakes. DTLS 1.2 peers switch to 
+the new record layer format when encryption is enabled.
 
 # Record Layer Extensions
 
-This extension is applicable for use with DTLS 1.2 and DTLS 1.3. This extension
-can be used with the optimized DTLS 1.3 record layer format.
-
-{{dtls-record12}} and {{dtls-record13}} illustrate the record formats of DTLS 1.2
-and DTLS 1.3, respectively.
+This extension is applicable for use with DTLS 1.2 and {{dtls-record12}} 
+illustrates the record format.
 
 ~~~~
   struct {
      ContentType type;
      ProtocolVersion version;
-     uint16 epoch;
-     uint48 sequence_number;
-     opaque cid[cid_length];               // New field
-     uint16 length;
+	 opaque cid_hdr[variable]; 
      select (CipherSpec.cipher_type) {
         case block:  GenericBlockCipher;
         case aead:   GenericAEADCipher;
@@ -238,82 +178,71 @@ and DTLS 1.3, respectively.
 ~~~~
 {: #dtls-record12 title="DTLS 1.2 Record Format with Connection ID"}
 
+The cid_hdr is field of variable length, as shown in {{cid_hdr}}. 
+
 ~~~~
-  struct {
-     opaque content[DTLSPlaintext.length];
-     ContentType type;
-     uint8 zeros[length_of_padding];
-  } DTLSInnerPlaintext;
-
-  struct {
-     ContentType opaque_type = 23; /* application_data */
-     ProtocolVersion legacy_record_version = {254,253); // DTLSv1.2
-     uint16 epoch;                         // DTLS-related field
-     uint48 sequence_number;               // DTLS-related field
-     opaque cid[cid_length];               // New field
-     uint16 length;
-     opaque encrypted_record[length];
-  } DTLSCiphertext;
+  0 1 2 3 4 5 6 7
+ +-+-+-+-+-+-+-+-+
+ |0|0|1|C|L|X|X|X|
+ +-+-+-+-+-+-+-+-+
+ |E|E| 14 bit    |   Legend:
+ +-+-+           |
+ |Sequence Number|   C - CID present
+ +-+-+-+-+-+-+-+-+   L - Length present
+ | 16 bit Length |   E - Epoch
+ | (if present)  |   X - Reserved
+ +-+-+-+-+-+-+-+-+
+ | Connection ID |
+ | (if any,      |
+ /  length as    /
+ |  negotiated)  |
+ +-+-+-+-+-+-+-+-+
 ~~~~
-{: #dtls-record13 title="DTLS 1.3 Record Format with Connection ID"}
-
-Besides the "cid" field, all other fields are defined in the DTLS 1.2 and
-DTLS 1.3 specifications.
-
-Note that for both record formats, it is not possible to parse the
-records without knowing if the connection ID is in use and how long
-it is.
+{: #cid_hdr title="DTLS 1.2 CID Header Field"}
+ 
+Besides the "cid_hr" field, all other fields are defined in the DTLS 1.2 
+specification.
 
 # Examples
 
-Below is an example exchange for DTLS 1.3 using a single
-connection id in each direction.
+{{hdr_examples}} illustrates different record layer header types. 
 
 ~~~~
-Client                                             Server
-------                                             ------
+    0 1 2 3 4 5 6 7        0 1 2 3 4 5 6 7      0 1 2 3 4 5 6 7
+   +-+-+-+-+-+-+-+-+      +-+-+-+-+-+-+-+-+    +-+-+-+-+-+-+-+-+
+   | Content Type  |      | Content Type  |    | Content Type  |
+   +-+-+-+-+-+-+-+-+      +-+-+-+-+-+-+-+-+    +-+-+-+-+-+-+-+-+
+   |   16 bit      |      |   16 bit      |    |   16 bit      |
+   |   Version     |      |   Version     |    |   Version     |
+   +-+-+-+-+-+-+-+-+      +-+-+-+-+-+-+-+-+    +-+-+-+-+-+-+-+-+
+   |0|0|1|C|L|X|X|X|      |0|0|1|0|0|X|X|X|    |   16 bit      |
+   +-+-+-+-+-+-+-+-+      +-+-+-+-+-+-+-+-+    |    Epoch      |
+   |E|E| 14 bit    |      |E|E| 14 bit    |    +-+-+-+-+-+-+-+-+
+   +-+-+           |      +-+-+           |    |               |
+   |Sequence Number|      |Sequence Number|    |               |
+   +-+-+-+-+-+-+-+-+      +-+-+-+-+-+-+-+-+    |   48 bit      |
+   |   16 bit      |      |               |    |Sequence Number|
+   |   Length      |      |               |    |               |
+   +-+-+-+-+-+-+-+-+      /   Fragment    /    |               |
+   |               |      |               |    +-+-+-+-+-+-+-+-+
+   |               |      +-+-+-+-+-+-+-+-+    |    16 bit     |
+   / Connection ID /                           |    Length     |
+   |               |                           +-+-+-+-+-+-+-+-+
+   +-+-+-+-+-+-+-+-+                           |               |
+   |               |                           |               |
+   |               |                           /   Fragment    /
+   /   Fragment    /                           |               |
+   |               |                           +-+-+-+-+-+-+-+-+
+   +-+-+-+-+-+-+-+-+
 
-ClientHello
-(connection_id=5)
-                            -------->
-
-
-                            <--------       HelloRetryRequest
-                                                     (cookie)
-
-ClientHello                 -------->
-(connection_id=5)
-  +cookie
-
-                            <--------             ServerHello
-                                          (connection_id=100)
-                                          EncryptedExtensions
-                                                      (cid=5)
-                                                  Certificate
-                                                      (cid=5)
-                                            CertificateVerify
-                                                      (cid=5)
-                                                     Finished
-                                                      (cid=5)
-
-Certificate                -------->
-(cid=100)
-CertificateVerify
-(cid=100)
-Finished
-(cid=100)
-                           <--------                      Ack
-                                                      (cid=5)
-
-Application Data           ========>
-(cid=100)
-                           <========         Application Data
-                                                      (cid=5)
+    Full-Featured           Minimalistic       Original DTLS 1.2
+       Header                 Header               Header
 ~~~~
-{: #dtls-example title="Example DTLS 1.3 Exchange with Connection IDs"}
+{: #hdr_examples title="Header Examples"}
 
-Below is an example exchange for DTLS 1.2 using a connection id used
-uni-directionally from the client to the server.
+
+{{dtls-example2} shows an example exchange a connection id used
+uni-directionally from the client to the server in DTLS 1.2.
 
 ~~~~
 Client                                             Server
@@ -368,20 +297,18 @@ concerned about this SHOULD refuse to use connection ids.
 An on-path adversary, who is able to observe the DTLS 1.2 protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
 subsequent payloads carrying the same connection id pair (for bi-directional
-communication). In DTLS 1.3, it is possible to provide new encrypted connection
-IDs, though of course those IDs are immediately used on the wire.
-Without multi-homing and mobility the use of the connection id is not different to the
-use of the 5-tuple.
+communication). Without multi-homing or mobility the use of the connection id 
+is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
 interaction over the two paths, which adds further privacy concerns. In order
 to prevent this, implementations SHOULD attempt to use fresh connection IDs
 whenever they change local addresses or ports (though this is not always
-possible to detect). In DTLS 1.3, The RequestConnectionId message can be used
-to ask for new IDs in order to ensure that you have a pool of suitable IDs.
+possible to detect). 
 
-This document does not change the security properties of DTLS 1.2 {{RFC6347}} and DTLS 1.3 {{I-D.ietf-tls-dtls13}}.
-It merely provides a more robust mechanism for associating an incoming packet with a stored security context.
+This document does not change the security properties of DTLS 1.2 {{RFC6347}}.
+It merely provides a more robust mechanism for associating an incoming packet 
+with a stored security context.
 
 [[OPEN ISSUE: Sequence numbers leak connection IDs. We need to update the
 document to address this. One possibility would be the technique documented
@@ -402,6 +329,20 @@ in https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-nu
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-00
+
+  - Splitting the 1.2 and 1.3 functionality 
+    into two documents offering different 
+	designs, which impact security and privacy. 
+	
+	Unified header design based on decisions 
+	made at the London IETF meeting, March 2018
+	
+draft-ietf-tls-dtls-connection-id-00
+
+  - Initial working group version
+    (containing a solution for DTLS 1.2 and 1.3)
 
 draft-rescorla-tls-dtls-connection-id-00
 
