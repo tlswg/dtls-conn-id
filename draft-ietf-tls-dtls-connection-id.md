@@ -171,18 +171,38 @@ This extension is applicable for use with DTLS 1.2 and {{dtls-record12}}
 illustrates the record format.
 
 ~~~~
-  struct {
-     ContentType type;
-     ProtocolVersion version;
-     uint16 epoch;
-     uint48 sequence_number;
-     opaque cid[cid_length];               // New field
-     uint16 length;
-     select (CipherSpec.cipher_type) {
-        case block:  GenericBlockCipher;
-        case aead:   GenericAEADCipher;
-     } fragment;
-  } DTLSCiphertext;
+   struct {
+        ContentType type;
+        ProtocolVersion version;
+        uint16 epoch;
+        uint48 sequence_number;
+        opaque cid[cid_length];               // New field
+        uint16 length;
+        opaque fragment[DTLSPlaintext.length];
+   } DTLSPlaintext;
+
+   struct {
+        ContentType type;
+        ProtocolVersion version;
+        uint16 epoch;
+        uint48 sequence_number;
+        opaque cid[cid_length];               // New field
+        uint16 length;
+        opaque fragment[DTLSCompressed.length];
+   } DTLSCompressed;
+
+   struct {
+        ContentType type;
+        ProtocolVersion version;
+        uint16 epoch;
+        uint48 sequence_number;
+        opaque cid[cid_length];               // New field
+        uint16 length;
+        select (CipherSpec.cipher_type) {
+            case block:  GenericBlockCipher;
+            case aead:   GenericAEADCipher;
+        } fragment;
+   } DTLSCiphertext;
 ~~~~
 {: #dtls-record12 title="DTLS 1.2 Record Format with Connection ID"}
 
