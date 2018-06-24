@@ -1,6 +1,6 @@
 ---
-title: The Datagram Transport Layer Security (DTLS) 1.2 Connection Identifier
-abbrev: DTLS 1.2 Connection ID
+title: The Datagram Transport Layer Security (DTLS) Connection Identifier
+abbrev: DTLS Connection ID
 docname: draft-ietf-tls-dtls-connection-id-latest
 category: std
 updates: 6347
@@ -60,7 +60,7 @@ informative:
 --- abstract
 
 This document specifies the Connection ID construct for the Datagram Transport
-Layer Security (DTLS) protocol version 1.2.  {{I-D.ietf-tls-dtls13}} specifies
+Layer Security (DTLS) protocol.  {{I-D.ietf-tls-dtls13}} specifies
 the Connection ID for DTLS version 1.3.
 
 A Connection ID is an identifier carried in the record layer header that gives the
@@ -91,7 +91,7 @@ these values are insufficient. This is a particular issue in the Internet of Thi
 when devices enter extended sleep periods to increase their battery lifetime. The
 NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS 1.2 to add a connection ID to the
+This document defines an extension to DTLS to add a connection ID to the
 DTLS record layer. The presence of the connection ID is negotiated via a DTLS
 extension.
 
@@ -101,7 +101,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The reader is assumed to be familiar with DTLS 1.2 {{RFC6347}}.
+The reader is assumed to be familiar with DTLS {{RFC6347}}.
 
 
 # The "connection_id" Extension
@@ -157,16 +157,16 @@ for example by having the length in question be a compile-time constant.
 Note that such implementations must still be able to send other length
 connection identifiers to other parties.
 
-In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
+In DTLS, connection ids are exchanged at the beginning of the DTLS
 session only. There is no dedicated "connection id update" message
 that allows new connection ids to be established mid-session, because
-DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
-that do not themselves begin other handshakes. DTLS 1.2 peers switch to
+DTLS in general does not allow TLS 1.3-style post-handshake messages
+that do not themselves begin other handshakes. DTLS peers switch to
 the new record layer format when encryption is enabled.
 
 # Record Layer Extensions
 
-This extension is applicable for use with DTLS 1.2 and {{dtls-record12}}
+This extension is applicable for use with DTLS and {{dtls-record12}}
 illustrates the record format.
 
 ~~~~
@@ -275,7 +275,7 @@ per-connection to on-path observers. There is no straightforward way to
 address this with connection IDs that contain arbitrary values; implementations
 concerned about this SHOULD refuse to use connection ids.
 
-An on-path adversary, who is able to observe the DTLS 1.2 protocol exchanges between the
+An on-path adversary, who is able to observe the DTLS protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
 subsequent payloads carrying the same connection id pair (for bi-directional
 communication).  Without multi-homing or mobility, the use of the connection id
@@ -287,7 +287,7 @@ to prevent this, implementations SHOULD attempt to use fresh connection IDs
 whenever they change local addresses or ports (though this is not always
 possible to detect).
 
-This document does not change the security properties of DTLS 1.2 {{RFC6347}}.
+This document does not change the security properties of DTLS {{RFC6347}}.
 It merely provides a more robust mechanism for associating an incoming packet
 with a stored security context.
 
