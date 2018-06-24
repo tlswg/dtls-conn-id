@@ -177,16 +177,6 @@ illustrates the record format.
         uint48 sequence_number;
         opaque cid[cid_length];               // New field
         uint16 length;
-        opaque fragment[DTLSPlaintext.length];
-   } DTLSPlaintext;
-
-   struct {
-        ContentType type;
-        ProtocolVersion version;
-        uint16 epoch;
-        uint48 sequence_number;
-        opaque cid[cid_length];               // New field
-        uint16 length;
         opaque fragment[DTLSCompressed.length];
    } DTLSCompressed;
 
