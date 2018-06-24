@@ -294,9 +294,10 @@ this document.
 IANA is requested to allocate the following new values in the "TLS ContentType
 Registry":
 
-* application_data_with_cid(25)
-* alert_with_cid(26), and
-* heartbeat_with_cid(27)
+* alert_with_cid(25)
+* handshake_with_cid(26)
+* application_data_with_cid(27)
+* heartbeat_with_cid(28)
 
 --- back
 
