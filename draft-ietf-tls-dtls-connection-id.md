@@ -63,13 +63,12 @@ This document specifies the Connection ID construct for the Datagram Transport
 Layer Security (DTLS) protocol version 1.2.  {{I-D.ietf-tls-dtls13}} specifies
 the Connection ID for DTLS version 1.3.
 
-A Connection ID is an identifier carried in the record layer header that gives
-the recipient additional information for selecting the appropriate security
-association.  In "classical" DTLS, selecting a security association of an
-incoming DTLS record is accomplished with the help of the 5-tuple.  If the
-source IP address and/or source port changes during the lifetime of a DTLS
-session then the receiver will be unable to locate the correct security
-context.
+A Connection ID is an identifier carried in the record layer header that gives the
+recipient additional information for selecting the appropriate security association.
+In "classical" DTLS, selecting a security association of an incoming DTLS record
+is accomplished with the help of the 5-tuple. If the source IP address and/or
+source port changes during the lifetime of an ongoing DTLS session then the
+receiver will be unable to locate the correct security context.
 
 --- middle
 
@@ -132,7 +131,7 @@ the server to use a zero-length CID; the result is the same).
   } ConnectionId;
 ~~~~
 
-A server that is willing to use CIDs will respond with its own
+A server which is willing to use CIDs will respond with its own
 "connection_id" extension, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
@@ -209,11 +208,17 @@ illustrates the record format.
 Note that for both record formats, it is not possible to parse the
 records without knowing how long the Connection ID is.
 
-In order to help the receiver discerning a record bearing a Connection ID from
-one that doesn't, the ContentType of the record containing the cid field MUST
-be: application_data_with_cid(25) instead of application_data(23),
-alert_with_cid(26) instead of alert(24) and heartbeat_with_cid(27) instead of
-heartbeat(24).
+In order to allow a receiver to determine whether a record has CID or not,
+connections which have negotiated this extension use new record types for all
+protected records. {{new-cid-content-types}} shows the record types to use:
+
+| New ContentType | Value |
+|--------------|-----------|
+| alert_with_cid | 25 |
+| handshake_with_cid | 26 |
+| application_data_with_cid | 27 |
+| heartbeat_with_cid | 28 |
+{: #new-cid-content-types}
 
 # Examples
 
