@@ -212,7 +212,6 @@ Section 6.2.3.1 of {{RFC5246}} is extended as follows:
                             DTLSCompressed.sequence_number +
                             DTLSCompressed.type +
                             DTLSCompressed.version +
-                            connection_id + // New field
                             cid_length +        // New input
                             cid +               // New input
                             DTLSCompressed.length +
@@ -291,10 +290,6 @@ possible to detect).
 This document does not change the security properties of DTLS {{RFC6347}}.
 It merely provides a more robust mechanism for associating an incoming packet
 with a stored security context.
-
-[[OPEN ISSUE: Sequence numbers leak connection IDs. We need to update the
-document to address this. One possibility would be the technique documented
-in https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-number-gap.]]
 
 #  IANA Considerations
 
