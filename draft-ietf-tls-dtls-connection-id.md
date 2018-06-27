@@ -93,7 +93,7 @@ NAT rebinding leads to connection failure, with the resulting cost of a new hand
 
 This document defines an extension to DTLS to add a connection ID to the
 DTLS record layer. The presence of the connection ID is negotiated via a DTLS
-extension.
+extension during the handshake.
 
 # Conventions and Terminology
 
@@ -121,9 +121,9 @@ The extension_data field of this extension, when included in the
 ClientHello, MUST contain the CID structure, which carries the CID which
 the client wishes the server to use when sending messages towards it.
 A zero-length value indicates that the client is prepared to send
-with a connection ID but does not wish the server to use one when
-sending (alternately, this can be interpreted as the client wishes
-the server to use a zero-length CID; the result is the same).
+a connection ID but does not wish the server to use one when
+sending. Alternately, this can be interpreted as the client wishes
+the server to use a zero-length CID; the result is the same.
 
 ~~~~
   struct {
@@ -150,16 +150,16 @@ chance to fall back to a full handshake or more precisely to a
 handshake that uses session resumption.
 
 Because each party sends in the extension_data the value that it will
-receive as a connection identifier in encrypted records, it is possible
+receive as a connection ID in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
-identifiers.  This can in turn ease parsing and connection lookup,
+IDs.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
 Note that such implementations must still be able to send other length
-connection identifiers to other parties.
+connection IDs to other parties.
 
-In DTLS, connection ids are exchanged at the beginning of the DTLS
-session only. There is no dedicated "connection id update" message
-that allows new connection ids to be established mid-session, because
+In DTLS, connection ID are exchanged at the beginning of the DTLS
+session only. There is no dedicated "connection ID update" message
+that allows new connection IDs to be established mid-session, because
 DTLS in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. DTLS peers switch to
 the new record layer format when encryption is enabled.
@@ -228,7 +228,7 @@ The CID is authenticated.  The MAC of a DTLS record with CID is generated as:
 
 # Examples
 
-{{dtls-example2}} shows an example exchange where a connection id used
+{{dtls-example2}} shows an example exchange where a connection ID used
 uni-directionally from the client to the server in DTLS 1.2.
 
 ~~~~
@@ -271,7 +271,11 @@ Application Data           ========>
 
 #  Security and Privacy Considerations {#sec-cons}
 
-The connection id replaces the previously used 5-tuple and, as such, introduces
+This document does not change the security properties of DTLS {{RFC6347}}.
+It merely provides a more robust mechanism for associating an incoming packet
+with a stored security context.
+
+The connection ID replaces the previously used 5-tuple and, as such, introduces
 an identifier that remains persistent during the lifetime of a DTLS connection.
 Every identifier introduces the risk of linkability, as explained in {{RFC6973}}.
 
@@ -279,27 +283,24 @@ In addition, endpoints can use the connection ID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
 per-connection to on-path observers. There is no straightforward way to
 address this with connection IDs that contain arbitrary values; implementations
-concerned about this SHOULD refuse to use connection ids.
+concerned about this SHOULD refuse to use connection ID.
 
 An on-path adversary, who is able to observe the DTLS protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
-subsequent payloads carrying the same connection id pair (for bi-directional
-communication).  Without multi-homing or mobility, the use of the connection id
+subsequent payloads carrying the same connection ID pair (for bi-directional
+communication).  Without multi-homing or mobility, the use of the connection ID
 is not different to the use of the 5-tuple.
 
-With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns. In order
-to prevent this, implementations SHOULD attempt to use fresh connection IDs
-whenever they change local addresses or ports (though this is not always
-possible to detect).
+The connection ID feature for DTLS 1.2 is designed mainly for the use case where 
+a DTLS session is kept alive over a NAT when the DTLS client is inactive for an 
+extended period of time. Keeping a DTLS session alive in a mobility or a multi-homing
+scenario is not supported and requires re-negotation, resumption, or to re-run the 
+full handshake. For the limited set of scenarios supported there is also no additional 
+privacy risk due to the correlation of sequence numbers since the connection ID value 
+itself is sufficient to determine the correlation by an on-path adversary. 
 
-This document does not change the security properties of DTLS {{RFC6347}}.
-It merely provides a more robust mechanism for associating an incoming packet
-with a stored security context.
-
-[[OPEN ISSUE: Sequence numbers leak connection IDs. We need to update the
-document to address this. One possibility would be the technique documented
-in https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-number-gap.]]
+For those who want to address more advanced use cases and additional privacy features 
+the functionality offered by the connection ID feature of DTLS 1.3 is recommended. 
 
 #  IANA Considerations
 
