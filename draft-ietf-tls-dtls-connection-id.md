@@ -210,9 +210,10 @@ protected records. {{new-cid-content-types}} shows the record types to use:
 | heartbeat_with_cid | 28 |
 {: #new-cid-content-types}
 
-# CID authentication
 
-The CID is authenticated.  The MAC of a DTLS record with CID is generated as:
+# Record Payload Protection
+
+The CID value, when present, is included in the MAC calculation for the DTLS record. It is created as follows: 
 
 ~~~~
       MAC(MAC_write_key, DTLSCompressed.epoch +
@@ -222,9 +223,9 @@ The CID is authenticated.  The MAC of a DTLS record with CID is generated as:
                             DTLSCompressed.cid +      // New input
                             DTLSCompressed.length +
                             DTLSCompressed.fragment);
+   where "+" denotes concatenation.
 ~~~~
 
-   where "+" denotes concatenation.
 
 # Examples
 
