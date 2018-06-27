@@ -175,15 +175,6 @@ illustrates the record format.
         ProtocolVersion version;
         uint16 epoch;
         uint48 sequence_number;
-        uint16 length;
-        opaque fragment[DTLSCompressed.length];
-   } DTLSCompressed;
-
-   struct {
-        ContentType type;
-        ProtocolVersion version;
-        uint16 epoch;
-        uint48 sequence_number;
         opaque cid[cid_length];               // New field
         uint16 length;
         select (CipherSpec.cipher_type) {
@@ -212,7 +203,9 @@ protected records. {{new-cid-content-types}} shows the record types to use:
 
 # Record Payload Protection
 
-The CID value, when present, is included in the MAC calculation for the DTLS record. It is created as follows:
+The CID value, when present, is included in the MAC calculation for the DTLS
+record. The MAC algorithm described in Section 4.1.2.1 of {{RFC6347}} and
+Section 6.2.3.1 of {{RFC5246}} is extended as follows:
 
 ~~~~
       MAC(MAC_write_key, DTLSCompressed.epoch +
@@ -220,6 +213,8 @@ The CID value, when present, is included in the MAC calculation for the DTLS rec
                             DTLSCompressed.type +
                             DTLSCompressed.version +
                             connection_id + // New field
+                            cid_length +        // New input
+                            cid +               // New input
                             DTLSCompressed.length +
                             DTLSCompressed.fragment);
    where "+" denotes concatenation.
