@@ -74,15 +74,17 @@ receiver will be unable to locate the correct security context.
 
 #  Introduction
 
-The Datagram Transport Layer Security (DTLS) protocol was designed for securing
-connection-less transports, like UDP. DTLS, like TLS, starts with a handshake,
-which can be computationally demanding (particularly when public key cryptography
-is used). After a successful handshake, symmetric key cryptography is used to
-apply data origin authentication, integrity and confidentiality protection. This
-two-step approach allows to amortize the cost of the initial handshake to subsequent
-application data protection. Ideally, the second phase where application data is
-protected lasts over a longer period of time since the established keys will only
-need to be updated once the key lifetime expires.
+The Datagram Transport Layer Security (DTLS) protocol was designed for
+securing connection-less transports, like UDP. DTLS, like TLS, starts
+with a handshake, which can be computationally demanding (particularly
+when public key cryptography is used). After a successful handshake,
+symmetric key cryptography is used to apply data origin
+authentication, integrity and confidentiality protection. This
+two-step approach allows endpoints to amortize the cost of the initial
+handshake across subsequent application data protection. Ideally, the
+second phase where application data is protected lasts over a longer
+period of time since the established keys will only need to be updated
+once the key lifetime expires.
 
 In the current version of DTLS, the IP address and port of the peer are used to
 identify the DTLS association. Unfortunately, in some cases, such as NAT rebinding,
@@ -153,7 +155,9 @@ receive as a connection identifier in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
-Note that such implementations must still be able to send other length
+Implementations which want to use variable-length CIDs are responsible
+for constructing the CID in such a way that its length can be determined
+on reception. Note that such implementations must still be able to send other length
 connection identifiers to other parties.
 
 In DTLS, connection ids are exchanged at the beginning of the DTLS
@@ -288,13 +292,13 @@ to prevent this, implementations SHOULD attempt to use fresh connection IDs
 whenever they change local addresses or ports (though this is not always
 possible to detect).
 
+Importantly, the sequence number makes it possible for a passive attacker
+to correlate packets across CID changes. Thus, even if a client/server pair
+do a rehandshake to change CID, that does not provide much privacy benefit.
+
 This document does not change the security properties of DTLS {{RFC6347}}.
 It merely provides a more robust mechanism for associating an incoming packet
 with a stored security context.
-
-[[OPEN ISSUE: Sequence numbers leak connection IDs. We need to update the
-document to address this. One possibility would be the technique documented
-in https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-number-gap.]]
 
 #  IANA Considerations
 
@@ -356,7 +360,7 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 - Christian Huitema (Private Octopus Inc.)
 - Jana Iyengar (Google)
 - Daniel Kahn Gillmor (ACLU)
-- Patrick McManus (Sole Proprietor)
+- Patrick McManus (Mozilla)
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
