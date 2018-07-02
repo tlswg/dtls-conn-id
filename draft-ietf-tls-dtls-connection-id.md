@@ -60,8 +60,7 @@ informative:
 --- abstract
 
 This document specifies the Connection ID construct for the Datagram Transport
-Layer Security (DTLS) protocol.  {{I-D.ietf-tls-dtls13}} specifies
-the Connection ID for DTLS version 1.3.
+Layer Security (DTLS) protocol.
 
 A Connection ID is an identifier carried in the record layer header that gives the
 recipient additional information for selecting the appropriate security association.
@@ -166,8 +165,9 @@ the new record layer format when encryption is enabled.
 
 # Record Layer Extensions
 
-This extension is applicable for use with DTLS and {{dtls-record12}}
-illustrates the record format.
+This extension is applicable for use with DTLS 1.2 and below. {{dtls-record12}}
+illustrates the record format.   {{I-D.ietf-tls-dtls13}} specifies
+how to carry the CID in a DTLS 1.3 record.
 
 ~~~~
    struct {
@@ -223,8 +223,8 @@ Section 6.2.3.1 of {{RFC5246}} is extended as follows:
 
 # Examples
 
-{{dtls-example2}} shows an example exchange where a connection id used
-uni-directionally from the client to the server in DTLS 1.2.
+{{dtls-example2}} shows an example exchange where a connection id is
+used uni-directionally from the client to the server.
 
 ~~~~
 Client                                             Server
