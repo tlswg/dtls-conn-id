@@ -286,10 +286,7 @@ communication).  Without multi-homing or mobility, the use of the connection id
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns. In order
-to prevent this, implementations SHOULD attempt to use fresh connection IDs
-whenever they change local addresses or ports (though this is not always
-possible to detect).
+interaction over the two paths, which adds further privacy concerns.
 
 Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
