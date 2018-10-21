@@ -92,7 +92,7 @@ these values are insufficient. This is a particular issue in the Internet of Thi
 when devices enter extended sleep periods to increase their battery lifetime. The
 NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS to add a connection ID to the
+This document defines an extension to DTLS to add a connection ID (CID) to the
 DTLS record layer. The presence of the connection ID is negotiated via a DTLS
 extension.
 
@@ -119,7 +119,7 @@ The extension type is specified as follows.
 ~~~~
 
 The extension_data field of this extension, when included in the
-ClientHello, MUST contain the CID structure, which carries the CID which
+ClientHello, MUST contain the ConnectionId structure, which carries the CID which
 the client wishes the server to use when sending messages towards it.
 A zero-length value indicates that the client is prepared to send
 with a connection ID but does not wish the server to use one when
