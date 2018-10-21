@@ -1,6 +1,6 @@
 ---
-title: The Datagram Transport Layer Security (DTLS) Connection Identifier
-abbrev: DTLS Connection ID
+title: Connection Identifiers for DTLS 1.2
+abbrev: DTLS 1.2 Connection ID
 docname: draft-ietf-tls-dtls-connection-id-latest
 category: std
 updates: 6347
@@ -60,7 +60,7 @@ informative:
 --- abstract
 
 This document specifies the Connection ID construct for the Datagram Transport
-Layer Security (DTLS) protocol.
+Layer Security (DTLS) protocol version 1.2.
 
 A Connection ID is an identifier carried in the record layer header that gives the
 recipient additional information for selecting the appropriate security association.
