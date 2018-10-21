@@ -216,7 +216,6 @@ Section 6.2.3.1 of {{RFC5246}} is extended as follows:
                             DTLSCompressed.sequence_number +
                             DTLSCompressed.type +
                             DTLSCompressed.version +
-                            connection_id + // New field
                             cid_length +        // New input
                             cid +               // New input
                             DTLSCompressed.length +
