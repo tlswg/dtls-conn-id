@@ -338,6 +338,10 @@ Registry":
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-02
+
+  - Move to internal content types a la DTLS 1.3.
+
 draft-ietf-tls-dtls-connection-id-01
 
   - Remove 1.3 based on the WG consensus at IETF 101
