@@ -211,12 +211,15 @@ encrypted.
 
 ~~~~
      struct {
-         opaque content[TLSPlaintext.length];
+         opaque compressed[TLSCompressed.length];
          ContentType type;
          uint8 zeros[length_of_padding];
       } DTLSWrappedCompressed;
 ~~~~
 
+
+compressed
+: The value of DTLSCompressed.fragment
 
 type
 : The true content type.
@@ -225,14 +228,15 @@ zeroes
 : Padding, as defined in {{RFC8446}}.
 {:br}
 
-In addition, the CID value is included in the MAC calculation for the DTLS
-record. The MAC algorithm described in Section 4.1.2.1 of {{RFC6347}} and
-Section 6.2.3.1 of {{RFC5246}} is extended as follows:
+In addition, the CID value is included in the MAC calculation for the
+DTLS record as shown below. The MAC algorithm described in Section
+4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
+as follows:
 
 ~~~~
       MAC(MAC_write_key, DTLSCompressed.epoch +
                             DTLSCompressed.sequence_number +
-                            DTLSCompressed.type +
+                            tls12_cid +
                             DTLSCompressed.version +
                             connection_id + // New field
                             cid_length +        // New input
