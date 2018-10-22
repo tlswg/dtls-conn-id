@@ -53,6 +53,7 @@ normative:
   RFC2119:
   RFC5246:
   RFC6347:
+  RFC8446:
 informative:
   RFC6973:
   I-D.ietf-tls-dtls13:
@@ -193,33 +194,54 @@ Note that for both record formats, it is not possible to parse the
 records without knowing how long the Connection ID is.
 
 In order to allow a receiver to determine whether a record has CID or not,
-connections which have negotiated this extension use new record types for all
-protected records. {{new-cid-content-types}} shows the record types to use:
+connections which have negotiated this extension use a distinguished
+record type tls12_cid(25). Use of this content type has the following
+two implications:
 
-| New ContentType | Value |
-|--------------|-----------|
-| alert_with_cid | 25 |
-| handshake_with_cid | 26 |
-| application_data_with_cid | 27 |
-| heartbeat_with_cid | 28 |
-{: #new-cid-content-types}
-
+- The CID field is present
+- The true content type is inside the encryption envelope, as described
+  below.
 
 # Record Payload Protection
 
-The CID value, when present, is included in the MAC calculation for the DTLS
-record. The MAC algorithm described in Section 4.1.2.1 of {{RFC6347}} and
-Section 6.2.3.1 of {{RFC5246}} is extended as follows:
+When CID is being used, the DTLSCompressed value is first wrapped
+along with the true content type and padding into a DTLSWrappedCompressed
+value prior to encryption. The DTLSWrappedCompressed value is then
+encrypted.
+
+~~~~
+     struct {
+         opaque compressed[TLSCompressed.length];
+         ContentType type;
+         uint8 zeros[length_of_padding];
+      } DTLSWrappedCompressed;
+~~~~
+
+
+compressed
+: The value of DTLSCompressed.fragment
+
+type
+: The true content type.
+
+zeroes
+: Padding, as defined in {{RFC8446}}.
+{:br}
+
+In addition, the CID value is included in the MAC calculation for the
+DTLS record as shown below. The MAC algorithm described in Section
+4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
+as follows:
 
 ~~~~
       MAC(MAC_write_key, DTLSCompressed.epoch +
                             DTLSCompressed.sequence_number +
-                            DTLSCompressed.type +
+                            tls12_cid +
                             DTLSCompressed.version +
                             cid_length +        // New input
                             cid +               // New input
-                            DTLSCompressed.length +
-                            DTLSCompressed.fragment);
+                            DTLSWrappedCompressed.length +
+                            DTLSWrappedCompressed.fragment);
    where "+" denotes concatenation.
 ~~~~
 
