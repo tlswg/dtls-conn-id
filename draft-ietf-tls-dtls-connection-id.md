@@ -144,13 +144,6 @@ When a session is resumed, the "connection_id" extension is
 negotiated afresh, not retained from previous connections in
 the session.
 
-This is effectively the simplest possible design that will work.
-Previous design ideas for using cryptographically generated session
-ids, either using hash chains or public key encryption, were dismissed
-due to their inefficient designs. Note that a client always has the
-chance to fall back to a full handshake or more precisely to a
-handshake that uses session resumption.
-
 Because each party sends in the extension_data the value that it will
 receive as a connection identifier in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
