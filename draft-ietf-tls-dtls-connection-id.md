@@ -338,6 +338,10 @@ Registry":
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-03
+
+  - Updated list of contributors
+
 draft-ietf-tls-dtls-connection-id-02
 
   - Move to internal content types a la DTLS 1.3.
@@ -367,8 +371,9 @@ Archives of the list can be found at:
 # Contributors
 
 Many people have contributed to this specification since the functionality has
-been highly desired by the IoT community. We would like to thank the following
-individuals for their contributions in earlier specifications:
+been highly desired by the IoT community. 
+
+We would like to thank the following individuals for their contributions:
 
 ~~~
 * Nikos Mavrogiannopoulos
@@ -376,7 +381,13 @@ individuals for their contributions in earlier specifications:
   nmav@redhat.com
 ~~~
 
-Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawei), and the Connection ID task force team members:
+~~~
+* Yin Xinxing
+  Huawei
+  yinxinxing@huawei.com
+~~~
+
+Additionally, we would like to thank the Connection ID task force team members:
 
 - Martin Thomson (Mozilla)
 - Christian Huitema (Private Octopus Inc.)
@@ -387,4 +398,3 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 - Mark Nottingham (Fastly)
 
 Finally, we want to thank the IETF TLS working group chairs, Joseph Salowey and Sean Turner, for their patience, support and feedback.
-
