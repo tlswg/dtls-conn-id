@@ -249,45 +249,48 @@ as follows:
 # Examples
 
 {{dtls-example2}} shows an example exchange where a connection id is
-used uni-directionally from the client to the server.
+used uni-directionally from the client to the server. To indicate that 
+a connection_id has zero length we use the term 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
 ------                                             ------
 
-ClientHello
-(connection_id=empty)
-                            -------->
+ClientHello                 -------->
+(connection_id=empty)       
 
 
                             <--------      HelloVerifyRequest
                                                      (cookie)
 
-ClientHello                 -------->
+ClientHello                 --------> 
 (connection_id=empty)
-  +cookie
+(cookie)                   
 
-                            <--------             ServerHello
+                                                  ServerHello
                                           (connection_id=100)
                                                   Certificate
                                             ServerKeyExchange
                                            CertificateRequest
-                                              ServerHelloDone
+                            <--------         ServerHelloDone
 
-Certificate                 -------->
+Certificate                 
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
-Finished
-(cid=100)
-                            <--------      [ChangeCipherSpec]
-                                                     Finished
+Finished                    -------->
+(cid=100)                   
+
+                                           [ChangeCipherSpec]
+                            <--------                Finished
+
 
 Application Data           ========>
 (cid=100)
+
                            <========         Application Data
 ~~~~
-{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection IDs"}
+{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
 
 #  Security and Privacy Considerations {#sec-cons}
 
