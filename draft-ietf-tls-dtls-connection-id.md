@@ -211,7 +211,7 @@ encrypted.
 
 ~~~~
      struct {
-         opaque compressed[TLSCompressed.length];
+         opaque compressed[DTLSCompressed.length];
          ContentType type;
          uint8 zeros[length_of_padding];
       } DTLSWrappedCompressed;
@@ -229,22 +229,41 @@ zeroes
 {:br}
 
 In addition, the CID value is included in the MAC calculation for the
-DTLS record as shown below. The MAC algorithm described in Section
-4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
+DTLS record layer. At the time of writing ciphers using authenticated 
+encryption with additional data (AEAD) were state-of-the-art. Hence, this 
+specification updates only the additional data calculation defined in 
+Section 6.2.3.3 of {{RFC5246}}, which is re-used by Section
+4.1.2.1 of {{RFC6347}}. 
+
+The additional data calculation is extended
 as follows:
 
 ~~~~
-      MAC(MAC_write_key, DTLSCompressed.epoch +
-                            DTLSCompressed.sequence_number +
-                            tls12_cid +
-                            DTLSCompressed.version +
-                            cid_length +        // New input
-                            cid +               // New input
-                            DTLSWrappedCompressed.length +
-                            DTLSWrappedCompressed.fragment);
-   where "+" denotes concatenation.
+    additional_data = seq_num + DTLSWrappedCompressed.type + 
+	                  DTLSCompressed.version + DTLSCompressed.length + 
+					  cid + cid_length + cid_codepoint + 
+					  DTLSWrappedCompressed.length + 
+					  DTLSWrappedCompressed.fragment;
+					  
+    where "+" denotes concatenation. 
 ~~~~
 
+seq_num
+: As described in Section 6.2.3.3 of {{RFC5246}} this 64-bit value 
+is formed by concatenating the epoch and the sequence number in the 
+order they appear on the wire.
+
+DTLSWrappedCompressed.type
+: This value contains the correct type. 
+
+cid
+: Value of the connection id. 
+
+cid_length
+: Length of the connection id. 
+
+cid_codepoint
+: Indicates the code point for the "CID present" record type.
 
 # Examples
 
