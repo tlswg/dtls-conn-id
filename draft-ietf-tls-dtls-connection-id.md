@@ -279,18 +279,25 @@ ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
 Finished                    -------->
-(cid=100)                   
+<cid=100>                   
 
                                            [ChangeCipherSpec]
                             <--------                Finished
 
 
 Application Data           ========>
-(cid=100)
+<cid=100>
 
                            <========         Application Data
+
+Legend:
+
+<...> indicates that a connection id is used in the record layer
+(...) indicates an extension
+[...] indicates a payload other than a handshake message 
 ~~~~
 {: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
+
 
 #  Security and Privacy Considerations {#sec-cons}
 
