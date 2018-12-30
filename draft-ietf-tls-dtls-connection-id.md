@@ -43,10 +43,10 @@ author:
        email: thomas.fossati@nokia.com
 
  -
-       ins: T. Gondrom
-       name: Tobias Gondrom
+       ins: Y. Xinxing
+       name: Yin Xinxing
        organization: Huawei
-       email: tobias.gondrom@gondrom.org
+       email: yinxinxing@huawei.com
 
 
 normative:
@@ -361,6 +361,8 @@ draft-rescorla-tls-dtls-connection-id-00
 
 # Working Group Information
 
+RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
 The discussion list for the IETF TLS working group is located at the e-mail
 address <tls@ietf.org>. Information on the group and information on how to
 subscribe to the list is at <https://www1.ietf.org/mailman/listinfo/tls>
@@ -370,10 +372,8 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification since the functionality has
-been highly desired by the IoT community. 
-
-We would like to thank the following individuals for their contributions:
+Many people have contributed to this specification and we would like to thank 
+the following individuals for their contributions:
 
 ~~~
 * Nikos Mavrogiannopoulos
@@ -382,9 +382,8 @@ We would like to thank the following individuals for their contributions:
 ~~~
 
 ~~~
-* Yin Xinxing
-  Huawei
-  yinxinxing@huawei.com
+* Tobias Gondrom 
+  tobias.gondrom@gondrom.org
 ~~~
 
 Additionally, we would like to thank the Connection ID task force team members:
@@ -398,3 +397,7 @@ Additionally, we would like to thank the Connection ID task force team members:
 - Mark Nottingham (Fastly)
 
 Finally, we want to thank the IETF TLS working group chairs, Joseph Salowey and Sean Turner, for their patience, support and feedback.
+
+# Acknowledgements
+
+We would like to thank Achim Kraus for his review feedback. 
