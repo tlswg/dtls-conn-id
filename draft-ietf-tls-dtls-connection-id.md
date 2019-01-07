@@ -103,7 +103,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The reader is assumed to be familiar with DTLS {{RFC6347}}.
+The reader is assumed to be familiar with DTLS 1.2 {{RFC6347}}.
 
 
 # The "connection_id" Extension
@@ -139,6 +139,14 @@ client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
 wish the client to use a CID (or again, alternately, to use a
 zero-length CID).
+
+Whenever a zero-length CID has been negotiated then the RFC 6347-defined 
+record format MUST be used (see Section 4.1 of {{RFC6347}}). For example, 
+in {{dtls-example2}} the use of a connection ID has been successfully 
+negotiated between a client and a server whereby the client uses 
+the record format defined in this specification to transmit the CID value 
+(100) to the server while the server still uses the RFC 6347-defined 
+record format without a CID when transmitting a record to the client. 
 
 When a session is resumed, the "connection_id" extension is
 negotiated afresh, not retained from previous connections in
