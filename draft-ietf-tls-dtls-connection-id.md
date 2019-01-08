@@ -239,11 +239,8 @@ The additional data calculation is extended
 as follows:
 
 ~~~~
-    additional_data = seq_num + DTLSWrappedCompressed.type + 
-	                  DTLSCompressed.version + DTLSCompressed.length + 
-					  cid + cid_length + cid_codepoint + 
-					  DTLSWrappedCompressed.length + 
-					  DTLSWrappedCompressed.fragment;
+    additional_data = seq_num + type + version + 
+                      length + cid + cid_length;
 					  
     where "+" denotes concatenation. 
 ~~~~
@@ -253,17 +250,20 @@ seq_num
 is formed by concatenating the epoch and the sequence number in the 
 order they appear on the wire.
 
-DTLSWrappedCompressed.type
-: This value contains the correct type. 
+type
+: This value contains the outer-header content type, i.e. the tls12_cid. 
+
+version
+: This value contains the version number. 
+
+length
+: This value contains the length information in the outer-header. 
 
 cid
 : Value of the connection id. 
 
 cid_length
 : Length of the connection id. 
-
-cid_codepoint
-: Indicates the code point for the "CID present" record type.
 
 # Examples
 
