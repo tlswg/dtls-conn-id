@@ -239,16 +239,11 @@ The additional data calculation is extended
 as follows:
 
 ~~~~
-    additional_data = seq_num + type + version + 
-                      length + cid + cid_length;
+    additional_data = type + version + seq_num + 
+                      cid + length;
 					  
     where "+" denotes concatenation. 
 ~~~~
-
-seq_num
-: As described in Section 6.2.3.3 of {{RFC5246}} this 64-bit value 
-is formed by concatenating the epoch and the sequence number in the 
-order they appear on the wire.
 
 type
 : This value contains the outer-header content type, i.e. the tls12_cid. 
@@ -259,11 +254,13 @@ version
 length
 : This value contains the length information in the outer-header. 
 
+seq_num
+: As described in Section 6.2.3.3 of {{RFC5246}} this 64-bit value 
+is formed by concatenating the epoch and the sequence number in the 
+order they appear on the wire.
+
 cid
 : Value of the connection id. 
-
-cid_length
-: Length of the connection id. 
 
 # Examples
 
