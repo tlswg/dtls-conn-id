@@ -324,13 +324,8 @@ IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD) defined in
 this document.
 
-IANA is requested to allocate the following new values in the "TLS ContentType
-Registry":
-
-* alert_with_cid(25)
-* handshake_with_cid(26)
-* application_data_with_cid(27)
-* heartbeat_with_cid(28)
+IANA is requested to allocate tls12_cid(25) in the "TLS ContentType
+Registry".
 
 --- back
 
