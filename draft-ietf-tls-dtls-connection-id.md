@@ -300,7 +300,7 @@ Every identifier introduces the risk of linkability, as explained in {{RFC6973}}
 
 In addition, endpoints can use the connection ID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
-per-connection to on-path observers. There is no straightforward way to
+per-connection information to on-path observers. There is no straightforward way to
 address this with connection IDs that contain arbitrary values; implementations
 concerned about this SHOULD refuse to use connection ids.
 
