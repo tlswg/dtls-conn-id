@@ -245,6 +245,9 @@ as follows:
    where "+" denotes concatenation.
 ~~~~
 
+The `cid_length` field is a single octet containing the length of the
+connection ID.
+
 
 # Examples
 
