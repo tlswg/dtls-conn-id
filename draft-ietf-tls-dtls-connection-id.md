@@ -218,13 +218,13 @@ encrypted.
 ~~~~
 
 
-compressed
+compressed:
 : The value of DTLSCompressed.fragment
 
-type
+type:
 : The true content type.
 
-zeroes
+zeroes:
 : Padding, as defined in {{RFC8446}}.
 {:br}
 
