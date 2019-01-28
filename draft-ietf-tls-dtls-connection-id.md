@@ -368,9 +368,13 @@ Archives of the list can be found at:
 
 Many people have contributed to this specification since the functionality has
 been highly desired by the IoT community. We would like to thank the following
-individuals for their contributions in earlier specifications:
+individuals for their contributions:
 
 ~~~
+* Yin Xinxing
+  Huawei
+  yinxinxing@huawei.com
+
 * Nikos Mavrogiannopoulos
   RedHat
   nmav@redhat.com
