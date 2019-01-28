@@ -386,5 +386,5 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
-Finally, we want to thank the IETF TLS working group chairs, Joseph Salowey and Sean Turner, for their patience, support and feedback.
+Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and Sean Turner, for their patience, support and feedback.
 
