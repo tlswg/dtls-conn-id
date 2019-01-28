@@ -140,6 +140,9 @@ indicates that the server will send with the client's CID but does not
 wish the client to use a CID (or again, alternately, to use a
 zero-length CID).
 
+Having endpoints select the CID that is used by peers gives implementations
+flexibility in the choice of how to format and generate CIDs.
+
 When a session is resumed, the "connection_id" extension is
 negotiated afresh, not retained from previous connections in
 the session.
