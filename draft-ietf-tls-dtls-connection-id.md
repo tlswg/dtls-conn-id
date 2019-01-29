@@ -246,45 +246,62 @@ connection ID.
 # Examples
 
 {{dtls-example2}} shows an example exchange where a connection id is
-used uni-directionally from the client to the server.
+used uni-directionally from the client to the server. To indicate that 
+a connection_id has zero length we use the term 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
 ------                                             ------
 
-ClientHello
-(connection_id=empty)
-                            -------->
+ClientHello                 -------->
+(connection_id=empty)       
 
 
                             <--------      HelloVerifyRequest
                                                      (cookie)
 
-ClientHello                 -------->
+ClientHello                 --------> 
 (connection_id=empty)
-  +cookie
+(cookie)                   
 
-                            <--------             ServerHello
+                                                  ServerHello
                                           (connection_id=100)
                                                   Certificate
                                             ServerKeyExchange
                                            CertificateRequest
-                                              ServerHelloDone
+                            <--------         ServerHelloDone
 
-Certificate                 -------->
+Certificate                 
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
-Finished
-(cid=100)
-                            <--------      [ChangeCipherSpec]
-                                                     Finished
+Finished                    -------->
+<cid=100>                   
 
-Application Data           ========>
-(cid=100)
-                           <========         Application Data
+                                           [ChangeCipherSpec]
+                            <--------                Finished
+
+
+Application Data            ========>
+<cid=100>
+
+                            <========        Application Data
+
+Legend:
+
+<...> indicates that a connection id is used in the record layer
+(...) indicates an extension
+[...] indicates a payload other than a handshake message
 ~~~~
-{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection IDs"}
+{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
+
+Note: In the example exchange the CID is included in the record layer 
+once encryption is enabled. In DTLS 1.2 only one handshake message is 
+encrypted, namely the Finished message. Since the example shows how to 
+use the CID for payloads sent from the client to the server only the 
+record layer payload containing the Finished messagen contains a CID. 
+Application data payloads sent from the client to the server contain 
+a CID in this example as well. 
 
 #  Security and Privacy Considerations {#sec-cons}
 
