@@ -45,7 +45,7 @@ author:
  -
        ins: T. Gondrom
        name: Tobias Gondrom
-       organization: UOBi
+       organization: UOB
        email: tobias.gondrom@gondrom.org
 
 
