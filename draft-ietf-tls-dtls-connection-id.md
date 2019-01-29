@@ -155,6 +155,9 @@ for constructing the CID in such a way that its length can be determined
 on reception. Note that such implementations must still be able to send
 connection identifiers of different length to other parties.
 
+Note that it is not possible to parse the records without knowing how 
+long the Connection ID is.
+
 In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
 session only. There is no dedicated "connection id update" message
 that allows new connection ids to be established mid-session, because
@@ -164,30 +167,10 @@ that do not themselves begin other handshakes.
 DTLS peers switch to the new record layer format, i.e., the record layer format 
 containing the CID, when encryption is enabled.
 
-# Record Layer Extensions
+# Record Layer Extensions and Record Payload Protection
 
-This extension is applicable for use with DTLS 1.2 and below. {{dtls-record12}}
-illustrates the record format.  {{I-D.ietf-tls-dtls13}} specifies
-how to carry the CID in a DTLS 1.3 record.
-
-~~~~
-   struct {
-        ContentType type;
-        ProtocolVersion version;
-        uint16 epoch;
-        uint48 sequence_number;
-        opaque cid[cid_length];               // New field
-        uint16 length;
-        select (CipherSpec.cipher_type) {
-            case block:  GenericBlockCipher;
-            case aead:   GenericAEADCipher;
-        } fragment;
-   } DTLSCiphertext;
-~~~~
-{: #dtls-record12 title="DTLS 1.2 Record Format with Connection ID"}
-
-Note that for both record formats, it is not possible to parse the
-records without knowing how long the Connection ID is.
+This specification defines the DTLS 1.2 record layer format and 
+{{I-D.ietf-tls-dtls13}} specifies how to carry the CID in DTLS 1.3.
 
 In order to allow a receiver to determine whether a record has CID or not,
 connections which have negotiated this extension use a distinguished
@@ -198,30 +181,78 @@ two implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-# Record Payload Protection
-
-When CID is being used, the DTLSCompressed value is first wrapped
-along with the true content type and padding into a DTLSWrappedCompressed
-value prior to encryption. The DTLSWrappedCompressed value is then
-encrypted.
+When CID is being used, the content to be sent is first wrapped
+along with the true content type and padding into a DTLSInnerPlaintext
+value prior to encryption. The DTLSInnerPlaintext value is then
+encrypted. {{dtls-record12}} illustrates the record format. 
 
 ~~~~
      struct {
-         opaque compressed[TLSCompressed.length];
+         ContentType type;
+         ProtocolVersion version;
+         uint16 epoch;                         // DTLS field
+         uint48 sequence_number;               // DTLS field
+         uint16 length;
+         opaque fragment[DTLSPlaintext.length];
+     } DTLSPlaintext;
+
+     struct {
+         opaque content[DTLSPlaintext.length];
          ContentType type;
          uint8 zeros[length_of_padding];
-      } DTLSWrappedCompressed;
+     } DTLSInnerPlaintext;
+
+     struct {
+         ContentType special_type = tls12_cid; /* 25 */
+         ProtocolVersion version;
+         uint16 epoch;                         // DTLS field
+         uint48 sequence_number;               // DTLS field
+         opaque cid[cid_length];               // New field
+         uint16 length;
+         opaque encrypted_record[TLSCiphertext.length];
+     } DTLSCiphertext;
 ~~~~
+{: #dtls-record12 title="DTLS 1.2 Record Format with Connection ID"}
 
-compressed:
-: The value of DTLSCompressed.fragment
+content
+:  This field contains the byte encoding of a handshake, an alert 
+   message, or the raw bytes of the application's data to send.
 
-type:
-: The true content type.
+type
+:  The DTLSInnerPlaintext.type value contains the content type of the
+   record. This is the non-obfuscated (true) content type.
 
-zeroes:
-: Padding, as defined in {{RFC8446}}.
-{:br}
+zeros
+:  An arbitrary-length run of zero-valued bytes may appear in
+   the cleartext after the type field.  This provides an opportunity
+   for senders to pad any DTLS record by a chosen amount as long as
+   the total stays within record size limits.  See Section 5.4 of
+   for {{RFC8446}} more details. (Note that TLSInnerPlaintext in 
+   that section refers to DTLSInnerPlaintext in this specification.) 
+
+special_type
+:  The outer opaque_type field of a DTLSCiphertext record
+   is always set to the value 25 (tls12_cid). The actual content 
+   type of the record is found in DTLSInnerPlaintext.type after 
+   decryption. By encapsulating the true content type inside the 
+   encrypted payload the outer content type (special_type) can be
+   used to signal the new record layer format containing the CID. 
+
+version
+:  The DTLSCiphertext.version field describes the protocol being employed.
+   This document describes an extension to DTLS version 1.2. 
+
+length
+:  The DTLSCiphertext.length field indicates the length (in bytes) of 
+   the following DTLSCiphertext.encrypted_record, which is the sum of 
+   the lengths of the content and the padding, plus one for the inner 
+   content type, plus any expansion added by the AEAD algorithm.    
+   
+encrypted_record
+:  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure.
+
+Other fields are defined in RFC 6347. Note that this specification does 
+not make use of the DTLSCompressed structure. 
 
 In addition, the CID value is included in the MAC calculation for the
 DTLS record, as shown below. The MAC algorithm described in Section
