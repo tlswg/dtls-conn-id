@@ -39,14 +39,8 @@ author:
  -
        ins: T. Fossati
        name: Thomas Fossati
-       organization: Nokia
-       email: thomas.fossati@nokia.com
-
- -
-       ins: T. Gondrom
-       name: Tobias Gondrom
-       organization: Huawei
-       email: tobias.gondrom@gondrom.org
+       organization: Arm Limited
+       email: thomas.fossati@arm.com
 
 
 normative:
@@ -336,6 +330,10 @@ Registry".
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-03
+
+  - Updated list of contributors
+
 draft-ietf-tls-dtls-connection-id-02
 
   - Move to internal content types a la DTLS 1.3.
@@ -355,6 +353,8 @@ draft-rescorla-tls-dtls-connection-id-00
 
 # Working Group Information
 
+RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
 The discussion list for the IETF TLS working group is located at the e-mail
 address <tls@ietf.org>. Information on the group and information on how to
 subscribe to the list is at <https://www1.ietf.org/mailman/listinfo/tls>
@@ -364,9 +364,8 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification since the functionality has
-been highly desired by the IoT community. We would like to thank the following
-individuals for their contributions in earlier specifications:
+Many people have contributed to this specification and we would like to thank 
+the following individuals for their contributions:
 
 ~~~
 * Nikos Mavrogiannopoulos
@@ -374,7 +373,12 @@ individuals for their contributions in earlier specifications:
   nmav@redhat.com
 ~~~
 
-Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawei), and the Connection ID task force team members:
+~~~
+* Tobias Gondrom 
+  tobias.gondrom@gondrom.org
+~~~
+
+Additionally, we would like to thank the Connection ID task force team members:
 
 - Martin Thomson (Mozilla)
 - Christian Huitema (Private Octopus Inc.)
@@ -386,3 +390,6 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and Sean Turner, for their patience, support and feedback.
 
+# Acknowledgements
+
+We would like to thank Achim Kraus for his review feedback. 
