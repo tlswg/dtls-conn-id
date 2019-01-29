@@ -45,7 +45,7 @@ author:
  -
        ins: T. Gondrom
        name: Tobias Gondrom
-       organization: Huawei
+       organization: UOBi
        email: tobias.gondrom@gondrom.org
 
 
