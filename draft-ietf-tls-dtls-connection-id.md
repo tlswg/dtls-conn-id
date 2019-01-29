@@ -39,14 +39,8 @@ author:
  -
        ins: T. Fossati
        name: Thomas Fossati
-       organization: Nokia
-       email: thomas.fossati@nokia.com
-
- -
-       ins: T. Gondrom
-       name: Tobias Gondrom
-       organization: Huawei
-       email: tobias.gondrom@gondrom.org
+       organization: Arm Limited
+       email: thomas.fossati@arm.com
 
 
 normative:
@@ -151,25 +145,27 @@ due to their inefficient designs. Note that a client always has the
 chance to fall back to a full handshake or more precisely to a
 handshake that uses session resumption.
 
-Because each party sends in the extension_data the value that it will
+Because each party sends the value in the "connection_id" extension that it wants to 
 receive as a connection identifier in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
-Implementations which want to use variable-length CIDs are responsible
+Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
-on reception. Note that such implementations must still be able to send other length
-connection identifiers to other parties.
+on reception. Note that such implementations must still be able to send
+connection identifiers of different length to other parties.
 
 Note that it is not possible to parse the records without knowing how 
 long the Connection ID is.
 
-In DTLS, connection ids are exchanged at the beginning of the DTLS
+In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
 session only. There is no dedicated "connection id update" message
 that allows new connection ids to be established mid-session, because
-DTLS in general does not allow TLS 1.3-style post-handshake messages
-that do not themselves begin other handshakes. DTLS peers switch to
-the new record layer format when encryption is enabled.
+DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
+that do not themselves begin other handshakes. 
+
+DTLS peers switch to the new record layer format, i.e., the record layer format 
+containing the CID, when encryption is enabled.
 
 # Record Layer Extensions and Record Payload Protection
 
@@ -259,7 +255,7 @@ Other fields are defined in RFC 6347. Note that this specification does
 not make use of the DTLSCompressed structure. 
 
 In addition, the CID value is included in the MAC calculation for the
-DTLS record as shown below. The MAC algorithm described in Section
+DTLS record, as shown below. The MAC algorithm described in Section
 4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
 as follows:
 
@@ -275,49 +271,69 @@ as follows:
    where "+" denotes concatenation.
 ~~~~
 
+The `cid_length` field is a single octet containing the length of the
+connection ID.
+
 
 # Examples
 
 {{dtls-example2}} shows an example exchange where a connection id is
-used uni-directionally from the client to the server.
+used uni-directionally from the client to the server. To indicate that 
+a connection_id has zero length we use the term 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
 ------                                             ------
 
-ClientHello
-(connection_id=empty)
-                            -------->
+ClientHello                 -------->
+(connection_id=empty)       
 
 
                             <--------      HelloVerifyRequest
                                                      (cookie)
 
-ClientHello                 -------->
+ClientHello                 --------> 
 (connection_id=empty)
-  +cookie
+(cookie)                   
 
-                            <--------             ServerHello
+                                                  ServerHello
                                           (connection_id=100)
                                                   Certificate
                                             ServerKeyExchange
                                            CertificateRequest
-                                              ServerHelloDone
+                            <--------         ServerHelloDone
 
-Certificate                 -------->
+Certificate                 
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
-Finished
-(cid=100)
-                            <--------      [ChangeCipherSpec]
-                                                     Finished
+Finished                    -------->
+<cid=100>                   
 
-Application Data           ========>
-(cid=100)
-                           <========         Application Data
+                                           [ChangeCipherSpec]
+                            <--------                Finished
+
+
+Application Data            ========>
+<cid=100>
+
+                            <========        Application Data
+
+Legend:
+
+<...> indicates that a connection id is used in the record layer
+(...) indicates an extension
+[...] indicates a payload other than a handshake message
 ~~~~
-{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection IDs"}
+{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
+
+Note: In the example exchange the CID is included in the record layer 
+once encryption is enabled. In DTLS 1.2 only one handshake message is 
+encrypted, namely the Finished message. Since the example shows how to 
+use the CID for payloads sent from the client to the server only the 
+record layer payload containing the Finished messagen contains a CID. 
+Application data payloads sent from the client to the server contain 
+a CID in this example as well. 
 
 #  Security and Privacy Considerations {#sec-cons}
 
@@ -327,7 +343,7 @@ Every identifier introduces the risk of linkability, as explained in {{RFC6973}}
 
 In addition, endpoints can use the connection ID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
-per-connection to on-path observers. There is no straightforward way to
+per-connection information to on-path observers. There is no straightforward way to
 address this with connection IDs that contain arbitrary values; implementations
 concerned about this SHOULD refuse to use connection ids.
 
@@ -354,19 +370,18 @@ IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD) defined in
 this document.
 
-IANA is requested to allocate the following new values in the "TLS ContentType
-Registry":
-
-* alert_with_cid(25)
-* handshake_with_cid(26)
-* application_data_with_cid(27)
-* heartbeat_with_cid(28)
+IANA is requested to allocate tls12_cid(25) in the "TLS ContentType
+Registry".
 
 --- back
 
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-03
+
+  - Updated list of contributors
 
 draft-ietf-tls-dtls-connection-id-02
 
@@ -387,6 +402,8 @@ draft-rescorla-tls-dtls-connection-id-00
 
 # Working Group Information
 
+RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
 The discussion list for the IETF TLS working group is located at the e-mail
 address <tls@ietf.org>. Information on the group and information on how to
 subscribe to the list is at <https://www1.ietf.org/mailman/listinfo/tls>
@@ -396,9 +413,14 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification since the functionality has
-been highly desired by the IoT community. We would like to thank the following
-individuals for their contributions in earlier specifications:
+Many people have contributed to this specification and we would like to thank 
+the following individuals for their contributions:
+
+~~~
+* Yin Xinxing
+  Huawei
+  yinxinxing@huawei.com
+~~~
 
 ~~~
 * Nikos Mavrogiannopoulos
@@ -406,7 +428,12 @@ individuals for their contributions in earlier specifications:
   nmav@redhat.com
 ~~~
 
-Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawei), and the Connection ID task force team members:
+~~~
+* Tobias Gondrom 
+  tobias.gondrom@gondrom.org
+~~~
+
+Additionally, we would like to thank the Connection ID task force team members:
 
 - Martin Thomson (Mozilla)
 - Christian Huitema (Private Octopus Inc.)
@@ -416,5 +443,8 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
-Finally, we want to thank the IETF TLS working group chairs, Joseph Salowey and Sean Turner, for their patience, support and feedback.
+Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and Sean Turner, for their patience, support and feedback.
 
+# Acknowledgements
+
+We would like to thank Achim Kraus for his review feedback. 
