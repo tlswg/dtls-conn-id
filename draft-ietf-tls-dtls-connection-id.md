@@ -368,6 +368,12 @@ Many people have contributed to this specification and we would like to thank
 the following individuals for their contributions:
 
 ~~~
+* Yin Xinxing
+  Huawei
+  yinxinxing@huawei.com
+~~~
+
+~~~
 * Nikos Mavrogiannopoulos
   RedHat
   nmav@redhat.com
