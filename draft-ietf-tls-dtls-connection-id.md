@@ -145,27 +145,29 @@ due to their inefficient designs. Note that a client always has the
 chance to fall back to a full handshake or more precisely to a
 handshake that uses session resumption.
 
-Because each party sends in the extension_data the value that it will
+Because each party sends the value in the "connection_id" extension that it wants to 
 receive as a connection identifier in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
-Implementations which want to use variable-length CIDs are responsible
+Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
-on reception. Note that such implementations must still be able to send other length
-connection identifiers to other parties.
+on reception. Note that such implementations must still be able to send
+connection identifiers of different length to other parties.
 
-In DTLS, connection ids are exchanged at the beginning of the DTLS
+In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
 session only. There is no dedicated "connection id update" message
 that allows new connection ids to be established mid-session, because
-DTLS in general does not allow TLS 1.3-style post-handshake messages
-that do not themselves begin other handshakes. DTLS peers switch to
-the new record layer format when encryption is enabled.
+DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
+that do not themselves begin other handshakes. 
+
+DTLS peers switch to the new record layer format, i.e., the record layer format 
+containing the CID, when encryption is enabled.
 
 # Record Layer Extensions
 
 This extension is applicable for use with DTLS 1.2 and below. {{dtls-record12}}
-illustrates the record format.   {{I-D.ietf-tls-dtls13}} specifies
+illustrates the record format.  {{I-D.ietf-tls-dtls13}} specifies
 how to carry the CID in a DTLS 1.3 record.
 
 ~~~~
@@ -211,7 +213,6 @@ encrypted.
       } DTLSWrappedCompressed;
 ~~~~
 
-
 compressed:
 : The value of DTLSCompressed.fragment
 
@@ -223,7 +224,7 @@ zeroes:
 {:br}
 
 In addition, the CID value is included in the MAC calculation for the
-DTLS record as shown below. The MAC algorithm described in Section
+DTLS record, as shown below. The MAC algorithm described in Section
 4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
 as follows:
 
