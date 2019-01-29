@@ -39,14 +39,8 @@ author:
  -
        ins: T. Fossati
        name: Thomas Fossati
-       organization: Nokia
-       email: thomas.fossati@nokia.com
-
- -
-       ins: Y. Xinxing
-       name: Yin Xinxing
-       organization: Huawei
-       email: yinxinxing@huawei.com
+       organization: Arm Limited
+       email: thomas.fossati@arm.com
 
 
 normative:
