@@ -278,14 +278,14 @@ Certificate
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
-Finished*                   -------->
+Finished                    -------->
 <cid=100>                   
 
                                            [ChangeCipherSpec]
                             <--------                Finished
 
 
-Application Data**          ========>
+Application Data            ========>
 <cid=100>
 
                             <========        Application Data
@@ -295,7 +295,6 @@ Legend:
 <...> indicates that a connection id is used in the record layer
 (...) indicates an extension
 [...] indicates a payload other than a handshake message
-* and ** next to messages indicate footnotes 
 ~~~~
 {: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
 
@@ -303,9 +302,9 @@ Note: In the example exchange the CID is included in the record layer
 once encryption is enabled. In DTLS 1.2 only one handshake message is 
 encrypted, namely the Finished message. Since the example shows how to 
 use the CID for payloads sent from the client to the server only the 
-record layer payload containing the Finished message (marked with *) 
-contains a CID. Application data payloads sent from the client to the 
-server all contain a CID, as shown in **. 
+record layer payload containing the Finished messagen contains a CID. 
+Application data payloads sent from the client to the server contain 
+a CID in this example as well. 
 
 #  Security and Privacy Considerations {#sec-cons}
 
