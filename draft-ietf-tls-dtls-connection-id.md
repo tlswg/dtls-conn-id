@@ -196,7 +196,7 @@ Note that for both record formats, it is not possible to parse the
 records without knowing how long the Connection ID is.
 
 In order to allow a receiver to determine whether a record has CID or not,
-connections, which have negotiated this extension, use a distinguished
+connections which have negotiated this extension use a distinguished
 record type tls12_cid(25). Use of this content type has the following
 two implications:
 
