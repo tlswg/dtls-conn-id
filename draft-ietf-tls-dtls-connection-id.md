@@ -191,7 +191,7 @@ value prior to encryption. The DTLSInnerPlaintext value is then
 encrypted. {{dtls-record12}} illustrates the record format. 
 
 ~~~~
-	 struct {
+     struct {
          ContentType type;
          ProtocolVersion version;
          uint16 epoch;                         // DTLS field
@@ -199,7 +199,7 @@ encrypted. {{dtls-record12}} illustrates the record format.
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
-	  
+
      struct {
          opaque content[DTLSPlaintext.length];
          ContentType type;
@@ -209,7 +209,7 @@ encrypted. {{dtls-record12}} illustrates the record format.
      struct {
          ContentType special_type = tls12_cid; /* 25 */
          ProtocolVersion version;
-		 uint16 epoch;                         // DTLS field
+         uint16 epoch;                         // DTLS field
          uint48 sequence_number;               // DTLS field
          opaque cid[cid_length];               // New field
          uint16 length;
