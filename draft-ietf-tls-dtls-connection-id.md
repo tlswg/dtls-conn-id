@@ -245,7 +245,7 @@ special_type
 version
 :  The DTLSCiphertext.version field describes the protocol being employed.
    This document describes an extension to DTLS version 1.2. 
-	  
+
 length
 :  The DTLSCiphertext.length field indicates the length (in bytes) of 
    the following DTLSCiphertext.encrypted_record, which is the sum of 
@@ -256,8 +256,7 @@ encrypted_record
 :  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure.
 
 Other fields are defined in RFC 6347. Note that this specification does 
-not make use of the DTLSCompressed structure since the use of compression 
-has been discouraged. 
+not make use of the DTLSCompressed structure. 
 
 In addition, the CID value is included in the MAC calculation for the
 DTLS record as shown below. The MAC algorithm described in Section
