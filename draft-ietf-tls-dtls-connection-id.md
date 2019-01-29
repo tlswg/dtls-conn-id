@@ -39,14 +39,8 @@ author:
  -
        ins: T. Fossati
        name: Thomas Fossati
-       organization: Nokia
-       email: thomas.fossati@nokia.com
-
- -
-       ins: T. Gondrom
-       name: Tobias Gondrom
-       organization: Huawei
-       email: tobias.gondrom@gondrom.org
+       organization: Arm Limited
+       email: thomas.fossati@arm.com
 
 
 normative:
@@ -219,13 +213,13 @@ encrypted.
       } DTLSWrappedCompressed;
 ~~~~
 
-compressed
+compressed:
 : The value of DTLSCompressed.fragment
 
-type
+type:
 : The true content type.
 
-zeroes
+zeroes:
 : Padding, as defined in {{RFC8446}}.
 {:br}
 
@@ -246,49 +240,69 @@ as follows:
    where "+" denotes concatenation.
 ~~~~
 
+The `cid_length` field is a single octet containing the length of the
+connection ID.
+
 
 # Examples
 
 {{dtls-example2}} shows an example exchange where a connection id is
-used uni-directionally from the client to the server.
+used uni-directionally from the client to the server. To indicate that 
+a connection_id has zero length we use the term 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
 ------                                             ------
 
-ClientHello
-(connection_id=empty)
-                            -------->
+ClientHello                 -------->
+(connection_id=empty)       
 
 
                             <--------      HelloVerifyRequest
                                                      (cookie)
 
-ClientHello                 -------->
+ClientHello                 --------> 
 (connection_id=empty)
-  +cookie
+(cookie)                   
 
-                            <--------             ServerHello
+                                                  ServerHello
                                           (connection_id=100)
                                                   Certificate
                                             ServerKeyExchange
                                            CertificateRequest
-                                              ServerHelloDone
+                            <--------         ServerHelloDone
 
-Certificate                 -------->
+Certificate                 
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
-Finished
-(cid=100)
-                            <--------      [ChangeCipherSpec]
-                                                     Finished
+Finished                    -------->
+<cid=100>                   
 
-Application Data           ========>
-(cid=100)
-                           <========         Application Data
+                                           [ChangeCipherSpec]
+                            <--------                Finished
+
+
+Application Data            ========>
+<cid=100>
+
+                            <========        Application Data
+
+Legend:
+
+<...> indicates that a connection id is used in the record layer
+(...) indicates an extension
+[...] indicates a payload other than a handshake message
 ~~~~
-{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection IDs"}
+{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
+
+Note: In the example exchange the CID is included in the record layer 
+once encryption is enabled. In DTLS 1.2 only one handshake message is 
+encrypted, namely the Finished message. Since the example shows how to 
+use the CID for payloads sent from the client to the server only the 
+record layer payload containing the Finished messagen contains a CID. 
+Application data payloads sent from the client to the server contain 
+a CID in this example as well. 
 
 #  Security and Privacy Considerations {#sec-cons}
 
@@ -298,7 +312,7 @@ Every identifier introduces the risk of linkability, as explained in {{RFC6973}}
 
 In addition, endpoints can use the connection ID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
-per-connection to on-path observers. There is no straightforward way to
+per-connection information to on-path observers. There is no straightforward way to
 address this with connection IDs that contain arbitrary values; implementations
 concerned about this SHOULD refuse to use connection ids.
 
@@ -325,19 +339,18 @@ IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD) defined in
 this document.
 
-IANA is requested to allocate the following new values in the "TLS ContentType
-Registry":
-
-* alert_with_cid(25)
-* handshake_with_cid(26)
-* application_data_with_cid(27)
-* heartbeat_with_cid(28)
+IANA is requested to allocate tls12_cid(25) in the "TLS ContentType
+Registry".
 
 --- back
 
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-03
+
+  - Updated list of contributors
 
 draft-ietf-tls-dtls-connection-id-02
 
@@ -358,6 +371,8 @@ draft-rescorla-tls-dtls-connection-id-00
 
 # Working Group Information
 
+RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
 The discussion list for the IETF TLS working group is located at the e-mail
 address <tls@ietf.org>. Information on the group and information on how to
 subscribe to the list is at <https://www1.ietf.org/mailman/listinfo/tls>
@@ -367,9 +382,14 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification since the functionality has
-been highly desired by the IoT community. We would like to thank the following
-individuals for their contributions in earlier specifications:
+Many people have contributed to this specification and we would like to thank 
+the following individuals for their contributions:
+
+~~~
+* Yin Xinxing
+  Huawei
+  yinxinxing@huawei.com
+~~~
 
 ~~~
 * Nikos Mavrogiannopoulos
@@ -377,7 +397,12 @@ individuals for their contributions in earlier specifications:
   nmav@redhat.com
 ~~~
 
-Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawei), and the Connection ID task force team members:
+~~~
+* Tobias Gondrom 
+  tobias.gondrom@gondrom.org
+~~~
+
+Additionally, we would like to thank the Connection ID task force team members:
 
 - Martin Thomson (Mozilla)
 - Christian Huitema (Private Octopus Inc.)
@@ -387,5 +412,8 @@ Additionally, we would like to thank Yin Xinxing (Huawei), Tobias Gondrom (Huawe
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
-Finally, we want to thank the IETF TLS working group chairs, Joseph Salowey and Sean Turner, for their patience, support and feedback.
+Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and Sean Turner, for their patience, support and feedback.
 
+# Acknowledgements
+
+We would like to thank Achim Kraus for his review feedback. 
