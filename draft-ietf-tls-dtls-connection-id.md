@@ -247,7 +247,11 @@ length
    the following DTLSCiphertext.encrypted_record, which is the sum of 
    the lengths of the content and the padding, plus one for the inner 
    content type, plus any expansion added by the AEAD algorithm.    
-   
+
+cid
+:  The cid value of length indicated with cid_length, as agreed during the 
+   exchange.
+
 encrypted_record
 :  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure.
 
@@ -265,7 +269,7 @@ The additional data calculation is extended as follows:
 
 ~~~~
     additional_data = seq_num + type + version +  
-                      cid + length;
+                      cid + cid_length + length;
 
     where "+" denotes concatenation. 
 ~~~~
@@ -285,7 +289,13 @@ length
 : This value contains the length information in the outer-header. 
 
 cid
-: Value of the connection id. 
+: Value of the negotiated cid. This field is empty in case 
+a zero-length cid has been negotiated.
+
+cid_length
+: 1 byte field indicating the length of the negotiated cid. 
+If a zero-length cid has been negotiated, and therefore no 
+cid appears on the wire, a cid_length of zero (0) MUST be added. 
 
 # Examples
 
