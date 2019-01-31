@@ -247,7 +247,11 @@ length
    the following DTLSCiphertext.encrypted_record, which is the sum of 
    the lengths of the content and the padding, plus one for the inner 
    content type, plus any expansion added by the AEAD algorithm.    
-   
+
+cid
+:  The cid value of length indicated with cid_length, as agreed during the 
+   exchange.
+
 encrypted_record
 :  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure.
 
@@ -255,25 +259,43 @@ Other fields are defined in RFC 6347. Note that this specification does
 not make use of the DTLSCompressed structure. 
 
 In addition, the CID value is included in the MAC calculation for the
-DTLS record, as shown below. The MAC algorithm described in Section
-4.1.2.1 of {{RFC6347}} and Section 6.2.3.1 of {{RFC5246}} is extended
-as follows:
+DTLS record layer. At the time of writing ciphers using authenticated 
+encryption with additional data (AEAD) were state-of-the-art. Hence, this 
+specification updates only the additional data calculation defined in 
+Section 6.2.3.3 of {{RFC5246}}, which is re-used by Section
+4.1.2.1 of {{RFC6347}}. 
+
+The additional data calculation is extended as follows:
 
 ~~~~
-      MAC(MAC_write_key, DTLSCompressed.epoch +
-                            DTLSCompressed.sequence_number +
-                            tls12_cid +
-                            DTLSCompressed.version +
-                            cid_length +        // New input
-                            cid +               // New input
-                            DTLSWrappedCompressed.length +
-                            DTLSWrappedCompressed.fragment);
-   where "+" denotes concatenation.
+    additional_data = seq_num + type + version +  
+                      cid + cid_length + length;
+
+    where "+" denotes concatenation. 
 ~~~~
 
-The `cid_length` field is a single octet containing the length of the
-connection ID.
+seq_num
+: As described in Section 6.2.3.3 of {{RFC5246}} this 64-bit value 
+is formed by concatenating the epoch and the sequence number in the 
+order they appear on the wire.
 
+type
+: This value contains the outer-header content type, i.e. the tls12_cid. 
+
+version
+: This value contains the version number. 
+
+length
+: This value contains the length information in the outer-header. 
+
+cid
+: Value of the negotiated cid. This field is empty in case 
+a zero-length cid has been negotiated.
+
+cid_length
+: 1 byte field indicating the length of the negotiated cid. 
+If a zero-length cid has been negotiated, and therefore no 
+cid appears on the wire, a cid_length of zero (0) MUST be added. 
 
 # Examples
 
