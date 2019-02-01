@@ -181,7 +181,7 @@ two implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CID are being used, the content to be sent is first wrapped
+When CIDs are being used, the content to be sent is first wrapped
 along with the true content type and padding into a DTLSInnerPlaintext
 value prior to encryption. The DTLSInnerPlaintext value is then
 encrypted. {{dtls-record12}} illustrates the record format. 
