@@ -87,7 +87,7 @@ these values are insufficient. This is a particular issue in the Internet of Thi
 when devices enter extended sleep periods to increase their battery lifetime. The
 NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS 1.2 to add a Connection ID (CID) to the
+This document defines an extension to DTLS 1.2 to add a CID to the
 DTLS record layer. The presence of the CID is negotiated via a DTLS
 extension.
 
