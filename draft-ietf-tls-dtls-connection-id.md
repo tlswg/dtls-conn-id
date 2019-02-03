@@ -114,7 +114,7 @@ The extension type is specified as follows.
 ~~~~
 
 The extension_data field of this extension, when included in the
-ClientHello, MUST contain the Connection_ID structure, which carries the CID which
+ClientHello, MUST contain the ConnectionId structure, which carries the CID which
 the client wishes the server to use when sending messages towards it.
 A zero-length value indicates that the client is prepared to send
 with a CID but does not wish the server to use one when
@@ -124,14 +124,14 @@ the server to use a zero-length CID; the result is the same).
 ~~~~
   struct {
       opaque cid<0..2^8-1>;
-  } Connection_ID;
+  } ConnectionId;
 ~~~~
 
-A server which is willing to use CIDs will respond with its own
-"connection_id" extension, containing the CID it wishes the
+A server willing to use CIDs will respond with a "connection_id" 
+extension in the ServerHello, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
-wish the client to use a CID (or again, alternately, to use a
+wish the client to include a CID (or again, alternately, to use a
 zero-length CID).
 
 When a session is resumed, the "connection_id" extension is
