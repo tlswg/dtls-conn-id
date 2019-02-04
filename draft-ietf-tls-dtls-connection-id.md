@@ -138,17 +138,11 @@ When a session is resumed, the "connection_id" extension is
 negotiated afresh, not retained from previous connections in
 the session.
 
-This is effectively the simplest possible design that will work.
-Previous design ideas for using cryptographically generated session
-ids, either using hash chains or public key encryption, were dismissed
-due to their inefficient designs. Note that a client always has the
-chance to fall back to a full handshake or more precisely to a
-handshake that uses session resumption.
+Because each party sends the value in the "connection_id" extension that it wants to 
+receive as a connection identifier in encrypted records, it is possible
+for an endpoint to use a globally constant length for such connection
+identifiers.  This can in turn ease parsing and connection lookup,
 
-Because each party sends a CID value in the "connection_id" extension that it wants to 
-receive in encrypted records, it is possible
-for an endpoint to use a globally constant length for such CIDs.  
-This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
 Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
@@ -465,7 +459,15 @@ Additionally, we would like to thank the Connection ID task force team members:
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
-Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and Sean Turner, for their patience, support and feedback.
+The task force team discussed various design ideas, including cryptographically generated session	
+ids using hash chains and public key encryption, but dismissed them due to their 
+inefficiency. The approach described in this specification is the 
+simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
+better privacy features and developers are encouraged to switch to the new version of DTLS, 
+if these privacy properties are important in a given deployment. 
+
+Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
+Sean Turner, for their patience, support and feedback.
 
 # Acknowledgements
 
