@@ -54,10 +54,10 @@ informative:
 
 --- abstract
 
-This document specifies the Connection ID construct for the Datagram Transport
+This document specifies the Connection ID (CID) construct for the Datagram Transport
 Layer Security (DTLS) protocol version 1.2.
 
-A Connection ID is an identifier carried in the record layer header that gives the
+A CID is an identifier carried in the record layer header that gives the
 recipient additional information for selecting the appropriate security association.
 In "classical" DTLS, selecting a security association of an incoming DTLS record
 is accomplished with the help of the 5-tuple. If the source IP address and/or
@@ -87,8 +87,8 @@ these values are insufficient. This is a particular issue in the Internet of Thi
 when devices enter extended sleep periods to increase their battery lifetime. The
 NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS to add a connection ID (CID) to the
-DTLS record layer. The presence of the connection ID is negotiated via a DTLS
+This document defines an extension to DTLS 1.2 to add a CID to the
+DTLS record layer. The presence of the CID is negotiated via a DTLS
 extension.
 
 # Conventions and Terminology
@@ -102,7 +102,7 @@ The reader is assumed to be familiar with DTLS {{RFC6347}}.
 
 # The "connection_id" Extension
 
-This document defines a new extension type (connection_id(TBD)), which
+This document defines the "connection_id" extension, which
 is used in ClientHello and ServerHello messages.
 
 The extension type is specified as follows.
@@ -117,7 +117,7 @@ The extension_data field of this extension, when included in the
 ClientHello, MUST contain the ConnectionId structure, which carries the CID which
 the client wishes the server to use when sending messages towards it.
 A zero-length value indicates that the client is prepared to send
-with a connection ID but does not wish the server to use one when
+with a CID but does not wish the server to use one when
 sending (alternately, this can be interpreted as the client wishes
 the server to use a zero-length CID; the result is the same).
 
@@ -127,11 +127,11 @@ the server to use a zero-length CID; the result is the same).
   } ConnectionId;
 ~~~~
 
-A server which is willing to use CIDs will respond with its own
-"connection_id" extension, containing the CID it wishes the
+A server willing to use CIDs will respond with a "connection_id" 
+extension in the ServerHello, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
-wish the client to use a CID (or again, alternately, to use a
+wish the client to include a CID (or again, alternately, to use a
 zero-length CID).
 
 When a session is resumed, the "connection_id" extension is
@@ -142,6 +142,7 @@ Because each party sends the value in the "connection_id" extension that it want
 receive as a connection identifier in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
+
 for example by having the length in question be a compile-time constant.
 Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
@@ -149,11 +150,11 @@ on reception. Note that such implementations must still be able to send
 connection identifiers of different length to other parties.
 
 Note that it is not possible to parse the records without knowing how 
-long the Connection ID is.
+long the CID is.
 
-In DTLS 1.2, connection ids are exchanged at the beginning of the DTLS
-session only. There is no dedicated "connection id update" message
-that allows new connection ids to be established mid-session, because
+In DTLS 1.2, CIDs are exchanged at the beginning of the DTLS
+session only. There is no dedicated "CID update" message
+that allows new CIDs to be established mid-session, because
 DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. 
 
@@ -174,7 +175,7 @@ two implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CID is being used, the content to be sent is first wrapped
+When CIDs are being used, the content to be sent is first wrapped
 along with the true content type and padding into a DTLSInnerPlaintext
 value prior to encryption. The DTLSInnerPlaintext value is then
 encrypted. {{dtls-record12}} illustrates the record format. 
@@ -205,7 +206,7 @@ encrypted. {{dtls-record12}} illustrates the record format.
          opaque encrypted_record[TLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
-{: #dtls-record12 title="DTLS 1.2 Record Format with Connection ID"}
+{: #dtls-record12 title="DTLS 1.2 Record Format with the CID"}
 
 content
 :  This field contains the byte encoding of a handshake, an alert 
@@ -242,7 +243,7 @@ length
    content type, plus any expansion added by the AEAD algorithm.    
 
 cid
-:  The cid value of length indicated with cid_length, as agreed during the 
+:  The CID value of length indicated with cid_length, as agreed during the 
    exchange.
 
 encrypted_record
@@ -282,19 +283,19 @@ length
 : This value contains the length information in the outer-header. 
 
 cid
-: Value of the negotiated cid. This field is empty in case 
-a zero-length cid has been negotiated.
+: Value of the negotiated CID. This field is empty in case 
+a zero-length CID has been negotiated.
 
 cid_length
-: 1 byte field indicating the length of the negotiated cid. 
-If a zero-length cid has been negotiated, and therefore no 
-cid appears on the wire, a cid_length of zero (0) MUST be added. 
+: 1 byte field indicating the length of the negotiated CID. 
+If a zero-length CID has been negotiated, and therefore no 
+CID appears on the wire, a cid_length of zero (0) MUST be added. 
 
 # Examples
 
-{{dtls-example2}} shows an example exchange where a connection id is
+{{dtls-example2}} shows an example exchange where a CID is
 used uni-directionally from the client to the server. To indicate that 
-a connection_id has zero length we use the term 'connection_id=empty'.
+a zero-length CID we use the term 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
@@ -323,14 +324,14 @@ ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
 Finished                    -------->
-<cid=100>                   
+<CID=100>                   
 
                                            [ChangeCipherSpec]
                             <--------                Finished
 
 
 Application Data            ========>
-<cid=100>
+<CID=100>
 
                             <========        Application Data
 
@@ -340,7 +341,7 @@ Legend:
 (...) indicates an extension
 [...] indicates a payload other than a handshake message
 ~~~~
-{: #dtls-example2 title="Example DTLS 1.2 Exchange with Connection ID"}
+{: #dtls-example2 title="Example DTLS 1.2 Exchange with CID"}
 
 Note: In the example exchange the CID is included in the record layer 
 once encryption is enabled. In DTLS 1.2 only one handshake message is 
@@ -352,20 +353,20 @@ a CID in this example as well.
 
 #  Security and Privacy Considerations {#sec-cons}
 
-The connection id replaces the previously used 5-tuple and, as such, introduces
+The CID replaces the previously used 5-tuple and, as such, introduces
 an identifier that remains persistent during the lifetime of a DTLS connection.
 Every identifier introduces the risk of linkability, as explained in {{RFC6973}}.
 
-In addition, endpoints can use the connection ID to attach arbitrary metadata
+In addition, endpoints can use the CID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
 per-connection information to on-path observers. There is no straightforward way to
-address this with connection IDs that contain arbitrary values; implementations
+address this with CIDs that contain arbitrary values; implementations
 concerned about this SHOULD refuse to use connection ids.
 
 An on-path adversary, who is able to observe the DTLS protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
 subsequent payloads carrying the same connection id pair (for bi-directional
-communication).  Without multi-homing or mobility, the use of the connection id
+communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
