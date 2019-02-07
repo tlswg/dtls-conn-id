@@ -398,6 +398,12 @@ RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 draft-ietf-tls-dtls-connection-id-03
 
   - Updated list of contributors
+  - Updated list of contributors and acknowledgements
+  - Updated example
+  - Changed record layer design
+  - Changed record payload protection
+  - Updated introduction and security consideration section
+  - Author- and affiliation changes
 
 draft-ietf-tls-dtls-connection-id-02
 
