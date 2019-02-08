@@ -141,8 +141,8 @@ for example by having the length in question be a compile-time constant.
 Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
 on reception. Such implementations must still be able to send
-CIDs of different length to other parties. Is not possible to parse 
-the records without knowing how long the CID is.
+CIDs of different length to other parties. Note that there is no CID 
+length information included in the record itself.
 
 In DTLS 1.2, CIDs are exchanged at the beginning of the DTLS
 session only. There is no dedicated "CID update" message
