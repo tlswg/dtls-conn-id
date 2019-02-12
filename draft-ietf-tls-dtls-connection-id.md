@@ -159,7 +159,7 @@ to use the new record layer format, i.e., the record layer format
 containing the CID. This new record layer format is only used once encryption 
 is enabled. Plaintext payloads never contain a CID in the record layer.
 Whenever a zero-length CID has been negotiated then the RFC 6347-defined 
-record format MUST be used (see Section 4.1 of {{RFC6347}}). For example, 
+record format and content type MUST be used (see Section 4.1 of {{RFC6347}}). For example, 
 in {{dtls-example2}} the use of a CID has been successfully 
 negotiated between a client and a server whereby the client uses 
 the record format defined in this specification to transmit the CID value 
@@ -167,8 +167,8 @@ the record format defined in this specification to transmit the CID value
 record format without a CID when transmitting records to the client. 
 
 2. Second, peers need to use the new MAC calculation defined in this document. 
-Any record layer payload that uses the new record layer format MUST use the 
-new MAC computation defined in {{mac}}. Whenever the RFC 6347-defined 
+Any record layer payload that uses the new record layer format and the new content type
+ MUST use the new MAC computation defined in {{mac}}. Whenever the RFC 6347-defined 
 record format is used, i.e., no CID is included in the record layer, then 
 the MAC calculation defined in Section 4.1.2 of {{RFC6347}} (and Section 4.1.2.4 
 of {{RFC6347} for use with AEAD ciphers in particular).
@@ -182,9 +182,10 @@ This specification defines the DTLS 1.2 record layer format and
 In order to allow a receiver to determine whether a record has CID or not,
 connections which have negotiated this extension use a distinguished
 record type tls12_cid(25). Use of this content type has the following
-two implications:
+three implications:
 
-- The CID field is present in the record
+- The CID field is present.
+- The MAC calculation follows the process described in {{mac}}.
 - The true content type is inside the encryption envelope, as described
   below.
 
