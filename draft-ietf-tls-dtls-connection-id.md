@@ -165,16 +165,16 @@ type.
 
 For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format and the new content type MUST be used. 
+else the new record layer format and the new content type defined in {{dtls-record12}} MUST be used. 
 
 When transmitting a datagram with the new record format and the new content type, 
 the new MAC computation defined in {{mac}} MUST be used.
 
-For receiving, if the CID content type is set, then the CID is used to look up 
-the connection and the security association. If the CID content type is not set, 
+For receiving, if the tls12_cid content type is set, then the CID is used to look up 
+the connection and the security association. If the tls12_cid content type is not set, 
 then the connection and security association is looked up by the 5-tuple and a 
-verification MUST be made to determine whether the expected CID value is indeed 
-zero length.
+check MUST be made to determine whether the expected CID value is indeed 
+zero length. If the check fails, then the datagram MUST be dropped. 
 
 When receiving a datagram with the new record format and the new content type, 
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
