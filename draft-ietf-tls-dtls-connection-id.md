@@ -149,30 +149,38 @@ session only. There is no dedicated "CID update" message
 that allows new CIDs to be established mid-session, because
 DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. When a DTLS session is 
-resumed, the "connection_id" extension is negotiated afresh. 
+resumed or renegotiated, the "connection_id" extension is negotiated afresh. 
+
+If DTLS peers have not negotiated the use of a CIDs then the RFC 6347-defined 
+record format and content type MUST be used. 
 
 If DTLS peers have negotiated the use of a CIDs using the ClientHello and
-the ServerHello messages then the peers need to take two steps: 
+the ServerHello messages then the peers need to take the following steps.
 
-1. First, the peers need to determine whether incoming and ongoing messages need 
-to use the new record layer format, i.e., the record layer format 
-containing the CID. This new record layer format is only used once encryption 
-is enabled. Plaintext payloads never contain a CID in the record layer.
-Whenever a zero-length CID has been negotiated then the RFC 6347-defined 
-record format and content type MUST be used (see Section 4.1 of {{RFC6347}}). For example, 
-in {{dtls-example2}} the use of a CID has been successfully 
-negotiated between a client and a server whereby the client uses 
-the record format defined in this specification to transmit the CID value 
-(100) to the server. The server still uses the RFC 6347-defined 
-record format without a CID when transmitting records to the client. 
+The DTLS peers determine whether incoming and outgoing messages need 
+to use the new record format, i.e., the record format containing the CID. 
+The new record format and the CID content type is only used once encryption 
+is enabled. Plaintext payloads never use the new record type and the CID content 
+type. 
 
-2. Second, peers need to use the new MAC calculation defined in this document. 
-Any record layer payload that uses the new record layer format and the new content type
- MUST use the new MAC computation defined in {{mac}}. Whenever the RFC 6347-defined 
-record format is used, i.e., no CID is included in the record layer, then 
-the MAC calculation defined in Section 4.1.2 of {{RFC6347}} (and Section 4.1.2.4 
-of {{RFC6347} for use with AEAD ciphers in particular).
+For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
+record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
+else the new record layer format and the new content type MUST be used. 
 
+When transmitting a datagram with the new record format and the new content type, 
+the new MAC computation defined in {{mac}} MUST be used.
+
+For receiving, if the CID content type is set, then the CID is used to look up 
+the connection and the security association. If the CID content type is not set, 
+then the connection and security association is looked up by the 5-tuple and a 
+verification MUST be made to determine whether the expected CID value is indeed 
+zero length.
+
+When receiving a datagram with the new record format and the new content type, 
+the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
+with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2 
+of {{RFC6347}} (and Section 4.1.2.4  of {{RFC6347} for use with AEAD ciphers) MUST 
+be used. 
 
 # Record Layer Extensions
 
