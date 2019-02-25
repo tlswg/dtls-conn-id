@@ -151,7 +151,7 @@ DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. When a DTLS session is 
 resumed or renegotiated, the "connection_id" extension is negotiated afresh. 
 
-If DTLS peers have not negotiated the use of a CIDs then the RFC 6347-defined 
+If DTLS peers have not negotiated the use of CIDs then the RFC 6347-defined 
 record format and content type MUST be used. 
 
 If DTLS peers have negotiated the use of a CIDs using the ClientHello and
@@ -187,7 +187,7 @@ be used.
 This specification defines the DTLS 1.2 record layer format and 
 {{I-D.ietf-tls-dtls13}} specifies how to carry the CID in DTLS 1.3.
 
-In order to allow a receiver to determine whether a record has CID or not,
+To allow a receiver to determine whether a record has a CID or not,
 connections which have negotiated this extension use a distinguished
 record type tls12_cid(25). Use of this content type has the following
 three implications:
@@ -243,8 +243,8 @@ zeros
    the cleartext after the type field.  This provides an opportunity
    for senders to pad any DTLS record by a chosen amount as long as
    the total stays within record size limits.  See Section 5.4 of
-   for {{RFC8446}} more details. (Note that TLSInnerPlaintext in 
-   that section refers to DTLSInnerPlaintext in this specification.) 
+   {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
+   RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
 
 special_type
 :  The outer opaque_type field of a DTLSCiphertext record
@@ -307,13 +307,10 @@ length
 : This value contains the length information in the outer-header. 
 
 cid
-: Value of the negotiated CID. This field is empty in case 
-a zero-length CID has been negotiated.
+: Value of the negotiated CID.
 
 cid_length
-: 1 byte field indicating the length of the negotiated CID. 
-If a zero-length CID has been negotiated, and therefore no 
-CID appears on the wire, a cid_length of zero (0) MUST be added. 
+: 1 byte field indicating the length of the negotiated CID.
 
 # Examples
 
