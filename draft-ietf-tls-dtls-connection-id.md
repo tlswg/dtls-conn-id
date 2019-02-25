@@ -192,7 +192,7 @@ connections which have negotiated this extension use a distinguished
 record type tls12_cid(25). Use of this content type has the following
 three implications:
 
-- The CID field is present.
+- The CID field is present and contains one or more bytes.
 - The MAC calculation follows the process described in {{mac}}.
 - The true content type is inside the encryption envelope, as described
   below.
