@@ -97,8 +97,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The reader is assumed to be familiar with DTLS {{RFC6347}}.
-
+This document assumes familiarity with DTLS 1.2 {{RFC6347}}.
 
 # The "connection_id" Extension
 
@@ -114,12 +113,12 @@ The extension type is specified as follows.
 ~~~~
 
 The extension_data field of this extension, when included in the
-ClientHello, MUST contain the ConnectionId structure, which carries the CID which
-the client wishes the server to use when sending messages towards it.
-A zero-length value indicates that the client is prepared to send
-with a CID but does not wish the server to use one when
-sending (alternately, this can be interpreted as the client wishes
-the server to use a zero-length CID; the result is the same).
+ClientHello, MUST contain the ConnectionId structure. This structure 
+contains the CID value the client wishes the server to use when sending 
+messages to the client. A zero-length CID value indicates that the client 
+is prepared to send with a CID but does not wish the server to use one when
+sending. Alternatively, this can be interpreted as the client wishes
+the server to use a zero-length CID; the result is the same.
 
 ~~~~
   struct {
@@ -134,44 +133,67 @@ indicates that the server will send with the client's CID but does not
 wish the client to include a CID (or again, alternately, to use a
 zero-length CID).
 
-When a session is resumed, the "connection_id" extension is
-negotiated afresh, not retained from previous connections in
-the session.
-
-Because each party sends the value in the "connection_id" extension that it wants to 
-receive as a connection identifier in encrypted records, it is possible
+Because each party sends the value in the "connection_id" extension it wants to 
+receive as a CID in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
-
 for example by having the length in question be a compile-time constant.
 Implementations, which want to use variable-length CIDs, are responsible
 for constructing the CID in such a way that its length can be determined
-on reception. Note that such implementations must still be able to send
-connection identifiers of different length to other parties.
-
-Note that it is not possible to parse the records without knowing how 
-long the CID is.
+on reception. Such implementations must still be able to send
+CIDs of different length to other parties. Note that there is no CID 
+length information included in the record itself.
 
 In DTLS 1.2, CIDs are exchanged at the beginning of the DTLS
 session only. There is no dedicated "CID update" message
 that allows new CIDs to be established mid-session, because
 DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
-that do not themselves begin other handshakes. 
+that do not themselves begin other handshakes. When a DTLS session is 
+resumed or renegotiated, the "connection_id" extension is negotiated afresh. 
 
-DTLS peers switch to the new record layer format, i.e., the record layer format 
-containing the CID, when encryption is enabled.
+If DTLS peers have not negotiated the use of CIDs then the RFC 6347-defined 
+record format and content type MUST be used. 
 
-# Record Layer Extensions and Record Payload Protection
+If DTLS peers have negotiated the use of a CIDs using the ClientHello and
+the ServerHello messages then the peers need to take the following steps.
+
+The DTLS peers determine whether incoming and outgoing messages need 
+to use the new record format, i.e., the record format containing the CID. 
+The new record format with the the tls12_cid content type is only used once encryption 
+is enabled. Plaintext payloads never use the new record type and the CID content 
+type. 
+
+For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
+record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
+else the new record layer format with the tls12_cid content type defined in {{dtls-record12}} MUST be used. 
+
+When transmitting a datagram with the tls12_cid content type, 
+the new MAC computation defined in {{mac}} MUST be used.
+
+For receiving, if the tls12_cid content type is set, then the CID is used to look up 
+the connection and the security association. If the tls12_cid content type is not set, 
+then the connection and security association is looked up by the 5-tuple and a 
+check MUST be made to determine whether the expected CID value is indeed 
+zero length. If the check fails, then the datagram MUST be dropped. 
+
+When receiving a datagram with the tls12_cid content type, 
+the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
+with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2 
+of {{RFC6347}} (and Section 4.1.2.4  of {{RFC6347} for use with AEAD ciphers) MUST 
+be used. 
+
+# Record Layer Extensions
 
 This specification defines the DTLS 1.2 record layer format and 
 {{I-D.ietf-tls-dtls13}} specifies how to carry the CID in DTLS 1.3.
 
-In order to allow a receiver to determine whether a record has CID or not,
+To allow a receiver to determine whether a record has a CID or not,
 connections which have negotiated this extension use a distinguished
 record type tls12_cid(25). Use of this content type has the following
-two implications:
+three implications:
 
-- The CID field is present
+- The CID field is present and contains one or more bytes.
+- The MAC calculation follows the process described in {{mac}}.
 - The true content type is inside the encryption envelope, as described
   below.
 
@@ -221,8 +243,8 @@ zeros
    the cleartext after the type field.  This provides an opportunity
    for senders to pad any DTLS record by a chosen amount as long as
    the total stays within record size limits.  See Section 5.4 of
-   for {{RFC8446}} more details. (Note that TLSInnerPlaintext in 
-   that section refers to DTLSInnerPlaintext in this specification.) 
+   {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
+   RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
 
 special_type
 :  The outer opaque_type field of a DTLSCiphertext record
@@ -252,8 +274,10 @@ encrypted_record
 Other fields are defined in RFC 6347. Note that this specification does 
 not make use of the DTLSCompressed structure. 
 
-In addition, the CID value is included in the MAC calculation for the
-DTLS record layer. At the time of writing ciphers using authenticated 
+# Record Payload Protection {#mac}
+
+This specification changes the MAC calculation defined in Section 4.1.2 of 
+RFC 6347. At the time of writing ciphers using authenticated 
 encryption with additional data (AEAD) were state-of-the-art. Hence, this 
 specification updates only the additional data calculation defined in 
 Section 6.2.3.3 of {{RFC5246}}, which is re-used by Section
@@ -283,13 +307,10 @@ length
 : This value contains the length information in the outer-header. 
 
 cid
-: Value of the negotiated CID. This field is empty in case 
-a zero-length CID has been negotiated.
+: Value of the negotiated CID.
 
 cid_length
-: 1 byte field indicating the length of the negotiated CID. 
-If a zero-length CID has been negotiated, and therefore no 
-CID appears on the wire, a cid_length of zero (0) MUST be added. 
+: 1 byte field indicating the length of the negotiated CID.
 
 # Examples
 
@@ -376,9 +397,10 @@ Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
 do a rehandshake to change CID, that does not provide much privacy benefit.
 
-This document does not change the security properties of DTLS {{RFC6347}}.
-It merely provides a more robust mechanism for associating an incoming packet
-with a stored security context.
+The CID-enhanced record layer introduces record padding; a privacy feature 
+not available with the original DTLS 1.2 RFC. Padding allows to inflate the 
+size of the ciphertext making traffic analysis more difficult. More details 
+about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 
 #  IANA Considerations
 
