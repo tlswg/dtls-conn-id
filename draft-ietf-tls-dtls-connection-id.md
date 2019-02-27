@@ -399,7 +399,8 @@ do a rehandshake to change CID, that does not provide much privacy benefit.
 
 The CID-enhanced record layer introduces record padding; a privacy feature 
 not available with the original DTLS 1.2 RFC. Padding allows to inflate the 
-size of the ciphertext making traffic analysis more difficult. 
+size of the ciphertext making traffic analysis more difficult. More details 
+about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 
 #  IANA Considerations
 
