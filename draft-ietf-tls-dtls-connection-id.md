@@ -97,7 +97,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The reader is assumed to be familiar with DTLS 1.2 {{RFC6347}}.
+This document assumes familiarity with DTLS 1.2 {{RFC6347}}.
 
 # The "connection_id" Extension
 
@@ -159,15 +159,15 @@ the ServerHello messages then the peers need to take the following steps.
 
 The DTLS peers determine whether incoming and outgoing messages need 
 to use the new record format, i.e., the record format containing the CID. 
-The new record format and the CID content type is only used once encryption 
+The new record format with the the tls12_cid content type is only used once encryption 
 is enabled. Plaintext payloads never use the new record type and the CID content 
 type. 
 
 For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format and the new content type defined in {{dtls-record12}} MUST be used. 
+else the new record layer format with the tls12_cid content type defined in {{dtls-record12}} MUST be used. 
 
-When transmitting a datagram with the new record format and the new content type, 
+When transmitting a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used.
 
 For receiving, if the tls12_cid content type is set, then the CID is used to look up 
@@ -176,7 +176,7 @@ then the connection and security association is looked up by the 5-tuple and a
 check MUST be made to determine whether the expected CID value is indeed 
 zero length. If the check fails, then the datagram MUST be dropped. 
 
-When receiving a datagram with the new record format and the new content type, 
+When receiving a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
 with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2 
 of {{RFC6347}} (and Section 4.1.2.4  of {{RFC6347} for use with AEAD ciphers) MUST 
