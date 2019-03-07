@@ -277,9 +277,11 @@ not make use of the DTLSCompressed structure.
 # Record Payload Protection {#mac}
 
 This specification changes the MAC calculation defined in Section 4.1.2 of 
-RFC 6347. At the time of writing ciphers using authenticated 
-encryption with additional data (AEAD) were state-of-the-art. Hence, this 
-specification updates only the additional data calculation defined in 
+RFC 6347. 
+
+## AEAD Ciphers
+
+This  specification updates the additional data calculation defined in 
 Section 6.2.3.3 of {{RFC5246}}, which is re-used by Section
 4.1.2.1 of {{RFC6347}}. 
 
@@ -303,14 +305,45 @@ type
 version
 : This value contains the version number. 
 
+cid
+: Value of the negotiated CID.
+
+cid_length
+: 1 byte field indicating the length of the negotiated CID.
+
 length
 : This value contains the length information in the outer-header. 
+
+## CBC Block Ciphers
+
+This  specification updates the MAC calculation defined in 
+Section 6.2.3.2 of {{RFC5246}}, which is re-used by Section
+4.1.2.3 of {{RFC6347}}. 
+
+The MAC is generated as:
+
+   MAC(MAC_write_key, seq_num +
+                        TLSCompressed.type +
+                        TLSCompressed.version +
+						cid +
+						cid_length + 
+                        TLSCompressed.length +
+                        TLSCompressed.fragment);
+
+   where "+" denotes concatenation.
+
+seq_num
+: The sequence number for this record.
+
+MAC
+: The MAC algorithm specified by SecurityParameters.mac_algorithm.
 
 cid
 : Value of the negotiated CID.
 
 cid_length
 : 1 byte field indicating the length of the negotiated CID.
+	  
 
 # Examples
 
