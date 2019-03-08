@@ -225,7 +225,7 @@ encrypted. {{dtls-record12}} illustrates the record format.
          uint48 sequence_number;               // DTLS field
          opaque cid[cid_length];               // New field
          uint16 length;
-         opaque encrypted_record[TLSCiphertext.length];
+         opaque encrypted_record[DTLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
 {: #dtls-record12 title="DTLS 1.2 Record Format with the CID"}
