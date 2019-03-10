@@ -179,8 +179,7 @@ zero length. If the check fails, then the datagram MUST be dropped.
 When receiving a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
 with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2 
-of {{RFC6347}} (and Section 4.1.2.4  of {{RFC6347} for use with AEAD ciphers) MUST 
-be used. 
+of {{RFC6347}} MUST be used.
 
 # Record Layer Extensions
 
@@ -197,46 +196,31 @@ three implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CIDs are being used, the content to be sent is first wrapped
-along with the true content type and padding into a DTLSInnerPlaintext
-value prior to encryption. The DTLSInnerPlaintext value is then
-encrypted. {{dtls-record12}} illustrates the record format. 
+When CIDs are being used, the content to be sent is first wrapped along with
+its content type and optional padding into a DTLSInnerPlaintext:
 
-~~~~
+~~~
      struct {
          ContentType type;
          ProtocolVersion version;
-         uint16 epoch;                         // DTLS field
-         uint48 sequence_number;               // DTLS field
+         uint16 epoch;
+         uint48 sequence_number;
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
 
      struct {
          opaque content[DTLSPlaintext.length];
-         ContentType type;
+         ContentType real_type;
          uint8 zeros[length_of_padding];
      } DTLSInnerPlaintext;
-
-     struct {
-         ContentType special_type = tls12_cid; /* 25 */
-         ProtocolVersion version;
-         uint16 epoch;                         // DTLS field
-         uint48 sequence_number;               // DTLS field
-         opaque cid[cid_length];               // New field
-         uint16 length;
-         opaque encrypted_record[TLSCiphertext.length];
-     } DTLSCiphertext;
-~~~~
-{: #dtls-record12 title="DTLS 1.2 Record Format with the CID"}
+~~~
 
 content
-:  This field contains the byte encoding of a handshake, an alert 
-   message, or the raw bytes of the application's data to send.
+: A copy of DTLSPlaintext.fragment
 
-type
-:  The DTLSInnerPlaintext.type value contains the content type of the
-   record. This is the non-obfuscated (true) content type.
+real_type
+: A copy of DTLSPlaintext.type
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
@@ -246,71 +230,89 @@ zeros
    {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
    RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
 
+The DTLSInnerPlaintext value is then encrypted and the CID added to produce
+the final DTLSCiphertext.
+
+~~~
+     struct {
+         ContentType special_type = tls12_cid; /* 25 */
+         ProtocolVersion version;
+         uint16 epoch;
+         uint48 sequence_number;
+         opaque cid[cid_length];               // New field
+         uint16 length;
+         opaque enc_content[DTLSCiphertext.length];
+     } DTLSCiphertext;
+~~~~
+{: #dtls-record12 title="DTLSCiphertext with CID"}
+
 special_type
-:  The outer opaque_type field of a DTLSCiphertext record
-   is always set to the value 25 (tls12_cid). The actual content 
-   type of the record is found in DTLSInnerPlaintext.type after 
-   decryption. By encapsulating the true content type inside the 
-   encrypted payload the outer content type (special_type) can be
-   used to signal the new record layer format containing the CID. 
-
-version
-:  The DTLSCiphertext.version field describes the protocol being employed.
-   This document describes an extension to DTLS version 1.2. 
-
-length
-:  The DTLSCiphertext.length field indicates the length (in bytes) of 
-   the following DTLSCiphertext.encrypted_record, which is the sum of 
-   the lengths of the content and the padding, plus one for the inner 
-   content type, plus any expansion added by the AEAD algorithm.    
+:  The outer content type of a DTLSCiphertext record carrying a CID
+   is always set to the value 25 (tls12_cid). The actual content
+   type of the record is found in DTLSInnerPlaintext.real_type after
+   decryption.
 
 cid
-:  The CID value of length indicated with cid_length, as agreed during the 
-   exchange.
+:  The CID value, cid_length bytes long, as agreed at the time the extension
+   has been negotiated.
 
-encrypted_record
-:  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure.
+enc_content
+:  The encrypted form of the serialized DTLSInnerPlaintext structure.
 
-Other fields are defined in RFC 6347. Note that this specification does 
-not make use of the DTLSCompressed structure. 
+All other fields are as defined in RFC 6347.
 
 # Record Payload Protection {#mac}
 
-This specification changes the MAC calculation defined in Section 4.1.2 of 
-RFC 6347. At the time of writing ciphers using authenticated 
-encryption with additional data (AEAD) were state-of-the-art. Hence, this 
-specification updates only the additional data calculation defined in 
-Section 6.2.3.3 of {{RFC5246}}, which is re-used by Section
-4.1.2.1 of {{RFC6347}}. 
+This specification modifies the MAC calculation defined in {{RFC6347}} and
+{{!RFC7366}} as well as the definition of the additional data used with AEAD
+ciphers provided in {{RFC6347}}.
 
-The additional data calculation is extended as follows:
+- Block Ciphers:
 
-~~~~
-    additional_data = seq_num + type + version +  
-                      cid + cid_length + length;
+~~~
+    MAC(MAC_write_key, seq_num +
+        DTLSCompressed.type +
+        DTLSCompressed.version +
+        cid +                   // New input
+        cid_length +            // New input
+        TLSCompressed.length +
+        TLSCompressed.fragment);
+~~~
 
-    where "+" denotes concatenation. 
-~~~~
+- Block Ciphers with Encrypt-then-MAC processing:
 
-seq_num
-: As described in Section 6.2.3.3 of {{RFC5246}} this 64-bit value 
-is formed by concatenating the epoch and the sequence number in the 
-order they appear on the wire.
+~~~
+    MAC(MAC_write_key, seq_num +
+        DTLSCipherText.type +
+        DTLSCipherText.version +
+        DTLSCompressed.version +
+        cid +                   // New input
+        cid_length +            // New input
+        length of (IV + DTLSCiphertext.enc_content) +
+        IV +
+        DTLSCiphertext.enc_content);
+~~~
 
-type
-: This value contains the outer-header content type, i.e. the tls12_cid. 
+- AEAD Ciphers:
 
-version
-: This value contains the version number. 
+~~~
+    additional_data = seq_num + TLSCompressed.type +
+                      TLSCompressed.version +
+                      DTLSCompressed.version +
+                      cid +                   // New input
+                      cid_length +            // New input
+                      TLSCompressed.length;
 
-length
-: This value contains the length information in the outer-header. 
+~~~
 
+Where:
 cid
 : Value of the negotiated CID.
 
 cid_length
 : 1 byte field indicating the length of the negotiated CID.
+
+All other fields are as defined in the cited documents.
 
 # Examples
 
