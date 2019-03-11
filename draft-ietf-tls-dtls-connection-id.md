@@ -265,18 +265,23 @@ All other fields are as defined in RFC 6347.
 
 This specification modifies the MAC calculation defined in {{RFC6347}} and
 {{!RFC7366}} as well as the definition of the additional data used with AEAD
-ciphers provided in {{RFC6347}}.
+ciphers provided in {{RFC6347}} for records with content type tls12_cid.  The
+modified algorithm MUST NOT be applied to records that do not carry a CID, i.e.,
+records with content type other than tls12_cid.
 
 - Block Ciphers:
 
 ~~~
     MAC(MAC_write_key, seq_num +
-        DTLSCompressed.type +
-        DTLSCompressed.version +
-        cid +                   // New input
-        cid_length +            // New input
-        TLSCompressed.length +
-        TLSCompressed.fragment);
+        tls12_cid +                     // New input
+        DTLSPlaintext.version +
+        cid +                           // New input
+        cid_length +                    // New input
+        length_of_DTLSInnerPlaintext +  // New input
+        DTLSInnerPlaintext.content +    // New input
+        DTLSInnerPlaintext.real_type +  // New input
+        DTLSInnerPlaintext.zeros        // New input
+    )
 ~~~
 
 - Block Ciphers with Encrypt-then-MAC processing:
@@ -285,7 +290,7 @@ ciphers provided in {{RFC6347}}.
     MAC(MAC_write_key, seq_num +
         DTLSCipherText.type +
         DTLSCipherText.version +
-        DTLSCompressed.version +
+        DTLSPlaintext.version +
         cid +                   // New input
         cid_length +            // New input
         length of (IV + DTLSCiphertext.enc_content) +
@@ -296,13 +301,11 @@ ciphers provided in {{RFC6347}}.
 - AEAD Ciphers:
 
 ~~~
-    additional_data = seq_num + TLSCompressed.type +
-                      TLSCompressed.version +
-                      DTLSCompressed.version +
+    additional_data = seq_num + DTLSPlaintext.type +
+                      DTLSPlaintext.version +
                       cid +                   // New input
                       cid_length +            // New input
-                      TLSCompressed.length;
-
+                      length_of_DTLSInnerPlaintext;
 ~~~
 
 Where:
@@ -313,6 +316,10 @@ cid_length
 : 1 byte field indicating the length of the negotiated CID.
 
 All other fields are as defined in the cited documents.
+
+length_of_DTLSInnerPlaintext
+: The length (in bytes) of the serialised DTLSInnerPlaintext.  The length MUST
+  NOT exceed 2^14.
 
 # Examples
 
