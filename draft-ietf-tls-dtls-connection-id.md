@@ -310,10 +310,10 @@ records with content type other than tls12_cid.
 
 Where:
 cid
-: Value of the negotiated CID.
+: The DTLSCiphertext.cid value. 
 
 cid_length
-: 1 byte field indicating the length of the negotiated CID.
+: 1 byte field indicating the length of the DTLSCiphertext.cid.
 
 All other fields are as defined in the cited documents.
 
