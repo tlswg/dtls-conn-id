@@ -400,7 +400,8 @@ communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns.
+interaction over the two paths, which adds further privacy concerns. The lack 
+of a CID update mechanism makes this extension unsuitable for mobility scenarios.
 
 Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
@@ -500,8 +501,7 @@ The task force team discussed various design ideas, including cryptographically 
 ids using hash chains and public key encryption, but dismissed them due to their 
 inefficiency. The approach described in this specification is the 
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
-better privacy features and developers are encouraged to switch to the new version of DTLS, 
-if these privacy properties are important in a given deployment. 
+better privacy features and developers are encouraged to switch to the new version of DTLS. 
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
 Sean Turner, for their patience, support and feedback.
