@@ -108,7 +108,7 @@ The extension type is specified as follows.
 
 ~~~~
   enum {
-     connection_id(TBD), (65535)
+     connection_id(TBD1), (65535)
   } ExtensionType;
 ~~~~
 
@@ -188,7 +188,7 @@ This specification defines the DTLS 1.2 record layer format and
 
 To allow a receiver to determine whether a record has a CID or not,
 connections which have negotiated this extension use a distinguished
-record type tls12_cid(25). Use of this content type has the following
+record type tls12_cid(TBD2). Use of this content type has the following
 three implications:
 
 - The CID field is present and contains one or more bytes.
@@ -235,7 +235,7 @@ the final DTLSCiphertext.
 
 ~~~
      struct {
-         ContentType special_type = tls12_cid; /* 25 */
+         ContentType special_type = tls12_cid; 
          ProtocolVersion version;
          uint16 epoch;
          uint48 sequence_number;
@@ -248,7 +248,7 @@ the final DTLSCiphertext.
 
 special_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
-   is always set to the value 25 (tls12_cid). The actual content
+   is always set to tls12_cid(TBD2). The real content
    type of the record is found in DTLSInnerPlaintext.real_type after
    decryption.
 
@@ -414,10 +414,10 @@ about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 #  IANA Considerations
 
 IANA is requested to allocate an entry to the existing TLS "ExtensionType
-Values" registry, defined in {{RFC5246}}, for connection_id(TBD) defined in
+Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) defined in
 this document.
 
-IANA is requested to allocate tls12_cid(25) in the "TLS ContentType
+IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
 Registry".
 
 --- back
