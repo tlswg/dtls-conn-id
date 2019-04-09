@@ -196,8 +196,8 @@ three implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CIDs are being used, the content to be sent is first wrapped along with
-its content type and optional padding into a DTLSInnerPlaintext:
+Plaintext records are not impacted by this extension. Hence, the format 
+of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}.
 
 ~~~
      struct {
@@ -208,13 +208,23 @@ its content type and optional padding into a DTLSInnerPlaintext:
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
+~~~ 
+{: #dtls-plaintext title="DTLS 1.2 Plaintext Record Payload."}
 
+When CIDs are being used, the content to be sent is first wrapped along with
+its content type and optional padding into a DTLSInnerPlaintext. This newly 
+introduced structure is shown in {{dtls-innerplaintext}}. The DTLSInnerPlaintext 
+byte sequence is then encrypted. To create the DTLSCiphertext shown in 
+{{dtls-ciphertext}} the CID is added.
+
+~~~ 
      struct {
          opaque content[DTLSPlaintext.length];
          ContentType real_type;
          uint8 zeros[length_of_padding];
      } DTLSInnerPlaintext;
 ~~~
+{: #dtls-innerplaintext title="New DTLSInnerPlaintext Payload Structure."}
 
 content
 : A copy of DTLSPlaintext.fragment
@@ -230,9 +240,6 @@ zeros
    {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
    RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
 
-The DTLSInnerPlaintext value is then encrypted and the CID added to produce
-the final DTLSCiphertext.
-
 ~~~
      struct {
          ContentType special_type = tls12_cid; /* 25 */
@@ -244,7 +251,7 @@ the final DTLSCiphertext.
          opaque enc_content[DTLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
-{: #dtls-record12 title="DTLSCiphertext with CID"}
+{: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record Payload."}
 
 special_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
