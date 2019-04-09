@@ -165,7 +165,7 @@ type.
 
 For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format with the tls12_cid content type defined in {{dtls-record12}} MUST be used. 
+else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used. 
 
 When transmitting a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used.
@@ -211,15 +211,16 @@ of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}
 ~~~ 
 {: #dtls-plaintext title="DTLS 1.2 Plaintext Record Payload."}
 
-When CIDs are being used, the content to be sent is first wrapped along with
-its content type and optional padding into a DTLSInnerPlaintext. This newly 
-introduced structure is shown in {{dtls-innerplaintext}}. The DTLSInnerPlaintext 
-byte sequence is then encrypted. To create the DTLSCiphertext shown in 
-{{dtls-ciphertext}} the CID is added.
+When CIDs are being used, the content to be sent 
+is first wrapped along with its content type and optional padding into a 
+DTLSInnerPlaintext structure. This newly introduced structure is shown in 
+{{dtls-innerplaintext}}. The DTLSInnerPlaintext 
+byte sequence is then encrypted. To create the DTLSCiphertext structure shown in 
+{{dtls-ciphertext}} the CID is added. 
 
 ~~~ 
      struct {
-         opaque content[DTLSPlaintext.length];
+         opaque content[length];
          ContentType real_type;
          uint8 zeros[length_of_padding];
      } DTLSInnerPlaintext;
@@ -227,10 +228,10 @@ byte sequence is then encrypted. To create the DTLSCiphertext shown in
 {: #dtls-innerplaintext title="New DTLSInnerPlaintext Payload Structure."}
 
 content
-: A copy of DTLSPlaintext.fragment
+: Corresponds to the fragment of a given length.
 
 real_type
-: A copy of DTLSPlaintext.type
+: The content type describing the payload. 
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
