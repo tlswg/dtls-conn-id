@@ -252,7 +252,7 @@ zeros
          opaque enc_content[DTLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
-{: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record Payload."}
+{: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
 special_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
