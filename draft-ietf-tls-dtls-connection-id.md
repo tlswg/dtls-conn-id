@@ -400,7 +400,9 @@ communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns.
+interaction over the two paths, which adds further privacy concerns. The lack 
+of a CID update mechanism makes this extension unsuitable for mobility scenarios
+where correlation must be considered.
 
 Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
