@@ -317,8 +317,9 @@ cid_length
 All other fields are as defined in the cited documents.
 
 length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext. The length MUST
-  NOT exceed 2^14. 
+: The length (in bytes) of the serialised DTLSInnerPlaintext.  The length MUST
+  NOT exceed 2^14. This field is of type uint16. 
+
 
 # Examples
 
