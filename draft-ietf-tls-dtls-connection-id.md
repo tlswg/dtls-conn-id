@@ -426,6 +426,11 @@ Registry".
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-04
+
+  - Editorial simplifications to the 'Record Layer Extensions' and the 'Record Payload Protection' sections.
+  - Added MAC calculations for block ciphers with and without Encrypt-then-MAC processing.
+
 draft-ietf-tls-dtls-connection-id-03
 
   - Updated list of contributors
@@ -500,12 +505,11 @@ The task force team discussed various design ideas, including cryptographically 
 ids using hash chains and public key encryption, but dismissed them due to their 
 inefficiency. The approach described in this specification is the 
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
-better privacy features and developers are encouraged to switch to the new version of DTLS, 
-if these privacy properties are important in a given deployment. 
+better privacy features and developers are encouraged to switch to the new version of DTLS. 
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
 Sean Turner, for their patience, support and feedback.
 
 # Acknowledgements
 
-We would like to thank Achim Kraus for his review feedback. 
+We would like to thank Achim Kraus for his review comments and implementation feedback. 
