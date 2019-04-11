@@ -326,7 +326,7 @@ described in {{RFC7366}}.
 
 ## AEAD Ciphers
 
-For ciphers utilizing the modern authenticated encryption with additional 
+For ciphers utilizing authenticated encryption with additional 
 data the following modification is made to the additional data calculation.
 
 ~~~
