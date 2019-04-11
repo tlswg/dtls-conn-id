@@ -165,7 +165,7 @@ type.
 
 For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format with the tls12_cid content type defined in {{dtls-record12}} MUST be used. 
+else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used. 
 
 When transmitting a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used.
@@ -196,8 +196,8 @@ three implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CIDs are being used, the content to be sent is first wrapped along with
-its content type and optional padding into a DTLSInnerPlaintext:
+Plaintext records are not impacted by this extension. Hence, the format 
+of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}.
 
 ~~~
      struct {
@@ -208,19 +208,30 @@ its content type and optional padding into a DTLSInnerPlaintext:
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
+~~~ 
+{: #dtls-plaintext title="DTLS 1.2 Plaintext Record Payload."}
 
+When CIDs are being used, the content to be sent 
+is first wrapped along with its content type and optional padding into a 
+DTLSInnerPlaintext structure. This newly introduced structure is shown in 
+{{dtls-innerplaintext}}. The DTLSInnerPlaintext 
+byte sequence is then encrypted. To create the DTLSCiphertext structure shown in 
+{{dtls-ciphertext}} the CID is added. 
+
+~~~ 
      struct {
-         opaque content[DTLSPlaintext.length];
+         opaque content[length];
          ContentType real_type;
          uint8 zeros[length_of_padding];
      } DTLSInnerPlaintext;
 ~~~
+{: #dtls-innerplaintext title="New DTLSInnerPlaintext Payload Structure."}
 
 content
-: A copy of DTLSPlaintext.fragment
+: Corresponds to the fragment of a given length.
 
 real_type
-: A copy of DTLSPlaintext.type
+: The content type describing the payload. 
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
@@ -229,9 +240,6 @@ zeros
    the total stays within record size limits.  See Section 5.4 of
    {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
    RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
-
-The DTLSInnerPlaintext value is then encrypted and the CID added to produce
-the final DTLSCiphertext.
 
 ~~~
      struct {
@@ -244,7 +252,7 @@ the final DTLSCiphertext.
          opaque enc_content[DTLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
-{: #dtls-record12 title="DTLSCiphertext with CID"}
+{: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
 special_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
