@@ -274,7 +274,7 @@ records with content type other than tls12_cid.
 ~~~
     MAC(MAC_write_key, seq_num +
         tls12_cid +                     // New input
-        DTLSCipherText.version +
+        DTLSCiphertext.version +
         cid +                           // New input
         cid_length +                    // New input
         length_of_DTLSInnerPlaintext +  // New input
@@ -290,7 +290,6 @@ records with content type other than tls12_cid.
     MAC(MAC_write_key, seq_num +
         tls12_cid +
         DTLSCipherText.version +
-        DTLSPlaintext.version +
         cid +                   // New input
         cid_length +            // New input
         length of (IV + DTLSCiphertext.enc_content) +
@@ -311,16 +310,17 @@ records with content type other than tls12_cid.
 
 Where:
 cid
-: Value of the negotiated CID.
+: The DTLSCiphertext.cid value. 
 
 cid_length
-: 1 byte field indicating the length of the negotiated CID.
+: 1 byte field indicating the length of the DTLSCiphertext.cid.
 
 All other fields are as defined in the cited documents.
 
 length_of_DTLSInnerPlaintext
 : The length (in bytes) of the serialised DTLSInnerPlaintext.  The length MUST
-  NOT exceed 2^14.
+  NOT exceed 2^14. This field is of type uint16. 
+
 
 # Examples
 
@@ -401,7 +401,9 @@ communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns.
+interaction over the two paths, which adds further privacy concerns. The lack 
+of a CID update mechanism makes this extension unsuitable for mobility scenarios
+where correlation must be considered.
 
 Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
@@ -426,6 +428,11 @@ Registry".
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-04
+
+  - Editorial simplifications to the 'Record Layer Extensions' and the 'Record Payload Protection' sections.
+  - Added MAC calculations for block ciphers with and without Encrypt-then-MAC processing.
 
 draft-ietf-tls-dtls-connection-id-03
 
@@ -501,12 +508,11 @@ The task force team discussed various design ideas, including cryptographically 
 ids using hash chains and public key encryption, but dismissed them due to their 
 inefficiency. The approach described in this specification is the 
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
-better privacy features and developers are encouraged to switch to the new version of DTLS, 
-if these privacy properties are important in a given deployment. 
+better privacy features and developers are encouraged to switch to the new version of DTLS. 
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
 Sean Turner, for their patience, support and feedback.
 
 # Acknowledgements
 
-We would like to thank Achim Kraus for his review feedback. 
+We would like to thank Achim Kraus for his review comments and implementation feedback. 
