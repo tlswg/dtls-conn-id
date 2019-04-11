@@ -274,7 +274,7 @@ records with content type other than tls12_cid.
 ~~~
     MAC(MAC_write_key, seq_num +
         tls12_cid +                     // New input
-        DTLSPlaintext.version +
+        DTLSCiphertext.version +
         cid +                           // New input
         cid_length +                    // New input
         length_of_DTLSInnerPlaintext +  // New input
@@ -290,7 +290,6 @@ records with content type other than tls12_cid.
     MAC(MAC_write_key, seq_num +
         DTLSCipherText.type +
         DTLSCipherText.version +
-        DTLSPlaintext.version +
         cid +                   // New input
         cid_length +            // New input
         length of (IV + DTLSCiphertext.enc_content) +
@@ -318,8 +317,8 @@ cid_length
 All other fields are as defined in the cited documents.
 
 length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext.  The length MUST
-  NOT exceed 2^14.
+: The length (in bytes) of the serialised DTLSInnerPlaintext. The length MUST
+  NOT exceed 2^14. 
 
 # Examples
 
