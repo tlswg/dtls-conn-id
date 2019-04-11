@@ -288,7 +288,7 @@ records with content type other than tls12_cid.
 
 ~~~
     MAC(MAC_write_key, seq_num +
-        DTLSCipherText.type +
+        tls12_cid +
         DTLSCipherText.version +
         cid +                   // New input
         cid_length +            // New input
@@ -300,8 +300,9 @@ records with content type other than tls12_cid.
 - AEAD Ciphers:
 
 ~~~
-    additional_data = seq_num + DTLSPlaintext.type +
-                      DTLSPlaintext.version +
+    additional_data = seq_num + 
+                      tls12_cid +
+                      DTLSCipherText.version +
                       cid +                   // New input
                       cid_length +            // New input
                       length_of_DTLSInnerPlaintext;
