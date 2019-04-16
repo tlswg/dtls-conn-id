@@ -271,64 +271,79 @@ All other fields are as defined in RFC 6347.
 
 # Record Payload Protection {#mac}
 
+Several types of ciphers have been defined for use with TLS and DTLS and the 
+MAC calculation for those ciphers differs slightly. 
+
 This specification modifies the MAC calculation defined in {{RFC6347}} and
 {{!RFC7366}} as well as the definition of the additional data used with AEAD
 ciphers provided in {{RFC6347}} for records with content type tls12_cid.  The
 modified algorithm MUST NOT be applied to records that do not carry a CID, i.e.,
 records with content type other than tls12_cid.
 
-- Block Ciphers:
+The following fields are defined in this document; all other fields are as 
+defined in the cited documents.
+
+cid
+: Value of the negotiated CID.
+
+cid_length
+: 1 byte field indicating the length of the negotiated CID.
+
+length_of_DTLSInnerPlaintext
+: The length (in bytes) of the serialised DTLSInnerPlaintext.  
+  The length MUST NOT exceed 2^14.
+
+Note "+" denotes concatenation.
+ 
+## Block Ciphers
+
+The following MAC algorithm applies to block ciphers 
+that do not use the with Encrypt-then-MAC processing
+described in {{RFC7366}}. 
 
 ~~~
     MAC(MAC_write_key, seq_num +
-        tls12_cid +                     // New input
+        tls12_cid +                     
         DTLSCiphertext.version +
-        cid +                           // New input
-        cid_length +                    // New input
-        length_of_DTLSInnerPlaintext +  // New input
-        DTLSInnerPlaintext.content +    // New input
-        DTLSInnerPlaintext.real_type +  // New input
-        DTLSInnerPlaintext.zeros        // New input
+        cid +                           
+        cid_length +                    
+        length_of_DTLSInnerPlaintext +  
+        DTLSInnerPlaintext.content +    
+        DTLSInnerPlaintext.real_type +  
+        DTLSInnerPlaintext.zeros        
     )
 ~~~
 
-- Block Ciphers with Encrypt-then-MAC processing:
+## Block Ciphers with Encrypt-then-MAC processing
+
+The following MAC algorithm applies to block ciphers 
+that use the with Encrypt-then-MAC processing
+described in {{RFC7366}}. 
 
 ~~~
     MAC(MAC_write_key, seq_num +
         tls12_cid +
         DTLSCipherText.version +
-        cid +                   // New input
-        cid_length +            // New input
+        cid +                  
+        cid_length +            
         length of (IV + DTLSCiphertext.enc_content) +
         IV +
         DTLSCiphertext.enc_content);
 ~~~
 
-- AEAD Ciphers:
+## AEAD Ciphers
+
+For ciphers utilizing authenticated encryption with additional 
+data the following modification is made to the additional data calculation.
 
 ~~~
     additional_data = seq_num + 
                       tls12_cid +
                       DTLSCipherText.version +
-                      cid +                   // New input
-                      cid_length +            // New input
+                      cid +                   
+                      cid_length +            
                       length_of_DTLSInnerPlaintext;
 ~~~
-
-Where:
-cid
-: The DTLSCiphertext.cid value. 
-
-cid_length
-: 1 byte field indicating the length of the DTLSCiphertext.cid.
-
-All other fields are as defined in the cited documents.
-
-length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext.  The length MUST
-  NOT exceed 2^14. This field is of type uint16. 
-
 
 # Examples
 
