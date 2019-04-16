@@ -108,7 +108,7 @@ The extension type is specified as follows.
 
 ~~~~
   enum {
-     connection_id(TBD), (65535)
+     connection_id(TBD1), (65535)
   } ExtensionType;
 ~~~~
 
@@ -165,7 +165,7 @@ type.
 
 For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format with the tls12_cid content type defined in {{dtls-record12}} MUST be used. 
+else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used. 
 
 When transmitting a datagram with the tls12_cid content type, 
 the new MAC computation defined in {{mac}} MUST be used.
@@ -188,7 +188,7 @@ This specification defines the DTLS 1.2 record layer format and
 
 To allow a receiver to determine whether a record has a CID or not,
 connections which have negotiated this extension use a distinguished
-record type tls12_cid(25). Use of this content type has the following
+record type tls12_cid(TBD2). Use of this content type has the following
 three implications:
 
 - The CID field is present and contains one or more bytes.
@@ -196,8 +196,8 @@ three implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-When CIDs are being used, the content to be sent is first wrapped along with
-its content type and optional padding into a DTLSInnerPlaintext:
+Plaintext records are not impacted by this extension. Hence, the format 
+of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}.
 
 ~~~
      struct {
@@ -208,19 +208,30 @@ its content type and optional padding into a DTLSInnerPlaintext:
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
+~~~ 
+{: #dtls-plaintext title="DTLS 1.2 Plaintext Record Payload."}
 
+When CIDs are being used, the content to be sent 
+is first wrapped along with its content type and optional padding into a 
+DTLSInnerPlaintext structure. This newly introduced structure is shown in 
+{{dtls-innerplaintext}}. The DTLSInnerPlaintext 
+byte sequence is then encrypted. To create the DTLSCiphertext structure shown in 
+{{dtls-ciphertext}} the CID is added. 
+
+~~~ 
      struct {
-         opaque content[DTLSPlaintext.length];
+         opaque content[length];
          ContentType real_type;
          uint8 zeros[length_of_padding];
      } DTLSInnerPlaintext;
 ~~~
+{: #dtls-innerplaintext title="New DTLSInnerPlaintext Payload Structure."}
 
 content
-: A copy of DTLSPlaintext.fragment
+: Corresponds to the fragment of a given length.
 
 real_type
-: A copy of DTLSPlaintext.type
+: The content type describing the payload. 
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
@@ -230,12 +241,9 @@ zeros
    {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
    RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
 
-The DTLSInnerPlaintext value is then encrypted and the CID added to produce
-the final DTLSCiphertext.
-
 ~~~
      struct {
-         ContentType special_type = tls12_cid; /* 25 */
+         ContentType special_type = tls12_cid; 
          ProtocolVersion version;
          uint16 epoch;
          uint48 sequence_number;
@@ -244,11 +252,11 @@ the final DTLSCiphertext.
          opaque enc_content[DTLSCiphertext.length];
      } DTLSCiphertext;
 ~~~~
-{: #dtls-record12 title="DTLSCiphertext with CID"}
+{: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
 special_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
-   is always set to the value 25 (tls12_cid). The actual content
+   is always set to tls12_cid(TBD2). The real content
    type of the record is found in DTLSInnerPlaintext.real_type after
    decryption.
 
@@ -296,7 +304,7 @@ described in {{RFC7366}}.
 ~~~
     MAC(MAC_write_key, seq_num +
         tls12_cid +                     
-        DTLSPlaintext.version +
+        DTLSCiphertext.version +
         cid +                           
         cid_length +                    
         length_of_DTLSInnerPlaintext +  
@@ -314,9 +322,8 @@ described in {{RFC7366}}.
 
 ~~~
     MAC(MAC_write_key, seq_num +
-        DTLSCipherText.type +
+        tls12_cid +
         DTLSCipherText.version +
-        DTLSPlaintext.version +
         cid +                  
         cid_length +            
         length of (IV + DTLSCiphertext.enc_content) +
@@ -330,8 +337,9 @@ For ciphers utilizing authenticated encryption with additional
 data the following modification is made to the additional data calculation.
 
 ~~~
-    additional_data = seq_num + DTLSPlaintext.type +
-                      DTLSPlaintext.version +
+    additional_data = seq_num + 
+                      tls12_cid +
+                      DTLSCipherText.version +
                       cid +                   
                       cid_length +            
                       length_of_DTLSInnerPlaintext;
@@ -416,7 +424,9 @@ communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
 With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns.
+interaction over the two paths, which adds further privacy concerns. The lack 
+of a CID update mechanism makes this extension unsuitable for mobility scenarios
+where correlation must be considered.
 
 Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
@@ -430,10 +440,10 @@ about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 #  IANA Considerations
 
 IANA is requested to allocate an entry to the existing TLS "ExtensionType
-Values" registry, defined in {{RFC5246}}, for connection_id(TBD) defined in
+Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) defined in
 this document.
 
-IANA is requested to allocate tls12_cid(25) in the "TLS ContentType
+IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
 Registry".
 
 --- back
@@ -441,6 +451,11 @@ Registry".
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-04
+
+  - Editorial simplifications to the 'Record Layer Extensions' and the 'Record Payload Protection' sections.
+  - Added MAC calculations for block ciphers with and without Encrypt-then-MAC processing.
 
 draft-ietf-tls-dtls-connection-id-03
 
@@ -516,12 +531,11 @@ The task force team discussed various design ideas, including cryptographically 
 ids using hash chains and public key encryption, but dismissed them due to their 
 inefficiency. The approach described in this specification is the 
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
-better privacy features and developers are encouraged to switch to the new version of DTLS, 
-if these privacy properties are important in a given deployment. 
+better privacy features and developers are encouraged to switch to the new version of DTLS. 
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
 Sean Turner, for their patience, support and feedback.
 
 # Acknowledgements
 
-We would like to thank Achim Kraus for his review feedback. 
+We would like to thank Achim Kraus for his review comments and implementation feedback. 
