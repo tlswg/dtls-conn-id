@@ -345,6 +345,30 @@ data the following modification is made to the additional data calculation.
                       length_of_DTLSInnerPlaintext;
 ~~~
 
+# Peer Address Update Checks
+
+When a record with CID is received that has the source address of the enclosing
+UDP datagram different from the one previously recorded, the receiver MUST NOT
+update its view of the peer address with the source specified in the UDP packet
+before cryptographically validating the enclosed record(s).
+
+Immediately after reception, the recipient SHOULD initiate address validation
+using a Heartbeat {!RFC6520} based ping-pong with the new peer address.  This
+is to ensure that address validation can be cryptographically verified.  Both
+Heartbeat messages (request and response) MUST be wrapped into tls12_cid
+records.  If CID has not been negotiated, the sender MUST use a 0-length CID
+instead of the RFC 6347-defined record format. While the address validation
+sub-protocol is run, the initiator MUST limit the outbound traffic to the new
+peer address to a minimum.  If the address validation sub-protocol completes
+with an error (either because of a timeout or a failed validation), the
+receiver MUST NOT update its view of the peer address with the source specified
+in the UDP packet.
+
+These checks are meant to ensure that the address update is genuine (i.e.,
+resulting from network attachment migration, or NAT rebinding) and not
+malicious (e.g., a man-on-the-side / man-in-the-middle attacker trying to
+either DoS the sender or use the receiver as a DDoS reflector).
+
 # Examples
 
 {{dtls-example2}} shows an example exchange where a CID is
