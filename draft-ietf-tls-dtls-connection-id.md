@@ -347,27 +347,41 @@ data the following modification is made to the additional data calculation.
 
 # Peer Address Update Checks
 
+A priori, a receiver has no means to distinguish an address update event that
+is genuine (for example, resulting from a NAT rebinding occurring at an on-path
+middlebox) from one that is malicious (for example, a man-on-the-side /
+man-in-the-middle attacker trying to either DoS the receiver’s peer or use the
+receiver as a DDoS reflector.)
+
+This section describes what an implementation must do in order to thwart, or at
+least mitigate, an attacker’s attempts at maliciously subverting the
+functionality provided by CID by manipulating the source 2-tuple of CID bearing
+datagrams.
+
 When a record with CID is received that has the source address of the enclosing
-UDP datagram different from the one previously recorded, the receiver MUST NOT
-update its view of the peer address with the source specified in the UDP packet
-before cryptographically validating the enclosed record(s).
+UDP datagram different from the one previously associated with that CID, the
+receiver MUST NOT update its view of the peer’s address with the source
+specified in the UDP packet before cryptographically validating the enclosed
+record(s).  This is to ensure that a man-on-the-side attacker that sends a
+packet with a different source address on an existing CID session does not
+successfully manage to reroute any return traffic.
 
-Immediately after reception, the recipient SHOULD initiate address validation
-using a Heartbeat {!RFC6520} based ping-pong with the new peer address.  This
-is to ensure that address validation can be cryptographically verified.  Both
-Heartbeat messages (request and response) MUST be wrapped into tls12_cid
-records.  If CID has not been negotiated, the sender MUST use a 0-length CID
-instead of the RFC 6347-defined record format. While the address validation
-sub-protocol is run, the initiator MUST limit the outbound traffic to the new
-peer address to a minimum.  If the address validation sub-protocol completes
-with an error (either because of a timeout or a failed validation), the
-receiver MUST NOT update its view of the peer address with the source specified
-in the UDP packet.
+Further, when using CID, anti-replay MUST be enabled. This is to ensure that a
+man-on-the-side attacker that sends a previously captured record with a
+modified source address won’t be able to successfully pass the above check
+(since the packet is immediately discarded on receipt).
 
-These checks are meant to ensure that the address update is genuine (i.e.,
-resulting from network attachment migration, or NAT rebinding) and not
-malicious (e.g., a man-on-the-side / man-in-the-middle attacker trying to
-either DoS the sender or use the receiver as a DDoS reflector).
+The two countermeasures just described will stop a man-on-the-side, but can’t
+stop an active man-in-the-middle who could still either DoS the sender or use
+the receiver as as backscatter source for a DDoS attack.  In order to counter
+this kind of attacker, an address validation mechanism is needed.
+
+This document does not define an in-protocol peer validation procedure.
+Therefore, it is RECOMMENDED that implementations of this specification expose
+peer address update events to their users.   Users can then use them as
+triggers to an application protocol's address verification mechanism, for
+example one that is based on successful exchange of minimal amount of ping-pong
+traffic with the peer.
 
 # Examples
 
