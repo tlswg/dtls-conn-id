@@ -448,8 +448,14 @@ IANA is also requested to add a "DTLS Only" column to the TLS "ExtensionType
 Values" registry.  The value for this extension is "Y" while all others are
 "N".
 
-IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
-Registry".  The "DTLS-OK" is "Y".
+IANA is requested to allocate tls12_cid(TBD2) in the TLS "ContentType"
+registry.  The "DTLS-OK" is "Y".
+
+IANA is also requested to add the following to the TLS "ContentType"
+registry:
+
+NOTE:
+: The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 --- back
 
