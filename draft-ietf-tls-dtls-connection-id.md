@@ -441,10 +441,15 @@ about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 
 IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) defined in
-this document.
+this document.  The "TLS 1.3" column is "-" because the extension is not
+applicable to TLS 1.3 and the "Recommended" column is "Y".
+
+IANA is also requested to add a "DTLS Only" column to the TLS "ExtensionType
+Values" registry.  The value for this extension is "Y" while all others are
+"N".
 
 IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
-Registry".
+Registry".  The "DTLS-OK" is "Y".
 
 --- back
 
