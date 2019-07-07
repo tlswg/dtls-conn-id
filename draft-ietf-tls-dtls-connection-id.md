@@ -427,7 +427,7 @@ An on-path adversary can also black-hole traffic or create a reflection attack
 against third parties because a DTLS peer has no means to distinguish a 
 genuine address update event (for example, due to a NAT rebinding) from one 
 that is malicious. This attack is of concern when there is a large asymmetry 
-of requst/response message sizes. 
+of request/response message sizes. 
 
 With multi-homing, an adversary is able to correlate the communication
 interaction over the two paths, which adds further privacy concerns. The lack 
