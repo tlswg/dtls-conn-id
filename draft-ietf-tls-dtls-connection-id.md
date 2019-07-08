@@ -423,6 +423,12 @@ subsequent payloads carrying the same connection id pair (for bi-directional
 communication).  Without multi-homing or mobility, the use of the CID
 is not different to the use of the 5-tuple.
 
+An on-path adversary can also black-hole traffic or create a reflection attack
+against third parties because a DTLS peer has no means to distinguish a 
+genuine address update event (for example, due to a NAT rebinding) from one 
+that is malicious. This attack is of concern when there is a large asymmetry 
+of request/response message sizes. 
+
 With multi-homing, an adversary is able to correlate the communication
 interaction over the two paths, which adds further privacy concerns. The lack 
 of a CID update mechanism makes this extension unsuitable for mobility scenarios
@@ -440,17 +446,40 @@ about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 #  IANA Considerations
 
 IANA is requested to allocate an entry to the existing TLS "ExtensionType
-Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) defined in
-this document.
+Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) as described
+in the table below. IANA is requested to add an extra column to the 
+TLS ExtensionType Values registry to indicate whether an extension is only 
+applicable to DTLS. 
+
+~~~~
+Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
+--------------------------------------------------------------------
+TBD1    connection_id   -        Y          N           [[This doc]]
+~~~~
+
+Note: The value "N" in the Recommended column is set because this 
+extension is intended only for specific use cases. This document describes 
+an extension for DTLS 1.2 only; it is not to TLS (1.3). The DTLS 1.3 
+functionality is described in {{I-D.ietf-tls-dtls13}}. 
 
 IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
-Registry".
+Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 --- back
 
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-06
+
+  - Updated IANA considerations 
+  - Enhanced security consideration section to describe a potential 
+    man-in-the-middle attack concerning address validation. 
+  
+draft-ietf-tls-dtls-connection-id-05
+  
+  - Restructed Section 5 "Record Payload Protection"
 
 draft-ietf-tls-dtls-connection-id-04
 
