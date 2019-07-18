@@ -347,11 +347,10 @@ data the following modification is made to the additional data calculation.
 
 # Peer Address Update
 
-When a CID record is received with the source address of the enclosing
-datagram different from the one currently associated with that CID, the
-receiver SHALL update its view of the peer's address with the source
-address specified in the UDP packet only if the two following conditions
-hold:
+When a CID record is received with a different source address than the
+one currently associated with the DTLS connection, the receiver SHALL
+NOT update its view of the peer's address with the source address
+specified in the enclosing UDP packet unless both conditions are met:
 
 - The records in the enclosing datagram are cryptographically
   validated;
@@ -361,22 +360,23 @@ hold:
 
 The above ensures correctness of the protocol in presence of packet
 reordering at the network layer, while also thwarting a man-on-the-side
-attacker trying to use spoofed or replayed records to reroute return
+attacker attempting to use spoofed or replayed records to reroute return
 traffic.
 
-The described mechanism cannot stop an active man-in-the-middle that can
-freely manipulate the source two-tuple and thus potentially turn the
+However, this mechanism cannot stop an active man-in-the-middle with the
+ability to manipulate the source two-tuple to potentially turn the
 receiver into as backscatter source for a DDoS attack.  In order to
 counter this kind of attacker, an address validation protocol like the
 one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
 
 Since this document does not define an in-protocol peer validation
 procedure, implementations that do not already offer the mechanism
-described in {{!I-D.tschofenig-tls-dtls-rrc}} MUST expose peer address
-updates to their users.  When notified of such an event, a user can
-trigger an application protocol-specific address validation mechanism,
-for example one that is based on successful exchange of minimal amount
-of ping-pong traffic with the peer.
+described in {{!I-D.tschofenig-tls-dtls-rrc}} MUST, on CID-enabled
+sessions, report any peer address update to their users.  When delivered
+such an event, the user can trigger an application layer-specific
+address validation mechanism, for example one that is based on
+successful exchange of minimal amount of ping-pong traffic with the
+peer.
 
 # Examples
 
