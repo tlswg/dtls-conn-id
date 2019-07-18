@@ -345,6 +345,39 @@ data the following modification is made to the additional data calculation.
                       length_of_DTLSInnerPlaintext;
 ~~~
 
+# Peer Address Update
+
+When a CID record is received with the source address of the enclosing
+datagram different from the one currently associated with that CID, the
+receiver SHALL update its view of the peer's address with the source
+address specified in the UDP packet only if the two following conditions
+hold:
+
+- The records in the enclosing datagram are cryptographically
+  validated;
+- The records are "newer" (in terms of their epoch and sequence
+  number) than the last record that successfully updated the peer
+  address.
+
+The above ensures correctness of the protocol in presence of packet
+reordering at the network layer, while also thwarting a man-on-the-side
+attacker trying to use spoofed or replayed records to reroute return
+traffic.
+
+The described mechanism cannot stop an active man-in-the-middle who can
+freely manipulate the source two-tuple, and therefore DoS the sender or
+use the receiver as as backscatter source for a DDoS attack.  In order
+to counter this kind of attacker, an address validation protocol like
+the one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
+
+Since this document does not define an in-protocol peer validation
+procedure, implementations that do not already offer the mechanism
+described in {{!I-D.tschofenig-tls-dtls-rrc}} MUST expose peer address
+updates to their users.  When notified of such an event, a user can
+trigger an application protocol-specific address validation mechanism,
+for example one that is based on successful exchange of minimal amount
+of ping-pong traffic with the peer.
+
 # Examples
 
 {{dtls-example2}} shows an example exchange where a CID is
