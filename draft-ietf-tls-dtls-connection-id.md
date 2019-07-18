@@ -364,11 +364,11 @@ reordering at the network layer, while also thwarting a man-on-the-side
 attacker trying to use spoofed or replayed records to reroute return
 traffic.
 
-The described mechanism cannot stop an active man-in-the-middle who can
-freely manipulate the source two-tuple, and therefore DoS the sender or
-use the receiver as as backscatter source for a DDoS attack.  In order
-to counter this kind of attacker, an address validation protocol like
-the one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
+The described mechanism cannot stop an active man-in-the-middle that can
+freely manipulate the source two-tuple and thus potentially turn the
+receiver into as backscatter source for a DDoS attack.  In order to
+counter this kind of attacker, an address validation protocol like the
+one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
 
 Since this document does not define an in-protocol peer validation
 procedure, implementations that do not already offer the mechanism
