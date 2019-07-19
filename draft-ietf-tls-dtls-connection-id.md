@@ -365,7 +365,7 @@ traffic.
 
 However, this mechanism cannot stop an active man-in-the-middle with the
 ability to manipulate the source two-tuple to potentially turn the
-receiver into as backscatter source for a DDoS attack.  In order to
+receiver into a backscatter source for a DDoS attack.  In order to
 counter this kind of attacker, an address validation protocol like the
 one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
 
