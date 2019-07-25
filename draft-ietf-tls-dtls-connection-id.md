@@ -345,38 +345,32 @@ data the following modification is made to the additional data calculation.
                       length_of_DTLSInnerPlaintext;
 ~~~
 
-# Peer Address Update
+# Peer Address Update {#peer-address-update}
 
-When a CID record is received with a different source address than the
-one currently associated with the DTLS connection, the receiver SHALL
-NOT update its view of the peer's address with the source address
-specified in the enclosing UDP packet unless both conditions are met:
+When a datagram with a CID is received that has a source address different than the one currently associated with the DTLS connection, the receiver MUST NOT replace the source address currently stored in the association with the source address specified in the received datagram unless the following conditions are met:
 
-- The records in the enclosing datagram are cryptographically
-  validated;
-- The records are "newer" (in terms of their epoch and sequence
-  number) than the last record that successfully updated the peer
-  address.
+- The received datagram has been cryptographically verified using the DTLS record layer processing procedures.
+
+- The received datagram is "newer" (in terms of their epoch and sequence
+number) than the last datagram that successfully updated the source address.
+This condition ensures that replayed datagrams cannot be used to perform address 
+updates. Note that this condition does not help when the attacker is able to 
+replay datagrams that arrive earlier at the DTLS peer than the original datagram.
+
+- There is a strategy for performing a perform some reachability test. 
+No such test is defined in this	specification; {{!I-D.tschofenig-tls-dtls-rrc}} 
+defines an extension for such a DTLS protocol extension.
 
 The above ensures correctness of the protocol in presence of packet
 reordering at the network layer, while also thwarting a man-on-the-side
 attacker attempting to use spoofed or replayed records to reroute return
 traffic.
 
-However, this mechanism cannot stop an active man-in-the-middle with the
-ability to manipulate the source two-tuple to potentially turn the
-receiver into a backscatter source for a DDoS attack.  In order to
-counter this kind of attacker, an address validation protocol like the
-one described in {{!I-D.tschofenig-tls-dtls-rrc}} is needed.
-
-Since this document does not define an in-protocol peer validation
-procedure, implementations that do not already offer the mechanism
-described in {{!I-D.tschofenig-tls-dtls-rrc}} MUST, on CID-enabled
-sessions, report any peer address update to their users.  When delivered
-such an event, the user can trigger an application layer-specific
-address validation mechanism, for example one that is based on
-successful exchange of minimal amount of ping-pong traffic with the
-peer.
+Implementations that offer an application layer return routability check 
+MUST report any peer address update on CID-enabled session to applications.  
+When delivered such an event, the user can trigger an application layer-specific
+address validation mechanism, for example one that is based on successful 
+exchange of minimal amount of ping-pong traffic with the peer.
 
 # Examples
 
@@ -454,13 +448,16 @@ An on-path adversary, who is able to observe the DTLS protocol exchanges between
 DTLS client and the DTLS server, is able to link the observed payloads to all
 subsequent payloads carrying the same connection id pair (for bi-directional
 communication).  Without multi-homing or mobility, the use of the CID
-is not different to the use of the 5-tuple.
+has the same privacy properties of the 5-tuple.
 
 An on-path adversary can also black-hole traffic or create a reflection attack
 against third parties because a DTLS peer has no means to distinguish a 
 genuine address update event (for example, due to a NAT rebinding) from one 
 that is malicious. This attack is of concern when there is a large asymmetry 
-of request/response message sizes. 
+of request/response message sizes. Additionally, an attacker able to observe 
+the data traffic exchanged between two DTLS peers is able to replay datagrams
+with modified IP address/port numbers. The topic of peer address updates is 
+discussed in {{peer-address-update}}.
 
 With multi-homing, an adversary is able to correlate the communication
 interaction over the two paths, which adds further privacy concerns. The lack 
