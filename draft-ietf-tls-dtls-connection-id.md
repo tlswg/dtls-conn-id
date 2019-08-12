@@ -440,8 +440,8 @@ Every identifier introduces the risk of linkability, as explained in {{RFC6973}}
 In addition, endpoints can use the CID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
 per-connection information to on-path observers. There is no straightforward way to
-address this with CIDs that contain arbitrary values; implementations
-concerned about this SHOULD refuse to use connection ids.
+address this concern with CIDs that contain arbitrary values. Implementations
+concerned about this aspects SHOULD refuse to use CIDs.
 
 An on-path adversary, who is able to observe the DTLS protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
@@ -467,10 +467,10 @@ Importantly, the sequence number makes it possible for a passive attacker
 to correlate packets across CID changes. Thus, even if a client/server pair
 do a rehandshake to change CID, that does not provide much privacy benefit.
 
-The CID-enhanced record layer introduces record padding; a privacy feature 
+The CID-enhanced record layer introduces record padding, which is a privacy feature 
 not available with the original DTLS 1.2 RFC. Padding allows to inflate the 
 size of the ciphertext making traffic analysis more difficult. More details 
-about the padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
+about record padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
 
 #  IANA Considerations
 
@@ -500,6 +500,12 @@ Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-06
+   
+   -  Wording changes in the security and privacy 
+      consideration and the peer address update 
+      sections. 
+      
 draft-ietf-tls-dtls-connection-id-06
 
   - Updated IANA considerations 
