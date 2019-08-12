@@ -350,26 +350,23 @@ data the following modification is made to the additional data calculation.
 When a record with a CID is received that has a source address different than the one currently associated with the DTLS connection, the receiver MUST NOT replace the address it uses for sending records to its peer with the source
 address specified in the received datagram unless the following conditions are met: 
 
-
 - The received datagram has been cryptographically verified using the DTLS record layer processing procedures.
 
-- The received datagram is "newer" (in terms of their epoch and sequence
-number) than the last datagram that successfully updated the source address.
-This condition ensures that replayed datagrams cannot be used to perform address 
+- The received datagram is "newer" (in terms of both epoch and sequence
+number) than the newest datagram received. This condition ensures that replayed datagrams cannot be used to perform address 
 updates. Note that this condition does not help when the attacker is able to 
 replay datagrams that arrive earlier at the DTLS peer than the original datagram.
 
-- There is a strategy for performing a perform some reachability test. 
+- There is a strategy for ensuring that the new peer address is able to receive and process. 
 No such test is defined in this	specification; {{!I-D.tschofenig-tls-dtls-rrc}} 
 defines an extension for such a DTLS protocol extension.
 
-The above ensures correctness of the protocol in presence of packet
-reordering at the network layer, while also thwarting a man-on-the-side
-attacker attempting to use spoofed or replayed records to reroute return
-traffic.
+The above is necessary to protect against attacks that use datagrams with spoofed addresses or replayed datagrams to trigger attacks.
 
-Implementations that offer an application layer return routability check 
-MUST report any peer address update on CID-enabled session to applications.  
+Application protocols that implement protection against these attacks depend on
+being aware of changes in peer addresses so that they can engage the necessary
+mechanisms.
+
 When delivered such an event, the user can trigger an application layer-specific
 address validation mechanism, for example one that is based on successful 
 exchange of minimal amount of ping-pong traffic with the peer.
@@ -448,9 +445,9 @@ concerned about this SHOULD refuse to use connection ids.
 
 An on-path adversary, who is able to observe the DTLS protocol exchanges between the
 DTLS client and the DTLS server, is able to link the observed payloads to all
-subsequent payloads carrying the same connection id pair (for bi-directional
+subsequent payloads carrying the same ID pair (for bi-directional
 communication).  Without multi-homing or mobility, the use of the CID
-has the same privacy properties of the 5-tuple.
+exposes the same information as the 5-tuple.
 
 An on-path adversary can also black-hole traffic or create a reflection attack
 against third parties because a DTLS peer has no means to distinguish a 
