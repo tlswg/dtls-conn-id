@@ -347,29 +347,42 @@ data the following modification is made to the additional data calculation.
 
 # Peer Address Update {#peer-address-update}
 
-When a record with a CID is received that has a source address different than the one currently associated with the DTLS connection, the receiver MUST NOT replace the address it uses for sending records to its peer with the source
-address specified in the received datagram unless the following conditions are met: 
+When a record with a CID is received that has a source address 
+different than the one currently associated with the DTLS connection, 
+the receiver MUST NOT replace the address it uses for sending records 
+to its peer with the source address specified in the received 
+datagram unless the following conditions are met: 
 
-- The received datagram has been cryptographically verified using the DTLS record layer processing procedures.
+- The received datagram has been cryptographically verified using 
+the DTLS record layer processing procedures.
 
-- The received datagram is "newer" (in terms of both epoch and sequence
-number) than the newest datagram received. This condition ensures that replayed datagrams cannot be used to perform address 
-updates. Note that this condition does not help when the attacker is able to 
-replay datagrams that arrive earlier at the DTLS peer than the original datagram.
+- The received datagram is "newer" (in terms of both epoch and sequence 
+number) than the newest datagram received. Reordered datagrams that are 
+sent prior to a change in a peer address might otherwise cause a valid 
+address change to be reverted. This also limits the ability of an attacker 
+to use replayed datagrams to force a spurious address change, which 
+could result in denial of service. An attacker might be able to succeed 
+in changing a peer address if they are able to rewrite source addresses 
+and if replayed packets are able to arrive before any original. 
 
-- There is a strategy for ensuring that the new peer address is able to receive and process. 
-No such test is defined in this	specification; {{!I-D.tschofenig-tls-dtls-rrc}} 
-defines an extension for such a DTLS protocol extension.
+- There is a strategy for ensuring that the new peer address is able to 
+receive and process DTLS records. No such test is defined in this	specification. 
 
-The above is necessary to protect against attacks that use datagrams with spoofed addresses or replayed datagrams to trigger attacks.
+The above is necessary to protect against attacks that use datagrams with 
+spoofed addresses or replayed datagrams to trigger attacks. Note that there 
+is no requirement to use of the anti-replay window mechanism defined in 
+Section 4.1.2.6 of DTLS 1.2. Both solutions, the "anti-replay window" or 
+"newer algorithm" will prevent address updates from replay attacks while the 
+latter will only apply to peer address updates and the former applies to any 
+application layer traffic.
 
 Application protocols that implement protection against these attacks depend on
 being aware of changes in peer addresses so that they can engage the necessary
-mechanisms.
-
-When delivered such an event, the user can trigger an application layer-specific
-address validation mechanism, for example one that is based on successful 
-exchange of minimal amount of ping-pong traffic with the peer.
+mechanisms. When delivered such an event, an application layer-specific
+address validation mechanism can be triggered, for example one that is based on 
+successful exchange of minimal amount of ping-pong traffic with the peer. 
+Alternatively, an DTLS-specific mechanism may be used, as described in 
+{{!I-D.tschofenig-tls-dtls-rrc}}.
 
 # Examples
 
