@@ -431,46 +431,51 @@ record layer payload containing the Finished messagen contains a CID.
 Application data payloads sent from the client to the server contain 
 a CID in this example as well. 
 
-#  Security and Privacy Considerations {#sec-cons}
+#  Privacy Considerations {#priv-cons}
 
 The CID replaces the previously used 5-tuple and, as such, introduces
 an identifier that remains persistent during the lifetime of a DTLS connection.
 Every identifier introduces the risk of linkability, as explained in {{RFC6973}}.
 
-In addition, endpoints can use the CID to attach arbitrary metadata
+An on-path adversary observing the DTLS protocol exchanges between the
+DTLS client and the DTLS server is able to link the observed payloads to all
+subsequent payloads carrying the same ID pair (for bi-directional
+communication).  Without multi-homing or mobility, the use of the CID
+exposes the same information as the 5-tuple.
+
+With multi-homing, a passive attacker is able to correlate the communication
+interaction over the two paths and the sequence number makes it possible 
+to correlate packets across CID changes. The lack of a CID update mechanism 
+in DTLS 1.2 makes this extension unsuitable for mobility scenarios where 
+correlation must be considered. Deployments that use DTLS in multi-homing
+environments and are concerned about this aspects SHOULD refuse to use CIDs in 
+DTLS 1.2 and switch to DTLS 1.3 where a CID update mechanism is provided and 
+sequence number encryption is offered. 
+
+The specification introduces record padding for the CID-enhanced record layer, 
+which is a privacy feature not available with the original DTLS 1.2 specification. 
+Padding allows to inflate the size of the ciphertext making traffic analysis 
+more difficult. More details about record padding can be found in Section 5.4 
+and Appendix E.3 of RFC 8446.
+
+Finally, endpoints can use the CID to attach arbitrary metadata
 to each record they receive. This may be used as a mechanism to communicate
 per-connection information to on-path observers. There is no straightforward way to
 address this concern with CIDs that contain arbitrary values. Implementations
 concerned about this aspects SHOULD refuse to use CIDs.
 
-An on-path adversary, who is able to observe the DTLS protocol exchanges between the
-DTLS client and the DTLS server, is able to link the observed payloads to all
-subsequent payloads carrying the same ID pair (for bi-directional
-communication).  Without multi-homing or mobility, the use of the CID
-exposes the same information as the 5-tuple.
+#  Security Considerations {#sec-cons}
 
-An on-path adversary can also black-hole traffic or create a reflection attack
+An on-path adversary can create reflection attacks
 against third parties because a DTLS peer has no means to distinguish a 
 genuine address update event (for example, due to a NAT rebinding) from one 
 that is malicious. This attack is of concern when there is a large asymmetry 
-of request/response message sizes. Additionally, an attacker able to observe 
-the data traffic exchanged between two DTLS peers is able to replay datagrams
-with modified IP address/port numbers. The topic of peer address updates is 
-discussed in {{peer-address-update}}.
+of request/response message sizes. 
 
-With multi-homing, an adversary is able to correlate the communication
-interaction over the two paths, which adds further privacy concerns. The lack 
-of a CID update mechanism makes this extension unsuitable for mobility scenarios
-where correlation must be considered.
+Additionally, an attacker able to observe the data traffic exchanged between 
+two DTLS peers is able to replay datagrams with modified IP address/port numbers. 
 
-Importantly, the sequence number makes it possible for a passive attacker
-to correlate packets across CID changes. Thus, even if a client/server pair
-do a rehandshake to change CID, that does not provide much privacy benefit.
-
-The CID-enhanced record layer introduces record padding, which is a privacy feature 
-not available with the original DTLS 1.2 RFC. Padding allows to inflate the 
-size of the ciphertext making traffic analysis more difficult. More details 
-about record padding can be found in Section 5.4 and Appendix E.3 of RFC 8446.
+The topic of peer address updates is discussed in {{peer-address-update}}.
 
 #  IANA Considerations
 
