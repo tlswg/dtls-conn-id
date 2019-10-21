@@ -1,7 +1,7 @@
 ---
 title: Connection Identifiers for DTLS 1.2
 abbrev: DTLS 1.2 Connection ID
-docname: draft-ietf-tls-dtls-connection-id-latest
+docname: draft-ietf-tls-dtls-connection-id-07
 category: std
 updates: 6347
 
@@ -440,7 +440,7 @@ Note: In the example exchange the CID is included in the record layer
 once encryption is enabled. In DTLS 1.2 only one handshake message is 
 encrypted, namely the Finished message. Since the example shows how to 
 use the CID for payloads sent from the client to the server only the 
-record layer payload containing the Finished messagen contains a CID. 
+record layer payloads containing the Finished messages include a CID. 
 Application data payloads sent from the client to the server contain 
 a CID in this example as well. 
 
