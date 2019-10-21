@@ -463,7 +463,7 @@ in DTLS 1.2 makes this extension unsuitable for mobility scenarios where
 correlation must be considered. Deployments that use DTLS in multi-homing
 environments and are concerned about this aspects SHOULD refuse to use CIDs in 
 DTLS 1.2 and switch to DTLS 1.3 where a CID update mechanism is provided and 
-sequence number encryption is offered. 
+sequence number encryption is available. 
 
 The specification introduces record padding for the CID-enhanced record layer, 
 which is a privacy feature not available with the original DTLS 1.2 specification. 
