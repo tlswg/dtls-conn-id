@@ -518,7 +518,7 @@ Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
-draft-ietf-tls-dtls-connection-id-06
+draft-ietf-tls-dtls-connection-id-07
    
    -  Wording changes in the security and privacy 
       consideration and the peer address update 
