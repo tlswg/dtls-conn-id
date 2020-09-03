@@ -263,7 +263,13 @@ outer_type
 
 cid
 :  The CID value, cid_length bytes long, as agreed at the time the extension
-   has been negotiated.
+   has been negotiated.  Recall that (as discussed previously) each peer chooses
+   the CID value it will receive and use to identify the connection, so an
+   implementation can choose to always recieve CIDs of a fixed length.  If,
+   however, an implementation chooses to receive different lengths of CID,
+   the assigned CID values must be self-deliniating since there is no other
+   mechanism available to determine what connection (and thus, what CID length)
+   is in use.
 
 enc_content
 :  The encrypted form of the serialized DTLSInnerPlaintext structure.
