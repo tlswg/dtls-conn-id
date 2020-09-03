@@ -244,7 +244,7 @@ zeros
 
 ~~~
      struct {
-         ContentType special_type = tls12_cid; 
+         ContentType outer_type = tls12_cid; 
          ProtocolVersion version;
          uint16 epoch;
          uint48 sequence_number;
@@ -255,7 +255,7 @@ zeros
 ~~~~
 {: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
-special_type
+outer_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
    is always set to tls12_cid(TBD2). The real content
    type of the record is found in DTLSInnerPlaintext.real_type after
