@@ -267,7 +267,7 @@ cid
    the CID value it will receive and use to identify the connection, so an
    implementation can choose to always recieve CIDs of a fixed length.  If,
    however, an implementation chooses to receive different lengths of CID,
-   the assigned CID values must be self-deliniating since there is no other
+   the assigned CID values must be self-delineating since there is no other
    mechanism available to determine what connection (and thus, what CID length)
    is in use.
 
@@ -519,8 +519,8 @@ TBD1    connection_id   -        Y          N           [[This doc]]
 
 Note: The value "N" in the Recommended column is set because this 
 extension is intended only for specific use cases. This document describes 
-an extension for DTLS 1.2 only; it is not applicable to TLS or DTLS 1.3.
-Analogous functionality for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}. 
+an extension for DTLS 1.2 only; it is not applicable to TLS, and
+analogous functionality for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}. 
 
 IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
 Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
