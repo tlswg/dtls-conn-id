@@ -497,8 +497,11 @@ that is malicious. This attack is of concern when there is a large asymmetry
 of request/response message sizes. 
 
 Additionally, an attacker able to observe the data traffic exchanged between 
-two DTLS peers is able to replay datagrams with modified IP address/port numbers
-if the optional DTLS replay detection functionality is not in use. 
+two DTLS peers is able to modify IP address/port numbers without causing the
+packet to be rejected by the recipient.  When the optional DTLS replay
+detection is not in use, such an attacker can also replay the observed packets,
+and the multiple copies of each packet can have different IP address/port
+numbers as well.
 
 The topic of peer address updates is discussed in {{peer-address-update}}.
 
@@ -519,8 +522,8 @@ TBD1    connection_id   -        Y          N           [[This doc]]
 
 Note: The value "N" in the Recommended column is set because this 
 extension is intended only for specific use cases. This document describes 
-an extension for DTLS 1.2 only; it is not applicable to TLS, and
-analogous functionality for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}. 
+the behavior of this extension for DTLS 1.2 only; it is not applicable to TLS, and
+its usage for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}.
 
 IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
 Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
