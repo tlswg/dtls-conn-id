@@ -517,7 +517,7 @@ for the registry.
 ~~~~
 Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
 --------------------------------------------------------------------
-TBD1    connection_id   -        Y          N           [[This doc]]
+TBD1    connection_id   CH, SH   Y          N           [[This doc]]
 ~~~~
 
 Note: The value "N" in the Recommended column is set because this 
