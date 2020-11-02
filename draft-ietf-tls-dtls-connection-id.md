@@ -70,7 +70,7 @@ receiver will be unable to locate the correct security context.
 
 #  Introduction
 
-The Datagram Transport Layer Security (DTLS) protocol was designed for
+The Datagram Transport Layer Security (DTLS) {{RFC6347}} protocol was designed for
 securing connection-less transports, like UDP. DTLS, like TLS, starts
 with a handshake, which can be computationally demanding (particularly
 when public key cryptography is used). After a successful handshake,
@@ -78,11 +78,11 @@ symmetric key cryptography is used to apply data origin
 authentication, integrity and confidentiality protection. This
 two-step approach allows endpoints to amortize the cost of the initial
 handshake across subsequent application data protection. Ideally, the
-second phase where application data is protected lasts over a longer
+second phase where application data is protected lasts over a long
 period of time since the established keys will only need to be updated
 once the key lifetime expires.
 
-In the current version of DTLS, the IP address and port of the peer are used to
+In DTLS as specified in RFC 6347, the IP address and port of the peer are used to
 identify the DTLS association. Unfortunately, in some cases, such as NAT rebinding,
 these values are insufficient. This is a particular issue in the Internet of Things
 when devices enter extended sleep periods to increase their battery lifetime. The
@@ -139,10 +139,11 @@ receive as a CID in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
-Implementations, which want to use variable-length CIDs, are responsible
+Such implementations MUST still be able to send
+CIDs of different length to other parties.
+Implementations that want to use variable-length CIDs are responsible
 for constructing the CID in such a way that its length can be determined
-on reception. Such implementations must still be able to send
-CIDs of different length to other parties. Note that there is no CID 
+on reception.  Note that there is no CID
 length information included in the record itself.
 
 In DTLS 1.2, CIDs are exchanged at the beginning of the DTLS
@@ -244,7 +245,7 @@ zeros
 
 ~~~
      struct {
-         ContentType special_type = tls12_cid; 
+         ContentType outer_type = tls12_cid; 
          ProtocolVersion version;
          uint16 epoch;
          uint48 sequence_number;
@@ -255,7 +256,7 @@ zeros
 ~~~~
 {: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
-special_type
+outer_type
 :  The outer content type of a DTLSCiphertext record carrying a CID
    is always set to tls12_cid(TBD2). The real content
    type of the record is found in DTLSInnerPlaintext.real_type after
@@ -263,7 +264,13 @@ special_type
 
 cid
 :  The CID value, cid_length bytes long, as agreed at the time the extension
-   has been negotiated.
+   has been negotiated.  Recall that (as discussed previously) each peer chooses
+   the CID value it will receive and use to identify the connection, so an
+   implementation can choose to always recieve CIDs of a fixed length.  If,
+   however, an implementation chooses to receive different lengths of CID,
+   the assigned CID values must be self-delineating since there is no other
+   mechanism available to determine what connection (and thus, what CID length)
+   is in use.
 
 enc_content
 :  The encrypted form of the serialized DTLSInnerPlaintext structure.
@@ -273,11 +280,11 @@ All other fields are as defined in RFC 6347.
 # Record Payload Protection {#mac}
 
 Several types of ciphers have been defined for use with TLS and DTLS and the 
-MAC calculation for those ciphers differs slightly. 
+MAC calculations for those ciphers differ slightly. 
 
-This specification modifies the MAC calculation defined in {{RFC6347}} and
-{{!RFC7366}} as well as the definition of the additional data used with AEAD
-ciphers provided in {{RFC6347}} for records with content type tls12_cid.  The
+This specification modifies the MAC calculation as defined in {{RFC6347}} and
+{{!RFC7366}}, as well as the definition of the additional data used with AEAD
+ciphers provided in {{RFC6347}}, for records with content type tls12_cid.  The
 modified algorithm MUST NOT be applied to records that do not carry a CID, i.e.,
 records with content type other than tls12_cid.
 
@@ -285,13 +292,13 @@ The following fields are defined in this document; all other fields are as
 defined in the cited documents.
 
 cid
-: Value of the negotiated CID.
+: Value of the negotiated CID (variable length).
 
 cid_length
 : 1 byte field indicating the length of the negotiated CID.
 
 length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext.  
+: The length (in bytes) of the serialised DTLSInnerPlaintext (two-byte integer).  
   The length MUST NOT exceed 2^14.
 
 Note "+" denotes concatenation.
@@ -371,17 +378,21 @@ receive and process DTLS records. No such test is defined in this	specification.
 
 The above is necessary to protect against attacks that use datagrams with 
 spoofed addresses or replayed datagrams to trigger attacks. Note that there 
-is no requirement to use of the anti-replay window mechanism defined in 
+is no requirement for use of the anti-replay window mechanism defined in 
 Section 4.1.2.6 of DTLS 1.2. Both solutions, the "anti-replay window" or 
-"newer algorithm" will prevent address updates from replay attacks while the 
+"newer" algorithm, will prevent address updates from replay attacks while the 
 latter will only apply to peer address updates and the former applies to any 
 application layer traffic.
+
+Note that datagrams that pass the DTLS cryptographic verification procedures
+but do not trigger a change of peer address are still valid DTLS records and
+are still to be passed to the application.
 
 Application protocols that implement protection against these attacks depend on
 being aware of changes in peer addresses so that they can engage the necessary
 mechanisms. When delivered such an event, an application layer-specific
 address validation mechanism can be triggered, for example one that is based on 
-successful exchange of minimal amount of ping-pong traffic with the peer. 
+successful exchange of a minimal amount of ping-pong traffic with the peer. 
 Alternatively, an DTLS-specific mechanism may be used, as described in 
 {{I-D.tschofenig-tls-dtls-rrc}}.
 
@@ -389,7 +400,8 @@ Alternatively, an DTLS-specific mechanism may be used, as described in
 
 {{dtls-example2}} shows an example exchange where a CID is
 used uni-directionally from the client to the server. To indicate that 
-a zero-length CID we use the term 'connection_id=empty'.
+a zero-length CID is present in the "connection_id" extension
+we use the notation 'connection_id=empty'.
 
 ~~~~
 Client                                             Server
@@ -440,10 +452,9 @@ Legend:
 Note: In the example exchange the CID is included in the record layer 
 once encryption is enabled. In DTLS 1.2 only one handshake message is 
 encrypted, namely the Finished message. Since the example shows how to 
-use the CID for payloads sent from the client to the server only the 
-record layer payloads containing the Finished messages include a CID. 
-Application data payloads sent from the client to the server contain 
-a CID in this example as well. 
+use the CID for payloads sent from the client to the server, only the 
+record layer payloads containing the Finished message or application data
+include a CID. 
 
 #  Privacy Considerations {#priv-cons}
 
@@ -472,11 +483,11 @@ Padding allows to inflate the size of the ciphertext making traffic analysis
 more difficult. More details about record padding can be found in Section 5.4 
 and Appendix E.3 of RFC 8446.
 
-Finally, endpoints can use the CID to attach arbitrary metadata
-to each record they receive. This may be used as a mechanism to communicate
+Finally, endpoints can use the CID to attach arbitrary per-connection metadata
+to each record they receive on a given connection. This may be used as a mechanism to communicate
 per-connection information to on-path observers. There is no straightforward way to
 address this concern with CIDs that contain arbitrary values. Implementations
-concerned about this aspects SHOULD refuse to use CIDs.
+concerned about this aspect SHOULD refuse to use CIDs.
 
 #  Security Considerations {#sec-cons}
 
@@ -487,7 +498,10 @@ that is malicious. This attack is of concern when there is a large asymmetry
 of request/response message sizes. 
 
 Additionally, an attacker able to observe the data traffic exchanged between 
-two DTLS peers is able to replay datagrams with modified IP address/port numbers. 
+two DTLS peers is able to modify IP address/port numbers. When the optional DTLS replay
+detection is not in use, such an attacker can also replay the observed packets,
+and the multiple copies of each packet can have different IP address/port
+numbers as well.
 
 The topic of peer address updates is discussed in {{peer-address-update}}.
 
@@ -497,18 +511,19 @@ IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) as described
 in the table below. IANA is requested to add an extra column to the 
 TLS ExtensionType Values registry to indicate whether an extension is only 
-applicable to DTLS. 
+applicable to DTLS and to include this document as an additional reference
+for the registry. 
 
 ~~~~
 Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
 --------------------------------------------------------------------
-TBD1    connection_id   -        Y          N           [[This doc]]
+TBD1    connection_id   CH, SH   Y          N           [[This doc]]
 ~~~~
 
 Note: The value "N" in the Recommended column is set because this 
 extension is intended only for specific use cases. This document describes 
-an extension for DTLS 1.2 only; it is not to TLS (1.3). The DTLS 1.3 
-functionality is described in {{I-D.ietf-tls-dtls13}}. 
+the behavior of this extension for DTLS 1.2 only; it is not applicable to TLS, and
+its usage for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}.
 
 IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
 Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
