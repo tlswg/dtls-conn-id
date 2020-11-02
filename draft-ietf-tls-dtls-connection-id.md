@@ -498,10 +498,7 @@ that is malicious. This attack is of concern when there is a large asymmetry
 of request/response message sizes. 
 
 Additionally, an attacker able to observe the data traffic exchanged between 
-two DTLS peers is able to modify IP address/port numbers. When the optional DTLS replay
-detection is not in use, such an attacker can also replay the observed packets,
-and the multiple copies of each packet can have different IP address/port
-numbers as well.
+two DTLS peers is able to replay datagrams with modified IP address/port numbers. 
 
 The topic of peer address updates is discussed in {{peer-address-update}}.
 
