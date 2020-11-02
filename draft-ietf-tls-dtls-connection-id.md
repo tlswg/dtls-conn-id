@@ -348,10 +348,13 @@ data the following modification is made to the additional data calculation.
 # Peer Address Update {#peer-address-update}
 
 When a record with a CID is received that has a source address 
-different than the one currently associated with the DTLS connection, 
-the receiver MUST NOT replace the address it uses for sending records 
-to its peer with the source address specified in the received 
-datagram unless the following conditions are met: 
+different than the one currently associated with the DTLS connection,
+the receiver MUST NOT 
+* replace the address it uses for sending records to its peer with the 
+  source address specified in the received datagram, or
+* send a response of any kind to the record, including sending FatalAlerts
+  in response to an invalid record,
+unless the following conditions are met:
 
 - The received datagram has been cryptographically verified using 
 the DTLS record layer processing procedures.
