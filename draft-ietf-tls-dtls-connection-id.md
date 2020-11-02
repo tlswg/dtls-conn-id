@@ -138,7 +138,7 @@ receive as a CID in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
-Such implementations must still be able to send
+Such implementations MUST still be able to send
 CIDs of different length to other parties.
 Implementations that want to use variable-length CIDs are responsible
 for constructing the CID in such a way that its length can be determined
