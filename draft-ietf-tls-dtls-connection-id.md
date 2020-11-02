@@ -352,7 +352,7 @@ different than the one currently associated with the DTLS connection,
 the receiver MUST NOT 
 * replace the address it uses for sending records to its peer with the 
   source address specified in the received datagram, or
-* send a response of any kind to the record, including sending FatalAlerts
+* send a response of any kind to the record, including sending alerts
   in response to an invalid record,
 unless the following conditions are met:
 
