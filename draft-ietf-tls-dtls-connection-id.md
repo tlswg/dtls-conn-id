@@ -371,8 +371,8 @@ and if replayed packets are able to arrive before any original.
 - There is a strategy for ensuring that the new peer address is able to 
 receive and process DTLS records. No such test is defined in this specification.
 
-If any of the above checks fails, the receiver MUST silently discard the
-record.
+If any of the above conditions fail, the receiver MUST silently discard the
+received datagram.
 
 The above is necessary to protect against attacks that use datagrams with 
 spoofed addresses or replayed datagrams to trigger attacks. Note that there 
