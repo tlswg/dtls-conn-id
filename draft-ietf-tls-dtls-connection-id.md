@@ -1,7 +1,7 @@
 ---
 title: Connection Identifiers for DTLS 1.2
 abbrev: DTLS 1.2 Connection ID
-docname: draft-ietf-tls-dtls-connection-id-07
+docname: draft-ietf-tls-dtls-connection-id-latest
 category: std
 updates: 6347
 
@@ -42,15 +42,16 @@ author:
        organization: Arm Limited
        email: thomas.fossati@arm.com
 
-
 normative:
   RFC2119:
   RFC5246:
   RFC6347:
   RFC8446:
+
 informative:
   RFC6973:
   I-D.ietf-tls-dtls13:
+  I-D.tschofenig-tls-dtls-rrc: 
 
 --- abstract
 
@@ -382,7 +383,7 @@ mechanisms. When delivered such an event, an application layer-specific
 address validation mechanism can be triggered, for example one that is based on 
 successful exchange of minimal amount of ping-pong traffic with the peer. 
 Alternatively, an DTLS-specific mechanism may be used, as described in 
-{{!I-D.tschofenig-tls-dtls-rrc}}.
+{{I-D.tschofenig-tls-dtls-rrc}}.
 
 # Examples
 
@@ -517,6 +518,10 @@ Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 # History
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
+
+draft-ietf-tls-dtls-connection-id-08
+   
+   -  RRC draft moved from normative to informative.
 
 draft-ietf-tls-dtls-connection-id-07
    
