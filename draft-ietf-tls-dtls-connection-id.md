@@ -356,10 +356,10 @@ data the following modification is made to the additional data calculation.
 # Peer Address Update {#peer-address-update}
 
 When a record with a CID is received that has a source address 
-different than the one currently associated with the DTLS connection, 
+different than the one currently associated with the DTLS connection,
 the receiver MUST NOT replace the address it uses for sending records 
-to its peer with the source address specified in the received 
-datagram unless the following conditions are met: 
+to its peer with the source address specified in the received datagram
+unless the following three conditions are met:
 
 - The received datagram has been cryptographically verified using 
 the DTLS record layer processing procedures.
@@ -374,9 +374,9 @@ in changing a peer address if they are able to rewrite source addresses
 and if replayed packets are able to arrive before any original. 
 
 - There is a strategy for ensuring that the new peer address is able to 
-receive and process DTLS records. No such test is defined in this	specification. 
+receive and process DTLS records. No such test is defined in this specification.
 
-The above is necessary to protect against attacks that use datagrams with 
+The conditions above are necessary to protect against attacks that use datagrams with 
 spoofed addresses or replayed datagrams to trigger attacks. Note that there 
 is no requirement for use of the anti-replay window mechanism defined in 
 Section 4.1.2.6 of DTLS 1.2. Both solutions, the "anti-replay window" or 
@@ -396,6 +396,9 @@ successful exchange of a minimal amount of ping-pong traffic with the peer.
 Alternatively, an DTLS-specific mechanism may be used, as described in 
 {{I-D.tschofenig-tls-dtls-rrc}}.
 
+DTLS implementations MUST silently discard records with bad MACs or that are 
+otherwise invalid.
+  
 # Examples
 
 {{dtls-example2}} shows an example exchange where a CID is
