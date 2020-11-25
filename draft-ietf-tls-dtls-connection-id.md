@@ -51,7 +51,7 @@ normative:
 informative:
   RFC6973:
   I-D.ietf-tls-dtls13:
-  I-D.tschofenig-tls-dtls-rrc: 
+  I-D.tschofenig-tls-dtls-rrc:
 
 --- abstract
 
@@ -114,9 +114,9 @@ The extension type is specified as follows.
 ~~~~
 
 The extension_data field of this extension, when included in the
-ClientHello, MUST contain the ConnectionId structure. This structure 
-contains the CID value the client wishes the server to use when sending 
-messages to the client. A zero-length CID value indicates that the client 
+ClientHello, MUST contain the ConnectionId structure. This structure
+contains the CID value the client wishes the server to use when sending
+messages to the client. A zero-length CID value indicates that the client
 is prepared to send with a CID but does not wish the server to use one when
 sending. Alternatively, this can be interpreted as the client wishes
 the server to use a zero-length CID; the result is the same.
@@ -127,14 +127,14 @@ the server to use a zero-length CID; the result is the same.
   } ConnectionId;
 ~~~~
 
-A server willing to use CIDs will respond with a "connection_id" 
+A server willing to use CIDs will respond with a "connection_id"
 extension in the ServerHello, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
 wish the client to include a CID (or again, alternately, to use a
 zero-length CID).
 
-Because each party sends the value in the "connection_id" extension it wants to 
+Because each party sends the value in the "connection_id" extension it wants to
 receive as a CID in encrypted records, it is possible
 for an endpoint to use a globally constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
@@ -150,42 +150,42 @@ In DTLS 1.2, CIDs are exchanged at the beginning of the DTLS
 session only. There is no dedicated "CID update" message
 that allows new CIDs to be established mid-session, because
 DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
-that do not themselves begin other handshakes. When a DTLS session is 
-resumed or renegotiated, the "connection_id" extension is negotiated afresh. 
+that do not themselves begin other handshakes. When a DTLS session is
+resumed or renegotiated, the "connection_id" extension is negotiated afresh.
 
-If DTLS peers have not negotiated the use of CIDs then the RFC 6347-defined 
-record format and content type MUST be used. 
+If DTLS peers have not negotiated the use of CIDs then the RFC 6347-defined
+record format and content type MUST be used.
 
 If DTLS peers have negotiated the use of a CIDs using the ClientHello and
 the ServerHello messages then the peers need to take the following steps.
 
-The DTLS peers determine whether incoming and outgoing messages need 
-to use the new record format, i.e., the record format containing the CID. 
-The new record format with the the tls12_cid content type is only used once encryption 
-is enabled. Plaintext payloads never use the new record type and the CID content 
-type. 
+The DTLS peers determine whether incoming and outgoing messages need
+to use the new record format, i.e., the record format containing the CID.
+The new record format with the the tls12_cid content type is only used once encryption
+is enabled. Plaintext payloads never use the new record type and the CID content
+type.
 
-For sending, if a zero-length CID has been negotiated then the RFC 6347-defined 
+For sending, if a zero-length CID has been negotiated then the RFC 6347-defined
 record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used. 
+else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used.
 
-When transmitting a datagram with the tls12_cid content type, 
+When transmitting a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used.
 
-For receiving, if the tls12_cid content type is set, then the CID is used to look up 
-the connection and the security association. If the tls12_cid content type is not set, 
-then the connection and security association is looked up by the 5-tuple and a 
-check MUST be made to determine whether the expected CID value is indeed 
-zero length. If the check fails, then the datagram MUST be dropped. 
+For receiving, if the tls12_cid content type is set, then the CID is used to look up
+the connection and the security association. If the tls12_cid content type is not set,
+then the connection and security association is looked up by the 5-tuple and a
+check MUST be made to determine whether the expected CID value is indeed
+zero length. If the check fails, then the datagram MUST be dropped.
 
-When receiving a datagram with the tls12_cid content type, 
+When receiving a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
-with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2 
+with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2
 of {{RFC6347}} MUST be used.
 
 # Record Layer Extensions
 
-This specification defines the DTLS 1.2 record layer format and 
+This specification defines the DTLS 1.2 record layer format and
 {{I-D.ietf-tls-dtls13}} specifies how to carry the CID in DTLS 1.3.
 
 To allow a receiver to determine whether a record has a CID or not,
@@ -198,7 +198,7 @@ three implications:
 - The true content type is inside the encryption envelope, as described
   below.
 
-Plaintext records are not impacted by this extension. Hence, the format 
+Plaintext records are not impacted by this extension. Hence, the format
 of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}.
 
 ~~~
@@ -210,17 +210,17 @@ of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}
          uint16 length;
          opaque fragment[DTLSPlaintext.length];
      } DTLSPlaintext;
-~~~ 
+~~~
 {: #dtls-plaintext title="DTLS 1.2 Plaintext Record Payload."}
 
-When CIDs are being used, the content to be sent 
-is first wrapped along with its content type and optional padding into a 
-DTLSInnerPlaintext structure. This newly introduced structure is shown in 
-{{dtls-innerplaintext}}. The DTLSInnerPlaintext 
-byte sequence is then encrypted. To create the DTLSCiphertext structure shown in 
-{{dtls-ciphertext}} the CID is added. 
+When CIDs are being used, the content to be sent
+is first wrapped along with its content type and optional padding into a
+DTLSInnerPlaintext structure. This newly introduced structure is shown in
+{{dtls-innerplaintext}}. The DTLSInnerPlaintext
+byte sequence is then encrypted. To create the DTLSCiphertext structure shown in
+{{dtls-ciphertext}} the CID is added.
 
-~~~ 
+~~~
      struct {
          opaque content[length];
          ContentType real_type;
@@ -233,19 +233,19 @@ content
 : Corresponds to the fragment of a given length.
 
 real_type
-: The content type describing the payload. 
+: The content type describing the payload.
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
    the cleartext after the type field.  This provides an opportunity
    for senders to pad any DTLS record by a chosen amount as long as
    the total stays within record size limits.  See Section 5.4 of
-   {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in 
-   RFC 8446 refers to DTLSInnerPlaintext in this specification.) 
+   {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in
+   RFC 8446 refers to DTLSInnerPlaintext in this specification.)
 
 ~~~
      struct {
-         ContentType outer_type = tls12_cid; 
+         ContentType outer_type = tls12_cid;
          ProtocolVersion version;
          uint16 epoch;
          uint48 sequence_number;
@@ -279,8 +279,8 @@ All other fields are as defined in RFC 6347.
 
 # Record Payload Protection {#mac}
 
-Several types of ciphers have been defined for use with TLS and DTLS and the 
-MAC calculations for those ciphers differ slightly. 
+Several types of ciphers have been defined for use with TLS and DTLS and the
+MAC calculations for those ciphers differ slightly.
 
 This specification modifies the MAC calculation as defined in {{RFC6347}} and
 {{!RFC7366}}, as well as the definition of the additional data used with AEAD
@@ -288,7 +288,7 @@ ciphers provided in {{RFC6347}}, for records with content type tls12_cid.  The
 modified algorithm MUST NOT be applied to records that do not carry a CID, i.e.,
 records with content type other than tls12_cid.
 
-The following fields are defined in this document; all other fields are as 
+The following fields are defined in this document; all other fields are as
 defined in the cited documents.
 
 cid
@@ -298,42 +298,42 @@ cid_length
 : 1 byte field indicating the length of the negotiated CID.
 
 length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext (two-byte integer).  
+: The length (in bytes) of the serialised DTLSInnerPlaintext (two-byte integer).
   The length MUST NOT exceed 2^14.
 
 Note "+" denotes concatenation.
- 
+
 ## Block Ciphers
 
-The following MAC algorithm applies to block ciphers 
+The following MAC algorithm applies to block ciphers
 that do not use the with Encrypt-then-MAC processing
-described in {{RFC7366}}. 
+described in {{RFC7366}}.
 
 ~~~
     MAC(MAC_write_key, seq_num +
-        tls12_cid +                     
+        tls12_cid +
         DTLSCiphertext.version +
-        cid +                           
-        cid_length +                    
-        length_of_DTLSInnerPlaintext +  
-        DTLSInnerPlaintext.content +    
-        DTLSInnerPlaintext.real_type +  
-        DTLSInnerPlaintext.zeros        
+        cid +
+        cid_length +
+        length_of_DTLSInnerPlaintext +
+        DTLSInnerPlaintext.content +
+        DTLSInnerPlaintext.real_type +
+        DTLSInnerPlaintext.zeros
     )
 ~~~
 
 ## Block Ciphers with Encrypt-then-MAC processing
 
-The following MAC algorithm applies to block ciphers 
+The following MAC algorithm applies to block ciphers
 that use the with Encrypt-then-MAC processing
-described in {{RFC7366}}. 
+described in {{RFC7366}}.
 
 ~~~
     MAC(MAC_write_key, seq_num +
         tls12_cid +
         DTLSCipherText.version +
-        cid +                  
-        cid_length +            
+        cid +
+        cid_length +
         length of (IV + DTLSCiphertext.enc_content) +
         IV +
         DTLSCiphertext.enc_content);
@@ -341,47 +341,47 @@ described in {{RFC7366}}.
 
 ## AEAD Ciphers
 
-For ciphers utilizing authenticated encryption with additional 
+For ciphers utilizing authenticated encryption with additional
 data the following modification is made to the additional data calculation.
 
 ~~~
-    additional_data = seq_num + 
+    additional_data = seq_num +
                       tls12_cid +
                       DTLSCipherText.version +
-                      cid +                   
-                      cid_length +            
+                      cid +
+                      cid_length +
                       length_of_DTLSInnerPlaintext;
 ~~~
 
 # Peer Address Update {#peer-address-update}
 
-When a record with a CID is received that has a source address 
+When a record with a CID is received that has a source address
 different than the one currently associated with the DTLS connection,
-the receiver MUST NOT replace the address it uses for sending records 
+the receiver MUST NOT replace the address it uses for sending records
 to its peer with the source address specified in the received datagram
 unless the following three conditions are met:
 
-- The received datagram has been cryptographically verified using 
+- The received datagram has been cryptographically verified using
 the DTLS record layer processing procedures.
 
-- The received datagram is "newer" (in terms of both epoch and sequence 
-number) than the newest datagram received. Reordered datagrams that are 
-sent prior to a change in a peer address might otherwise cause a valid 
-address change to be reverted. This also limits the ability of an attacker 
-to use replayed datagrams to force a spurious address change, which 
-could result in denial of service. An attacker might be able to succeed 
-in changing a peer address if they are able to rewrite source addresses 
-and if replayed packets are able to arrive before any original. 
+- The received datagram is "newer" (in terms of both epoch and sequence
+number) than the newest datagram received. Reordered datagrams that are
+sent prior to a change in a peer address might otherwise cause a valid
+address change to be reverted. This also limits the ability of an attacker
+to use replayed datagrams to force a spurious address change, which
+could result in denial of service. An attacker might be able to succeed
+in changing a peer address if they are able to rewrite source addresses
+and if replayed packets are able to arrive before any original.
 
-- There is a strategy for ensuring that the new peer address is able to 
+- There is a strategy for ensuring that the new peer address is able to
 receive and process DTLS records. No such test is defined in this specification.
 
-The conditions above are necessary to protect against attacks that use datagrams with 
-spoofed addresses or replayed datagrams to trigger attacks. Note that there 
-is no requirement for use of the anti-replay window mechanism defined in 
-Section 4.1.2.6 of DTLS 1.2. Both solutions, the "anti-replay window" or 
-"newer" algorithm, will prevent address updates from replay attacks while the 
-latter will only apply to peer address updates and the former applies to any 
+The conditions above are necessary to protect against attacks that use datagrams with
+spoofed addresses or replayed datagrams to trigger attacks. Note that there
+is no requirement for use of the anti-replay window mechanism defined in
+Section 4.1.2.6 of DTLS 1.2. Both solutions, the "anti-replay window" or
+"newer" algorithm, will prevent address updates from replay attacks while the
+latter will only apply to peer address updates and the former applies to any
 application layer traffic.
 
 Note that datagrams that pass the DTLS cryptographic verification procedures
@@ -391,18 +391,18 @@ are still to be passed to the application.
 Application protocols that implement protection against these attacks depend on
 being aware of changes in peer addresses so that they can engage the necessary
 mechanisms. When delivered such an event, an application layer-specific
-address validation mechanism can be triggered, for example one that is based on 
-successful exchange of a minimal amount of ping-pong traffic with the peer. 
-Alternatively, an DTLS-specific mechanism may be used, as described in 
+address validation mechanism can be triggered, for example one that is based on
+successful exchange of a minimal amount of ping-pong traffic with the peer.
+Alternatively, an DTLS-specific mechanism may be used, as described in
 {{I-D.tschofenig-tls-dtls-rrc}}.
 
-DTLS implementations MUST silently discard records with bad MACs or that are 
+DTLS implementations MUST silently discard records with bad MACs or that are
 otherwise invalid.
-  
+
 # Examples
 
 {{dtls-example2}} shows an example exchange where a CID is
-used uni-directionally from the client to the server. To indicate that 
+used uni-directionally from the client to the server. To indicate that
 a zero-length CID is present in the "connection_id" extension
 we use the notation 'connection_id=empty'.
 
@@ -411,15 +411,15 @@ Client                                             Server
 ------                                             ------
 
 ClientHello                 -------->
-(connection_id=empty)       
+(connection_id=empty)
 
 
                             <--------      HelloVerifyRequest
                                                      (cookie)
 
-ClientHello                 --------> 
+ClientHello                 -------->
 (connection_id=empty)
-(cookie)                   
+(cookie)
 
                                                   ServerHello
                                           (connection_id=100)
@@ -428,12 +428,12 @@ ClientHello                 -------->
                                            CertificateRequest
                             <--------         ServerHelloDone
 
-Certificate                 
+Certificate
 ClientKeyExchange
 CertificateVerify
 [ChangeCipherSpec]
 Finished                    -------->
-<CID=100>                   
+<CID=100>
 
                                            [ChangeCipherSpec]
                             <--------                Finished
@@ -452,12 +452,12 @@ Legend:
 ~~~~
 {: #dtls-example2 title="Example DTLS 1.2 Exchange with CID"}
 
-Note: In the example exchange the CID is included in the record layer 
-once encryption is enabled. In DTLS 1.2 only one handshake message is 
-encrypted, namely the Finished message. Since the example shows how to 
-use the CID for payloads sent from the client to the server, only the 
+Note: In the example exchange the CID is included in the record layer
+once encryption is enabled. In DTLS 1.2 only one handshake message is
+encrypted, namely the Finished message. Since the example shows how to
+use the CID for payloads sent from the client to the server, only the
 record layer payloads containing the Finished message or application data
-include a CID. 
+include a CID.
 
 #  Privacy Considerations {#priv-cons}
 
@@ -472,18 +472,18 @@ communication).  Without multi-homing or mobility, the use of the CID
 exposes the same information as the 5-tuple.
 
 With multi-homing, a passive attacker is able to correlate the communication
-interaction over the two paths and the sequence number makes it possible 
-to correlate packets across CID changes. The lack of a CID update mechanism 
-in DTLS 1.2 makes this extension unsuitable for mobility scenarios where 
+interaction over the two paths and the sequence number makes it possible
+to correlate packets across CID changes. The lack of a CID update mechanism
+in DTLS 1.2 makes this extension unsuitable for mobility scenarios where
 correlation must be considered. Deployments that use DTLS in multi-homing
-environments and are concerned about this aspects SHOULD refuse to use CIDs in 
-DTLS 1.2 and switch to DTLS 1.3 where a CID update mechanism is provided and 
-sequence number encryption is available. 
+environments and are concerned about this aspects SHOULD refuse to use CIDs in
+DTLS 1.2 and switch to DTLS 1.3 where a CID update mechanism is provided and
+sequence number encryption is available.
 
-The specification introduces record padding for the CID-enhanced record layer, 
-which is a privacy feature not available with the original DTLS 1.2 specification. 
-Padding allows to inflate the size of the ciphertext making traffic analysis 
-more difficult. More details about record padding can be found in Section 5.4 
+The specification introduces record padding for the CID-enhanced record layer,
+which is a privacy feature not available with the original DTLS 1.2 specification.
+Padding allows to inflate the size of the ciphertext making traffic analysis
+more difficult. More details about record padding can be found in Section 5.4
 and Appendix E.3 of RFC 8446.
 
 Finally, endpoints can use the CID to attach arbitrary per-connection metadata
@@ -495,13 +495,13 @@ concerned about this aspect SHOULD refuse to use CIDs.
 #  Security Considerations {#sec-cons}
 
 An on-path adversary can create reflection attacks
-against third parties because a DTLS peer has no means to distinguish a 
-genuine address update event (for example, due to a NAT rebinding) from one 
-that is malicious. This attack is of concern when there is a large asymmetry 
-of request/response message sizes. 
+against third parties because a DTLS peer has no means to distinguish a
+genuine address update event (for example, due to a NAT rebinding) from one
+that is malicious. This attack is of concern when there is a large asymmetry
+of request/response message sizes.
 
-Additionally, an attacker able to observe the data traffic exchanged between 
-two DTLS peers is able to replay datagrams with modified IP address/port numbers. 
+Additionally, an attacker able to observe the data traffic exchanged between
+two DTLS peers is able to replay datagrams with modified IP address/port numbers.
 
 The topic of peer address updates is discussed in {{peer-address-update}}.
 
@@ -509,10 +509,10 @@ The topic of peer address updates is discussed in {{peer-address-update}}.
 
 IANA is requested to allocate an entry to the existing TLS "ExtensionType
 Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) as described
-in the table below. IANA is requested to add an extra column to the 
-TLS ExtensionType Values registry to indicate whether an extension is only 
+in the table below. IANA is requested to add an extra column to the
+TLS ExtensionType Values registry to indicate whether an extension is only
 applicable to DTLS and to include this document as an additional reference
-for the registry. 
+for the registry.
 
 ~~~~
 Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
@@ -520,8 +520,8 @@ Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
 TBD1    connection_id   CH, SH   Y          N           [[This doc]]
 ~~~~
 
-Note: The value "N" in the Recommended column is set because this 
-extension is intended only for specific use cases. This document describes 
+Note: The value "N" in the Recommended column is set because this
+extension is intended only for specific use cases. This document describes
 the behavior of this extension for DTLS 1.2 only; it is not applicable to TLS, and
 its usage for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}.
 
@@ -535,23 +535,23 @@ Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
 draft-ietf-tls-dtls-connection-id-08
-   
+
    -  RRC draft moved from normative to informative.
 
 draft-ietf-tls-dtls-connection-id-07
-   
-   -  Wording changes in the security and privacy 
-      consideration and the peer address update 
-      sections. 
-      
+
+   -  Wording changes in the security and privacy
+      consideration and the peer address update
+      sections.
+
 draft-ietf-tls-dtls-connection-id-06
 
-  - Updated IANA considerations 
-  - Enhanced security consideration section to describe a potential 
-    man-in-the-middle attack concerning address validation. 
-  
+  - Updated IANA considerations
+  - Enhanced security consideration section to describe a potential
+    man-in-the-middle attack concerning address validation.
+
 draft-ietf-tls-dtls-connection-id-05
-  
+
   - Restructed Section 5 "Record Payload Protection"
 
 draft-ietf-tls-dtls-connection-id-04
@@ -599,7 +599,7 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification and we would like to thank 
+Many people have contributed to this specification and we would like to thank
 the following individuals for their contributions:
 
 ~~~
@@ -615,7 +615,7 @@ the following individuals for their contributions:
 ~~~
 
 ~~~
-* Tobias Gondrom 
+* Tobias Gondrom
   tobias.gondrom@gondrom.org
 ~~~
 
@@ -629,15 +629,15 @@ Additionally, we would like to thank the Connection ID task force team members:
 - Ian Swett (Google)
 - Mark Nottingham (Fastly)
 
-The task force team discussed various design ideas, including cryptographically generated session	
-ids using hash chains and public key encryption, but dismissed them due to their 
-inefficiency. The approach described in this specification is the 
+The task force team discussed various design ideas, including cryptographically generated session
+ids using hash chains and public key encryption, but dismissed them due to their
+inefficiency. The approach described in this specification is the
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
-better privacy features and developers are encouraged to switch to the new version of DTLS. 
+better privacy features and developers are encouraged to switch to the new version of DTLS.
 
-Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and 
+Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
 
 # Acknowledgements
 
-We would like to thank Achim Kraus for his review comments and implementation feedback. 
+We would like to thank Achim Kraus for his review comments and implementation feedback.
