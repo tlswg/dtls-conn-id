@@ -315,8 +315,8 @@ described in {{RFC7366}}.
 ~~~
     MAC(MAC_write_key,
         seq_num_placeholder +
-        tls12_cid,
-        cid_length,
+        tls12_cid +
+        cid_length +
         tls12_cid +
         DTLSCiphertext.version +
         epoch +
@@ -348,8 +348,8 @@ described in {{RFC7366}}.
 ~~~
     MAC(MAC_write_key,
         seq_num_placeholder +
-        tls12_cid,
-        cid_length,
+        tls12_cid +
+        cid_length +
         tls12_cid +
         DTLSCiphertext.version +
         epoch +
