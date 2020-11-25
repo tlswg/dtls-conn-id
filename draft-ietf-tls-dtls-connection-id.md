@@ -335,7 +335,7 @@ connection ID. The former always consists of a sequence number
 followed by some other content type than tls12_cid; the latter
 always consists of the seq_num_placeholder followed by tls12_cid.
 Although 2^64-1 is potentially a valid sequence number, tls12_cid
-will never be a valid CID when the connection ID is not in use.
+will never be a valid content type when the connection ID is not in use.
 In addition, the epoch and sequence_number are now fed into
 the MAC in the same order as they appear on the wire.
 
