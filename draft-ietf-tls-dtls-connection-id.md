@@ -118,8 +118,7 @@ ClientHello, MUST contain the ConnectionId structure. This structure
 contains the CID value the client wishes the server to use when sending
 messages to the client. A zero-length CID value indicates that the client
 is prepared to send with a CID but does not wish the server to use one when
-sending. Alternatively, this can be interpreted as the client wishes
-the server to use a zero-length CID; the result is the same.
+sending.
 
 ~~~~
   struct {
