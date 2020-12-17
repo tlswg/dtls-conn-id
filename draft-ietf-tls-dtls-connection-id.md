@@ -367,7 +367,7 @@ data the following modification is made to the additional data calculation.
 
 ~~~
     additional_data = seq_num_placeholder +
-                      tls12_cid,
+                      tls12_cid +
                       cid_length +
                       tls12_cid +
                       DTLSCiphertext.version +
