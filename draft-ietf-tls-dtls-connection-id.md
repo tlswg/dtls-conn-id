@@ -301,6 +301,9 @@ length_of_DTLSInnerPlaintext
 : The length (in bytes) of the serialised DTLSInnerPlaintext (two-byte integer).
   The length MUST NOT exceed 2^14.
 
+seq_num_placeholder
+: 8 bytes of 0xff
+
 Note "+" denotes concatenation.
 
 ## Block Ciphers
@@ -310,17 +313,31 @@ that do not use the with Encrypt-then-MAC processing
 described in {{RFC7366}}.
 
 ~~~
-    MAC(MAC_write_key, seq_num +
+    MAC(MAC_write_key,
+        seq_num_placeholder +
+        tls12_cid +
+        cid_length +
         tls12_cid +
         DTLSCiphertext.version +
+        epoch +
+        sequence_number +
         cid +
-        cid_length +
         length_of_DTLSInnerPlaintext +
         DTLSInnerPlaintext.content +
         DTLSInnerPlaintext.real_type +
         DTLSInnerPlaintext.zeros
-    )
+    );
 ~~~
+
+The rationale behind this construction is to separate the MAC input
+for DTLS without the connection ID from the MAC input with the
+connection ID. The former always consists of a sequence number
+followed by some other content type than tls12_cid; the latter
+always consists of the seq_num_placeholder followed by tls12_cid.
+Although 2^64-1 is potentially a valid sequence number, tls12_cid
+will never be a valid content type when the connection ID is not in use.
+In addition, the epoch and sequence_number are now fed into
+the MAC in the same order as they appear on the wire.
 
 ## Block Ciphers with Encrypt-then-MAC processing
 
@@ -329,14 +346,18 @@ that use the with Encrypt-then-MAC processing
 described in {{RFC7366}}.
 
 ~~~
-    MAC(MAC_write_key, seq_num +
+    MAC(MAC_write_key,
+        seq_num_placeholder +
         tls12_cid +
-        DTLSCipherText.version +
-        cid +
         cid_length +
-        length of (IV + DTLSCiphertext.enc_content) +
+        tls12_cid +
+        DTLSCiphertext.version +
+        epoch +
+        sequence_number +
+        cid +
+        DTLSCiphertext.length +
         IV +
-        DTLSCiphertext.enc_content);
+        ENC(content + padding + padding_length));
 ~~~
 
 ## AEAD Ciphers
@@ -345,11 +366,14 @@ For ciphers utilizing authenticated encryption with additional
 data the following modification is made to the additional data calculation.
 
 ~~~
-    additional_data = seq_num +
+    additional_data = seq_num_placeholder +
                       tls12_cid +
-                      DTLSCipherText.version +
-                      cid +
                       cid_length +
+                      tls12_cid +
+                      DTLSCiphertext.version +
+                      epoch +
+                      sequence_number +
+                      cid +
                       length_of_DTLSInnerPlaintext;
 ~~~
 
