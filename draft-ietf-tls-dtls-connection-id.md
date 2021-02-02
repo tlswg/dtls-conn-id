@@ -495,8 +495,7 @@ communication).  Without multi-homing or mobility, the use of the CID
 exposes the same information as the 5-tuple.
 
 With multi-homing, a passive attacker is able to correlate the communication
-interaction over the two paths and the sequence number makes it possible
-to correlate packets across CID changes. The lack of a CID update mechanism
+interaction over the two paths. The lack of a CID update mechanism
 in DTLS 1.2 makes this extension unsuitable for mobility scenarios where
 correlation must be considered. Deployments that use DTLS in multi-homing
 environments and are concerned about this aspects SHOULD refuse to use CIDs in
