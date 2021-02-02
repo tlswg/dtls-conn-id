@@ -52,6 +52,7 @@ informative:
   RFC6973:
   I-D.ietf-tls-dtls13:
   I-D.tschofenig-tls-dtls-rrc:
+  I-D.gont-numeric-ids-sec-considerations:
 
 --- abstract
 
@@ -525,6 +526,8 @@ of request/response message sizes.
 
 Additionally, an attacker able to observe the data traffic exchanged between
 two DTLS peers is able to replay datagrams with modified IP address/port numbers.
+Guidelines for generating transient identifiers, like port numbers and CIDs, can 
+be found in {{I-D.gont-numeric-ids-sec-considerations}}.
 
 The topic of peer address updates is discussed in {{peer-address-update}}.
 
