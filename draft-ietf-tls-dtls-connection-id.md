@@ -216,8 +216,8 @@ When CIDs are being used, the content to be sent
 is first wrapped along with its content type and optional padding into a
 DTLSInnerPlaintext structure. This newly introduced structure is shown in
 {{dtls-innerplaintext}}. The DTLSInnerPlaintext
-byte sequence is then encrypted. To create the DTLSCiphertext structure shown in
-{{dtls-ciphertext}} the CID is added.
+byte sequence is then encrypted. To create the DTLSCIDCiphertext structure, shown in
+{{dtls-ciphertext}}, the CID is added.
 
 ~~~
      struct {
@@ -250,13 +250,13 @@ zeros
          uint48 sequence_number;
          opaque cid[cid_length];               // New field
          uint16 length;
-         opaque enc_content[DTLSCiphertext.length];
-     } DTLSCiphertext;
+         opaque enc_content[ciphertext_length];
+     } DTLSCIDCiphertext;
 ~~~~
 {: #dtls-ciphertext title="DTLS 1.2 CID-enhanced Ciphertext Record."}
 
 outer_type
-:  The outer content type of a DTLSCiphertext record carrying a CID
+:  The outer content type of a DTLSCIDCiphertext record carrying a CID
    is always set to tls12_cid(TBD2). The real content
    type of the record is found in DTLSInnerPlaintext.real_type after
    decryption.
@@ -272,7 +272,8 @@ cid
    is in use.
 
 enc_content
-:  The encrypted form of the serialized DTLSInnerPlaintext structure.
+:  The AEAD-encrypted form of the serialized DTLSInnerPlaintext structure of 
+   length ciphertext_length. 
 
 All other fields are as defined in RFC 6347.
 
@@ -317,7 +318,7 @@ described in {{RFC7366}}.
         tls12_cid +
         cid_length +
         tls12_cid +
-        DTLSCiphertext.version +
+        DTLSCIDCiphertext.version +
         epoch +
         sequence_number +
         cid +
@@ -350,11 +351,11 @@ described in {{RFC7366}}.
         tls12_cid +
         cid_length +
         tls12_cid +
-        DTLSCiphertext.version +
+        DTLSCIDCiphertext.version +
         epoch +
         sequence_number +
         cid +
-        DTLSCiphertext.length +
+        DTLSCIDCiphertext.length +
         IV +
         ENC(content + padding + padding_length));
 ~~~
@@ -369,7 +370,7 @@ data the following modification is made to the additional data calculation.
                       tls12_cid +
                       cid_length +
                       tls12_cid +
-                      DTLSCiphertext.version +
+                      DTLSCIDCiphertext.version +
                       epoch +
                       sequence_number +
                       cid +
