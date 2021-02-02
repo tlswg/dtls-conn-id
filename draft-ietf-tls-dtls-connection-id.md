@@ -520,8 +520,9 @@ concerned about this aspect SHOULD refuse to use CIDs.
 An on-path adversary can create reflection attacks
 against third parties because a DTLS peer has no means to distinguish a
 genuine address update event (for example, due to a NAT rebinding) from one
-that is malicious. This attack is of concern when there is a large asymmetry
-of request/response message sizes.
+that is malicious. This attack is of particular concern when the request is small 
+and the response large. See {{peer-address-update}} for the strategy to 
+ensure that the new peer address is able to receive and process DTLS records.
 
 Additionally, an attacker able to observe the data traffic exchanged between
 two DTLS peers is able to replay datagrams with modified IP address/port numbers.
