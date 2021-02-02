@@ -557,6 +557,18 @@ Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+
+draft-ietf-tls-dtls-connection-id-10
+
+   - TBD
+   - TBD
+
+draft-ietf-tls-dtls-connection-id-09
+
+   - Changed MAC/additional data calculation.
+   - Disallow sending MAC failure fatal alerts to non-validated peers.
+   - Incorporated editorial review comments by Ben Kaduk. 
+
 draft-ietf-tls-dtls-connection-id-08
 
    -  RRC draft moved from normative to informative.
