@@ -41,6 +41,11 @@ author:
        name: Thomas Fossati
        organization: Arm Limited
        email: thomas.fossati@arm.com
+ -
+       ins: A. Kraus
+       name: Achim Kraus
+       organization: Bosch.IO GmbH
+       email: achim.kraus@bosch.io
 
 normative:
   RFC2119:
@@ -661,6 +666,3 @@ better privacy features and developers are encouraged to switch to the new versi
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
 
-# Acknowledgements
-
-We would like to thank Achim Kraus for his review comments and implementation feedback.
