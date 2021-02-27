@@ -524,8 +524,8 @@ concerned about this aspect SHOULD refuse to use CIDs.
 An on-path adversary can create reflection attacks
 against third parties because a DTLS peer has no means to distinguish a
 genuine address update event (for example, due to a NAT rebinding) from one
-that is malicious. This attack is of particular concern when the request is small 
-and the response large. See {{peer-address-update}} for the strategy to 
+that is malicious. This attack is of particular concern when the request is small
+and the response large. See {{peer-address-update}} for the strategy to
 ensure that the new peer address is able to receive and process DTLS records.
 
 Additionally, an attacker able to observe the data traffic exchanged between
@@ -565,14 +565,14 @@ RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
 draft-ietf-tls-dtls-connection-id-10
 
-   - TBD
-   - TBD
+   - Clarify privacy impact.
+   - Have security considerations point to {{peer-address-update}}.
 
 draft-ietf-tls-dtls-connection-id-09
 
    - Changed MAC/additional data calculation.
    - Disallow sending MAC failure fatal alerts to non-validated peers.
-   - Incorporated editorial review comments by Ben Kaduk. 
+   - Incorporated editorial review comments by Ben Kaduk.
 
 draft-ietf-tls-dtls-connection-id-08
 
