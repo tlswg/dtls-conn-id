@@ -402,7 +402,7 @@ in changing a peer address if they are able to rewrite source addresses
 and if replayed packets are able to arrive before any original.
 
 - There is a strategy for ensuring that the new peer address is able to
-receive and process DTLS records. No such test is defined in this specification.
+receive and process DTLS records. No such strategy is defined in this specification.
 
 The conditions above are necessary to protect against attacks that use datagrams with
 spoofed addresses or replayed datagrams to trigger attacks. Note that there
@@ -524,9 +524,9 @@ concerned about this aspect SHOULD refuse to use CIDs.
 An on-path adversary can create reflection attacks
 against third parties because a DTLS peer has no means to distinguish a
 genuine address update event (for example, due to a NAT rebinding) from one
-that is malicious. This attack is of particular concern when the request is small 
-and the response large. See {{peer-address-update}} for the strategy to 
-ensure that the new peer address is able to receive and process DTLS records.
+that is malicious. This attack is of particular concern when the request is small
+and the response large. See {{peer-address-update}} for more
+on address updates.
 
 Additionally, an attacker able to observe the data traffic exchanged between
 two DTLS peers is able to replay datagrams with modified IP address/port numbers.
