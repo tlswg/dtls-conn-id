@@ -49,6 +49,7 @@ author:
 
 normative:
   RFC2119:
+  RFC8174:
   RFC5246:
   RFC6347:
   RFC8446:
@@ -101,7 +102,8 @@ extension.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in RFC 2119 {{RFC2119}}.
+document are to be interpreted as described in RFC 2119 {{RFC2119}} and 
+RFC 8174 {{RFC8174}}.
 
 This document assumes familiarity with DTLS 1.2 {{RFC6347}}.
 
