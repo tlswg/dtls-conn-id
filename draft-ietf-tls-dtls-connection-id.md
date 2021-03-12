@@ -535,12 +535,20 @@ The topic of peer address updates is discussed in {{peer-address-update}}.
 
 #  IANA Considerations
 
-IANA is requested to allocate an entry to the existing TLS "ExtensionType
-Values" registry, defined in {{RFC5246}}, for connection_id(TBD1) as described
-in the table below. IANA is requested to add an extra column to the
-TLS ExtensionType Values registry to indicate whether an extension is only
+This document requests three actions by IANA. 
+
+## Extra Column to TLS ExtensionType Values Registry
+
+IANA is requested to add an extra column to the
+"TLS ExtensionType Values" registry to indicate whether an extension is only
 applicable to DTLS and to include this document as an additional reference
 for the registry.
+
+## Entry to the TLS ExtensionType Values Registry
+
+IANA is requested to allocate an entry to the existing "TLS ExtensionType
+Values" registry, for connection_id(TBD1) as described
+in the table below. 
 
 ~~~~
 Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
@@ -553,8 +561,10 @@ extension is intended only for specific use cases. This document describes
 the behavior of this extension for DTLS 1.2 only; it is not applicable to TLS, and
 its usage for DTLS 1.3 is described in {{I-D.ietf-tls-dtls13}}.
 
-IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType
-Registry". The tls12_cid ContentType is only applicable to DTLS 1.2.
+## Entry to the TLS ContentType Registry
+
+IANA is requested to allocate tls12_cid(TBD2) in the "TLS ContentType"
+registry. The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 --- back
 
