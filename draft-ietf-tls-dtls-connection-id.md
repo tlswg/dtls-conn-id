@@ -135,8 +135,7 @@ A server willing to use CIDs will respond with a "connection_id"
 extension in the ServerHello, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
 indicates that the server will send with the client's CID but does not
-wish the client to include a CID (or again, alternately, to use a
-zero-length CID).
+wish the client to include a CID.
 
 Because each party sends the value in the "connection_id" extension it wants to
 receive as a CID in encrypted records, it is possible
@@ -157,13 +156,15 @@ DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. When a DTLS session is
 resumed or renegotiated, the "connection_id" extension is negotiated afresh.
 
-If DTLS peers have not negotiated the use of CIDs then the RFC 6347-defined
-record format and content type MUST be used.
+If DTLS peers have not negotiated the use of CIDs, which includes the case
+where both sent a zero-length cid in their connection_id extensions, then the
+RFC 6347-defined record format and content type MUST be used.
 
-If DTLS peers have negotiated the use of a CIDs using the ClientHello and
-the ServerHello messages then the peers need to take the following steps.
+If DTLS peers have negotiated the use of a non-zero CID in at least one
+direction using the ClientHello and the ServerHello messages, then the peers
+need to take the following steps.
 
-The DTLS peers determine whether incoming and outgoing messages need
+The DTLS peers determine whether incoming or outgoing (or both) messages need
 to use the new record format, i.e., the record format containing the CID.
 The new record format with the the tls12_cid content type is only used once encryption
 is enabled. Plaintext payloads never use the new record type and the CID content
