@@ -270,7 +270,7 @@ cid
 :  The CID value, cid_length bytes long, as agreed at the time the extension
    has been negotiated.  Recall that (as discussed previously) each peer chooses
    the CID value it will receive and use to identify the connection, so an
-   implementation can choose to always recieve CIDs of a fixed length.  If,
+   implementation can choose to always receive CIDs of a fixed length.  If,
    however, an implementation chooses to receive different lengths of CID,
    the assigned CID values must be self-delineating since there is no other
    mechanism available to determine what connection (and thus, what CID length)
@@ -313,7 +313,7 @@ Note "+" denotes concatenation.
 ## Block Ciphers
 
 The following MAC algorithm applies to block ciphers
-that do not use the with Encrypt-then-MAC processing
+that do not use the Encrypt-then-MAC processing
 described in {{RFC7366}}.
 
 ~~~
@@ -503,7 +503,7 @@ With multi-homing, a passive attacker is able to correlate the communication
 interaction over the two paths. The lack of a CID update mechanism
 in DTLS 1.2 makes this extension unsuitable for mobility scenarios where
 correlation must be considered. Deployments that use DTLS in multi-homing
-environments and are concerned about this aspects SHOULD refuse to use CIDs in
+environments and are concerned about these aspects SHOULD refuse to use CIDs in
 DTLS 1.2 and switch to DTLS 1.3 where a CID update mechanism is provided and
 sequence number encryption is available.
 
