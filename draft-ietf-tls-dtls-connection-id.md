@@ -675,6 +675,9 @@ inefficiency. The approach described in this specification is the
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
 better privacy features and developers are encouraged to switch to the new version of DTLS.
 
+# Acknowledgements  
+
+We would like to thank Tom Petch, Ben Kaduk, Sean Turner, and Hanno Becker for their review comments. 
+
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
-
