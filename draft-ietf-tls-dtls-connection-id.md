@@ -154,32 +154,24 @@ DTLS 1.2 in general does not allow TLS 1.3-style post-handshake messages
 that do not themselves begin other handshakes. When a DTLS session is
 resumed or renegotiated, the "connection_id" extension is negotiated afresh.
 
-If DTLS peers have not negotiated the use of CIDs, which includes the case
-where both sent a zero-length cid in their connection_id extensions, then the
-RFC 6347-defined record format and content type MUST be used.
+If DTLS peers have not negotiated the use of CIDs, or a zero-length
+CID has been advertised for a given direction, then the RFC
+6347-defined record format and content type MUST be used to send in
+that direction.
 
-If DTLS peers have negotiated the use of a non-zero-length CID in at least one
-direction using the ClientHello and the ServerHello messages, then the peers
-need to take the following steps.
-
-The DTLS peers determine whether incoming or outgoing (or both) messages need
-to use the new record format, i.e., the record format containing the CID.
-The new record format with the the tls12_cid content type is only used once encryption
-is enabled. Plaintext payloads never use the new record type and the CID content
+If DTLS peers have negotiated the use of a non-zero-length CID for a
+given direction, then once encryption is enabled they MUST send with
+the record format defined in {{dtls-ciphertext} with the
+new MAC computation defined in {{mac}} and the content type tls12_cid.
+Plaintext payloads never use the new record type and the CID content
 type.
 
-For sending, if a zero-length CID has been negotiated then the RFC 6347-defined
-record format and content type MUST be used (see Section 4.1 of {{RFC6347}})
-else the new record layer format with the tls12_cid content type defined in {{dtls-ciphertext}} MUST be used.
-
-When transmitting a datagram with the tls12_cid content type,
-the new MAC computation defined in {{mac}} MUST be used.
-
-For receiving, if the tls12_cid content type is set, then the CID is used to look up
-the connection and the security association. If the tls12_cid content type is not set,
-then the connection and security association is looked up by the 5-tuple and a
-check MUST be made to determine whether the expected CID value is indeed
-zero length. If the check fails, then the datagram MUST be dropped.
+When receiving, if the tls12_cid content type is set, then the CID is
+used to look up the connection and the security association. If the
+tls12_cid content type is not set, then the connection and security
+association is looked up by the 5-tuple and a check MUST be made to
+determine whether a non-zero length CID is expected. If the check
+fails, then the datagram MUST be dropped.
 
 When receiving a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
