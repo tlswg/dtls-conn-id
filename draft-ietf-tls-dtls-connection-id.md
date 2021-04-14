@@ -547,7 +547,7 @@ for the registry.
 
 IANA is requested to allocate an entry to the existing "TLS ExtensionType
 Values" registry, for connection_id(TBD1) as described
-in the table below. Although there is an early allocation, it
+in the table below. Although the value 53 has been allocated by early allocation for a previous version of this document, it
 is incompatible with this document.
 Once this document is approved for publication, the early allocation will be deprecated
 in favor of this assignment.
