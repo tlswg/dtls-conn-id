@@ -534,11 +534,11 @@ The topic of peer address updates is discussed in {{peer-address-update}}.
 
 #  IANA Considerations
 
-This document requests three actions by IANA. 
+This document requests three actions by IANA.
 
 ## Extra Column to TLS ExtensionType Values Registry
 
-IANA is requested to add an extra column to the
+IANA is requested to add an extra column named "DTLS-Only" to the
 "TLS ExtensionType Values" registry to indicate whether an extension is only
 applicable to DTLS and to include this document as an additional reference
 for the registry.
@@ -547,7 +547,10 @@ for the registry.
 
 IANA is requested to allocate an entry to the existing "TLS ExtensionType
 Values" registry, for connection_id(TBD1) as described
-in the table below. 
+in the table below. Although there is an early allocation, it
+is incompatible with this document.
+Once this document is approved for publication, the early allocation will be deprecated
+in favor of this assignment.
 
 ~~~~
 Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
