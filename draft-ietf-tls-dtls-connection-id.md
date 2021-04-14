@@ -157,7 +157,7 @@ resumed or renegotiated, the "connection_id" extension is negotiated afresh.
 If DTLS peers have not negotiated the use of CIDs, or a zero-length
 CID has been advertised for a given direction, then the RFC
 6347-defined record format and content type MUST be used to send in
-that direction.
+the indicated direction(s).
 
 If DTLS peers have negotiated the use of a non-zero-length CID for a
 given direction, then once encryption is enabled they MUST send with
@@ -170,8 +170,9 @@ When receiving, if the tls12_cid content type is set, then the CID is
 used to look up the connection and the security association. If the
 tls12_cid content type is not set, then the connection and security
 association is looked up by the 5-tuple and a check MUST be made to
-determine whether a non-zero length CID is expected. If the check
-fails, then the datagram MUST be dropped.
+determine whether a non-zero length CID is expected.
+If a non-zero-length CID is expected for the retrieved association,
+then the datagram MUST be treated as invalid.
 
 When receiving a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
