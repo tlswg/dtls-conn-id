@@ -160,7 +160,7 @@ If DTLS peers have not negotiated the use of CIDs, which includes the case
 where both sent a zero-length cid in their connection_id extensions, then the
 RFC 6347-defined record format and content type MUST be used.
 
-If DTLS peers have negotiated the use of a non-zero CID in at least one
+If DTLS peers have negotiated the use of a non-zero-length CID in at least one
 direction using the ClientHello and the ServerHello messages, then the peers
 need to take the following steps.
 
@@ -678,4 +678,3 @@ better privacy features and developers are encouraged to switch to the new versi
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
-
