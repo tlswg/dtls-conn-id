@@ -99,9 +99,7 @@ extension.
 
 # Conventions and Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in RFC 2119 {{RFC2119}}.
+{::boilerplate bcp14}
 
 This document assumes familiarity with DTLS 1.2 {{RFC6347}}.
 
@@ -675,9 +673,9 @@ inefficiency. The approach described in this specification is the
 simplest possible design that works given the limitations of DTLS 1.2. DTLS 1.3 provides
 better privacy features and developers are encouraged to switch to the new version of DTLS.
 
-# Acknowledgements  
+# Acknowledgements
 
-We would like to thank Tom Petch, Ben Kaduk, Sean Turner, and Hanno Becker for their review comments. 
+We would like to thank Tom Petch, Ben Kaduk, Sean Turner, and Hanno Becker for their review comments.
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
