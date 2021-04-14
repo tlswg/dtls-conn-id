@@ -163,7 +163,7 @@ If DTLS peers have negotiated the use of a non-zero-length CID for a
 given direction, then once encryption is enabled they MUST send with
 the record format defined in {{dtls-ciphertext} with the
 new MAC computation defined in {{mac}} and the content type tls12_cid.
-Plaintext payloads never use the new record type and the CID content
+Plaintext payloads never use the new record format or the CID content
 type.
 
 When receiving, if the tls12_cid content type is set, then the CID is
