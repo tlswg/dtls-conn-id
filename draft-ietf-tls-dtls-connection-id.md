@@ -237,7 +237,7 @@ content
 : Corresponds to the fragment of a given length.
 
 real_type
-: The content type describing the payload.
+: The content type describing the cleartext payload.
 
 zeros
 :  An arbitrary-length run of zero-valued bytes may appear in
