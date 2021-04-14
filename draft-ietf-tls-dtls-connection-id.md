@@ -172,7 +172,8 @@ tls12_cid content type is not set, then the connection and security
 association is looked up by the 5-tuple and a check MUST be made to
 determine whether a non-zero length CID is expected.
 If a non-zero-length CID is expected for the retrieved association,
-then the datagram MUST be treated as invalid.
+then the datagram MUST be treated as invalid, as described
+in Section 4.1.2.1 of {{RFC6347}}.
 
 When receiving a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
