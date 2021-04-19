@@ -143,7 +143,7 @@ for example by having the length in question be a compile-time constant.
 Such implementations MUST still be able to send
 CIDs of different length to other parties.
 Since the CID length information is not included in the record itself,
-implementations that want to use variable-length   CIDs are responsible
+implementations that want to use variable-length CIDs are responsible
 for constructing the CID in such a way that its length can be determined
 on reception.
 
