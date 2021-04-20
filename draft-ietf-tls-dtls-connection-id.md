@@ -552,7 +552,7 @@ Value   Extension Name  TLS 1.3  DTLS-Only  Recommended  Reference
 TBD1    connection_id   CH, SH   Y          N           [[This doc]]
 ~~~~
 
-A new column "DTLS-Only" is added to registry.
+A new column "DTLS-Only" is added to the registry.
 The valid entries are "Y" if the extension is only applicable to DTLS, "N" otherwise.
 All the pre-existing entries are given the value "N".
 
