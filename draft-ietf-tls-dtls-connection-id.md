@@ -93,7 +93,7 @@ these values are insufficient. This is a particular issue in the Internet of Thi
 when devices enter extended sleep periods to increase their battery lifetime. The
 NAT rebinding leads to connection failure, with the resulting cost of a new handshake.
 
-This document defines an extension to DTLS 1.2 to add a CID to the
+This document defines an extension to DTLS 1.2 to add a Connection ID (CID) to the
 DTLS record layer. The presence of the CID is negotiated via a DTLS
 extension.
 
@@ -213,9 +213,7 @@ of the DTLSPlaintext structure is left unchanged, as shown in {{dtls-plaintext}}
 When CIDs are being used, the content to be sent
 is first wrapped along with its content type and optional padding into a
 DTLSInnerPlaintext structure. This newly introduced structure is shown in
-{{dtls-innerplaintext}}. The DTLSInnerPlaintext
-byte sequence is then encrypted. To create the DTLSCiphertext structure shown in
-{{dtls-ciphertext}} the CID is added.
+{{dtls-innerplaintext}}.
 
 ~~~
      struct {
@@ -239,6 +237,9 @@ zeros
    the total stays within record size limits.  See Section 5.4 of
    {{RFC8446}} for more details. (Note that the term TLSInnerPlaintext in
    RFC 8446 refers to DTLSInnerPlaintext in this specification.)
+
+The DTLSInnerPlaintext byte sequence is then encrypted. To create the
+DTLSCiphertext structure shown in {{dtls-ciphertext}} the CID is added.
 
 ~~~
      struct {
