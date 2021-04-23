@@ -137,7 +137,7 @@ wish the client to include a CID when sending.
 
 Because each party sends the value in the "connection_id" extension it wants to
 receive as a CID in encrypted records, it is possible
-for an endpoint to use a globally constant length for such connection
+for an endpoint to use a deployment-specific constant length for such connection
 identifiers.  This can in turn ease parsing and connection lookup,
 for example by having the length in question be a compile-time constant.
 Such implementations MUST still be able to send
