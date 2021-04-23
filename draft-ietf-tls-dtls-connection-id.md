@@ -120,7 +120,7 @@ The extension_data field of this extension, when included in the
 ClientHello, MUST contain the ConnectionId structure. This structure
 contains the CID value the client wishes the server to use when sending
 messages to the client. A zero-length CID value indicates that the client
-is prepared to send with a CID but does not wish the server to use one when
+is prepared to send using a CID but does not wish the server to use one when
 sending.
 
 ~~~~
@@ -132,8 +132,8 @@ sending.
 A server willing to use CIDs will respond with a "connection_id"
 extension in the ServerHello, containing the CID it wishes the
 client to use when sending messages towards it. A zero-length value
-indicates that the server will send with the client's CID but does not
-wish the client to include a CID.
+indicates that the server will send using the client's CID but does not
+wish the client to include a CID when sending.
 
 Because each party sends the value in the "connection_id" extension it wants to
 receive as a CID in encrypted records, it is possible
@@ -161,7 +161,7 @@ the indicated direction(s).
 
 If DTLS peers have negotiated the use of a non-zero-length CID for a
 given direction, then once encryption is enabled they MUST send with
-the record format defined in {{dtls-ciphertext} with the
+the record format defined in {{dtls-ciphertext}} with the
 new MAC computation defined in {{mac}} and the content type tls12_cid.
 Plaintext payloads never use the new record format or the CID content
 type.
@@ -339,7 +339,7 @@ the MAC in the same order as they appear on the wire.
 ## Block Ciphers with Encrypt-then-MAC processing
 
 The following MAC algorithm applies to block ciphers
-that use the with Encrypt-then-MAC processing
+that use the Encrypt-then-MAC processing
 described in {{RFC7366}}.
 
 ~~~
@@ -547,10 +547,14 @@ Once this document is approved for publication, the early allocation will be dep
 in favor of this assignment.
 
 ~~~~
-Value   Extension Name  TLS 1.3  DTLS Only  Recommended  Reference
+Value   Extension Name  TLS 1.3  DTLS-Only  Recommended  Reference
 --------------------------------------------------------------------
 TBD1    connection_id   CH, SH   Y          N           [[This doc]]
 ~~~~
+
+A new column "DTLS-Only" is added to the registry.
+The valid entries are "Y" if the extension is only applicable to DTLS, "N" otherwise.
+All the pre-existing entries are given the value "N".
 
 Note: The value "N" in the Recommended column is set because this
 extension is intended only for specific use cases. This document describes
