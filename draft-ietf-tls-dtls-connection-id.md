@@ -49,7 +49,6 @@ author:
 
 normative:
   RFC2119:
-  RFC5246:
   RFC6347:
   RFC8446:
 
@@ -177,7 +176,7 @@ in Section 4.1.2.1 of {{RFC6347}}.
 
 When receiving a datagram with the tls12_cid content type,
 the new MAC computation defined in {{mac}} MUST be used. When receiving a datagram
-with the RFC 6347-defined record format the MAC calculation defined in Section 4.1.2
+with the RFC 6347-defined record format, the MAC calculation defined in Section 4.1.2
 of {{RFC6347}} MUST be used.
 
 # Record Layer Extensions
@@ -192,7 +191,7 @@ three implications:
 
 - The CID field is present and contains one or more bytes.
 - The MAC calculation follows the process described in {{mac}}.
-- The true content type is inside the encryption envelope, as described
+- The real content type is inside the encryption envelope, as described
   below.
 
 Plaintext records are not impacted by this extension. Hence, the format
@@ -296,7 +295,7 @@ cid_length
 : 1 byte field indicating the length of the negotiated CID.
 
 length_of_DTLSInnerPlaintext
-: The length (in bytes) of the serialised DTLSInnerPlaintext (two-byte integer).
+: The length (in bytes) of the serialized DTLSInnerPlaintext (two-byte integer).
   The length MUST NOT exceed 2^14.
 
 seq_num_placeholder
@@ -378,9 +377,9 @@ data the following modification is made to the additional data calculation.
 # Peer Address Update {#peer-address-update}
 
 When a record with a CID is received that has a source address
-different than the one currently associated with the DTLS connection,
+different from the one currently associated with the DTLS connection,
 the receiver MUST NOT replace the address it uses for sending records
-to its peer with the source address specified in the received datagram
+to its peer with the source address specified in the received datagram,
 unless the following three conditions are met:
 
 - The received datagram has been cryptographically verified using
@@ -529,7 +528,7 @@ The topic of peer address updates is discussed in {{peer-address-update}}.
 
 #  IANA Considerations
 
-This document requests three actions by IANA.
+This document requests three actions from IANA.
 
 ## Extra Column to TLS ExtensionType Values Registry
 
@@ -650,7 +649,7 @@ Archives of the list can be found at:
 
 # Contributors
 
-Many people have contributed to this specification and we would like to thank
+Many people have contributed to this specification, and we would like to thank
 the following individuals for their contributions:
 
 ~~~
