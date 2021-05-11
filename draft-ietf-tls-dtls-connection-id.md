@@ -574,6 +574,16 @@ registry. The tls12_cid ContentType is only applicable to DTLS 1.2.
 
 RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+draft-ietf-tls-dtls-connection-id-12
+
+   - Improved peer address update text
+   - Editorial improvements
+   - Clarification regarding the use of the TLS ExtensionType Values Registry
+
+draft-ietf-tls-dtls-connection-id-11
+
+   - Enhanced IANA considerations section
+   - Clarifications regarding CID negotiation and zero-length CIDs
 
 draft-ietf-tls-dtls-connection-id-10
 
@@ -689,7 +699,9 @@ better privacy features and developers are encouraged to switch to the new versi
 
 # Acknowledgements
 
-We would like to thank Tom Petch, Ben Kaduk, Sean Turner, and Hanno Becker for their review comments.
+We would like to thank Hanno Becker, Martin Duke, Lars Eggert, Ben Kaduk, Warren Kumari, 
+Francesca Palombini, Tom Petch, John Scudder, Sean Turner, Eric Vyncke, and Robert Wilton 
+for their review comments.
 
 Finally, we want to thank the IETF TLS working group chairs, Chris Wood, Joseph Salowey, and
 Sean Turner, for their patience, support and feedback.
