@@ -101,9 +101,9 @@ Table of Contents
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  14
      11.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Appendix A.  History  . . . . . . . . . . . . . . . . . . . . . .  15
-   Appendix B.  Working Group Information  . . . . . . . . . . . . .  16
+   Appendix B.  Working Group Information  . . . . . . . . . . . . .  17
    Appendix C.  Contributors . . . . . . . . . . . . . . . . . . . .  17
-   Appendix D.  Acknowledgements . . . . . . . . . . . . . . . . . .  17
+   Appendix D.  Acknowledgements . . . . . . . . . . . . . . . . . .  18
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
 
@@ -790,6 +790,21 @@ Appendix A.  History
 
    RFC EDITOR: PLEASE REMOVE THE THIS SECTION
 
+   draft-ietf-tls-dtls-connection-id-12
+
+   *  Improved peer address update text
+
+   *  Editorial improvements
+
+   *  Clarification regarding the use of the TLS ExtensionType Values
+      Registry
+
+   draft-ietf-tls-dtls-connection-id-11
+
+   *  Enhanced IANA considerations section
+
+   *  Clarifications regarding CID negotiation and zero-length CIDs
+
    draft-ietf-tls-dtls-connection-id-10
 
    *  Clarify privacy impact.
@@ -820,6 +835,13 @@ Appendix A.  History
    *  Enhanced security consideration section to describe a potential
       man-in-the-middle attack concerning address validation.
 
+
+
+Rescorla, et al.        Expires 12 November 2021               [Page 15]
+
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
+
+
    draft-ietf-tls-dtls-connection-id-05
 
    *  Restructed Section 5 "Record Payload Protection"
@@ -833,14 +855,6 @@ Appendix A.  History
       then-MAC processing.
 
    draft-ietf-tls-dtls-connection-id-03
-
-
-
-
-Rescorla, et al.        Expires 12 November 2021               [Page 15]
-
-Internet-Draft           DTLS 1.2 Connection ID                 May 2021
-
 
    *  Updated list of contributors
 
@@ -873,6 +887,17 @@ Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
    *  Initial version
 
+
+
+
+
+
+
+Rescorla, et al.        Expires 12 November 2021               [Page 16]
+
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
+
+
 Appendix B.  Working Group Information
 
    RFC EDITOR: PLEASE REMOVE THE THIS SECTION
@@ -886,17 +911,6 @@ Appendix B.  Working Group Information
    Archives of the list can be found at: https://www.ietf.org/mail-
    archive/web/tls/current/index.html (https://www.ietf.org/mail-
    archive/web/tls/current/index.html)
-
-
-
-
-
-
-
-Rescorla, et al.        Expires 12 November 2021               [Page 16]
-
-Internet-Draft           DTLS 1.2 Connection ID                 May 2021
-
 
 Appendix C.  Contributors
 
@@ -931,6 +945,15 @@ Appendix C.  Contributors
 
    *  Mark Nottingham (Fastly)
 
+
+
+
+
+Rescorla, et al.        Expires 12 November 2021               [Page 17]
+
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
+
+
    The task force team discussed various design ideas, including
    cryptographically generated session ids using hash chains and public
    key encryption, but dismissed them due to their inefficiency.  The
@@ -941,18 +964,10 @@ Appendix C.  Contributors
 
 Appendix D.  Acknowledgements
 
-   We would like to thank Tom Petch, Ben Kaduk, Sean Turner, and Hanno
-   Becker for their review comments.
-
-
-
-
-
-
-Rescorla, et al.        Expires 12 November 2021               [Page 17]
-
-Internet-Draft           DTLS 1.2 Connection ID                 May 2021
-
+   We would like to thank Hanno Becker, Martin Duke, Lars Eggert, Ben
+   Kaduk, Warren Kumari, Francesca Palombini, Tom Petch, John Scudder,
+   Sean Turner, Eric Vyncke, and Robert Wilton for their review
+   comments.
 
    Finally, we want to thank the IETF TLS working group chairs, Chris
    Wood, Joseph Salowey, and Sean Turner, for their patience, support
@@ -982,21 +997,6 @@ Authors' Addresses
    Bosch.IO GmbH
 
    Email: achim.kraus@bosch.io
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
