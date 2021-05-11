@@ -6,10 +6,10 @@ TLS                                                     E. Rescorla, Ed.
 Internet-Draft                                                RTFM, Inc.
 Updates: 6347 (if approved)                           H. Tschofenig, Ed.
 Intended status: Standards Track                              T. Fossati
-Expires: 25 October 2021                                     Arm Limited
+Expires: 12 November 2021                                    Arm Limited
                                                                 A. Kraus
                                                            Bosch.IO GmbH
-                                                           23 April 2021
+                                                             11 May 2021
 
 
                   Connection Identifiers for DTLS 1.2
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 October 2021.
+   This Internet-Draft will expire on 12 November 2021.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 1]
+Rescorla, et al.        Expires 12 November 2021                [Page 1]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 2]
+Rescorla, et al.        Expires 12 November 2021                [Page 2]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 3]
+Rescorla, et al.        Expires 12 November 2021                [Page 3]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    The extension_data field of this extension, when included in the
@@ -221,9 +221,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 4]
+Rescorla, et al.        Expires 12 November 2021                [Page 4]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    When receiving, if the tls12_cid content type is set, then the CID is
@@ -277,9 +277,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 5]
+Rescorla, et al.        Expires 12 November 2021                [Page 5]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    When CIDs are being used, the content to be sent is first wrapped
@@ -333,9 +333,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 6]
+Rescorla, et al.        Expires 12 November 2021                [Page 6]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
       always receive CIDs of a fixed length.  If, however, an
@@ -389,9 +389,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 7]
+Rescorla, et al.        Expires 12 November 2021                [Page 7]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
        MAC(MAC_write_key,
@@ -445,9 +445,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 8]
+Rescorla, et al.        Expires 12 November 2021                [Page 8]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
        additional_data = seq_num_placeholder +
@@ -482,8 +482,8 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
       replayed packets are able to arrive before any original.
 
    *  There is a strategy for ensuring that the new peer address is able
-      to receive and process DTLS records.  No such strategy is defined
-      in this specification.
+      to receive and process DTLS records.  No strategy is mandated by
+      this specification but see note (*) below.
 
    The conditions above are necessary to protect against attacks that
    use datagrams with spoofed addresses or replayed datagrams to trigger
@@ -501,19 +501,19 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021                [Page 9]
+Rescorla, et al.        Expires 12 November 2021                [Page 9]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
-   Application protocols that implement protection against these attacks
-   depend on being aware of changes in peer addresses so that they can
-   engage the necessary mechanisms.  When delivered such an event, an
-   application layer-specific address validation mechanism can be
-   triggered, for example one that is based on successful exchange of a
-   minimal amount of ping-pong traffic with the peer.  Alternatively, an
-   DTLS-specific mechanism may be used, as described in
-   [I-D.tschofenig-tls-dtls-rrc].
+   (*) Note: Application protocols that implement protection against
+   spoofed addresses depend on being aware of changes in peer addresses
+   so that they can engage the necessary mechanisms.  When delivered
+   such an event, an application layer-specific address validation
+   mechanism can be triggered, for example one that is based on
+   successful exchange of a minimal amount of ping-pong traffic with the
+   peer.  Alternatively, an DTLS-specific mechanism may be used, as
+   described in [I-D.tschofenig-tls-dtls-rrc].
 
    DTLS implementations MUST silently discard records with bad MACs or
    that are otherwise invalid.
@@ -557,9 +557,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 10]
+Rescorla, et al.        Expires 12 November 2021               [Page 10]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    Client                                             Server
@@ -613,9 +613,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 11]
+Rescorla, et al.        Expires 12 November 2021               [Page 11]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    how to use the CID for payloads sent from the client to the server,
@@ -669,9 +669,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 12]
+Rescorla, et al.        Expires 12 November 2021               [Page 12]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    Additionally, an attacker able to observe the data traffic exchanged
@@ -725,9 +725,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 13]
+Rescorla, et al.        Expires 12 November 2021               [Page 13]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
 11.1.  Normative References
@@ -760,9 +760,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
               Rescorla, E., Tschofenig, H., and N. Modadugu, "The
               Datagram Transport Layer Security (DTLS) Protocol Version
               1.3", Work in Progress, Internet-Draft, draft-ietf-tls-
-              dtls13-42, 22 April 2021,
+              dtls13-43, 30 April 2021,
               <https://www.ietf.org/archive/id/draft-ietf-tls-
-              dtls13-42.txt>.
+              dtls13-43.txt>.
 
    [I-D.tschofenig-tls-dtls-rrc]
               Fossati, T. and H. Tschofenig, "Return Routability Check
@@ -781,9 +781,9 @@ Internet-Draft           DTLS 1.2 Connection ID               April 2021
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 14]
+Rescorla, et al.        Expires 12 November 2021               [Page 14]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
 Appendix A.  History
@@ -837,9 +837,9 @@ Appendix A.  History
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 15]
+Rescorla, et al.        Expires 12 November 2021               [Page 15]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    *  Updated list of contributors
@@ -893,9 +893,9 @@ Appendix B.  Working Group Information
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 16]
+Rescorla, et al.        Expires 12 November 2021               [Page 16]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
 Appendix C.  Contributors
@@ -949,9 +949,9 @@ Appendix D.  Acknowledgements
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 17]
+Rescorla, et al.        Expires 12 November 2021               [Page 17]
 
-Internet-Draft           DTLS 1.2 Connection ID               April 2021
+Internet-Draft           DTLS 1.2 Connection ID                 May 2021
 
 
    Finally, we want to thank the IETF TLS working group chairs, Chris
@@ -1005,4 +1005,4 @@ Authors' Addresses
 
 
 
-Rescorla, et al.         Expires 25 October 2021               [Page 18]
+Rescorla, et al.        Expires 12 November 2021               [Page 18]
