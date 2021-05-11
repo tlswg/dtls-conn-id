@@ -396,7 +396,8 @@ in changing a peer address if they are able to rewrite source addresses
 and if replayed packets are able to arrive before any original.
 
 - There is a strategy for ensuring that the new peer address is able to
-receive and process DTLS records. No such strategy is defined in this specification.
+receive and process DTLS records. No strategy is mandated by this specification 
+but see note (*) below. 
 
 The conditions above are necessary to protect against attacks that use datagrams with
 spoofed addresses or replayed datagrams to trigger attacks. Note that there
@@ -410,8 +411,8 @@ Note that datagrams that pass the DTLS cryptographic verification procedures
 but do not trigger a change of peer address are still valid DTLS records and
 are still to be passed to the application.
 
-Application protocols that implement protection against these attacks depend on
-being aware of changes in peer addresses so that they can engage the necessary
+(*) Note: Application protocols that implement protection against spoofed addresses 
+depend on being aware of changes in peer addresses so that they can engage the necessary
 mechanisms. When delivered such an event, an application layer-specific
 address validation mechanism can be triggered, for example one that is based on
 successful exchange of a minimal amount of ping-pong traffic with the peer.
