@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-05-06T00:07:35.345939+00:00",
+  "timestamp": "2021-05-13T00:18:20.747967+00:00",
   "repo": "tlswg/dtls-conn-id",
   "labels": [
     {
@@ -9301,24 +9301,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjE5ODc0NzYy",
       "title": "John Scudder's Improved Peer Address Update Text",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/111",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "hannestschofenig",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2021-04-21T05:49:14Z",
-      "updatedAt": "2021-05-04T13:04:04Z",
+      "updatedAt": "2021-05-11T09:44:48Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "1043c5062331899bbca5a776bfa5c349db6586cf",
       "headRepository": "tlswg/dtls-conn-id",
       "headRefName": "hannestschofenig-patch-14",
       "headRefOid": "307485e76cd9e78d716b6811b852d04fc49ebca0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-05-11T09:44:48Z",
+      "mergedAt": "2021-05-11T09:44:48Z",
+      "mergedBy": "ekr",
+      "mergeCommit": {
+        "oid": "2eccffd3a8a291fdf468cee6f969c8c50e0ee4b5"
+      },
       "comments": [],
       "reviews": [
         {
@@ -9453,6 +9455,34 @@
           "updatedAt": "2021-04-23T23:04:20Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 117,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjQwMDI3Mjkz",
+      "title": "Updates to Acknowledgements and History",
+      "url": "https://github.com/tlswg/dtls-conn-id/pull/117",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-05-11T10:13:01Z",
+      "updatedAt": "2021-05-11T10:13:22Z",
+      "baseRepository": "tlswg/dtls-conn-id",
+      "baseRefName": "master",
+      "baseRefOid": "2eccffd3a8a291fdf468cee6f969c8c50e0ee4b5",
+      "headRepository": "tlswg/dtls-conn-id",
+      "headRefName": "hannestschofenig-patch-15",
+      "headRefOid": "faa9c1af444577e0464293a5dc5d1c2e144bf12b",
+      "closedAt": "2021-05-11T10:13:15Z",
+      "mergedAt": "2021-05-11T10:13:15Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "daa8598677956043ebecc3aab3c75d2fefe22a37"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
