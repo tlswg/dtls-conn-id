@@ -397,7 +397,8 @@ and if replayed packets are able to arrive before any original.
 
 - There is a strategy for ensuring that the new peer address is able to
 receive and process DTLS records. No strategy is mandated by this specification 
-but see note (*) below. 
+but see note (*) below. (Such a strategy might include sending specific
+probing packets to the new peer address.)
 
 The conditions above are necessary to protect against attacks that use datagrams with
 spoofed addresses or replayed datagrams to trigger attacks. Note that there
