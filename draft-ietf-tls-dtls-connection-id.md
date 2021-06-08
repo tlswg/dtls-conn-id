@@ -380,7 +380,6 @@ data the following modification is made to the additional data calculation.
 When a record with a CID is received that has a source address
 different from the one currently associated with the DTLS connection,
 the receiver MUST NOT replace the address it uses for sending records
-(other than specific probing packets)
 to its peer with the source address specified in the received datagram,
 unless the following three conditions are met:
 
