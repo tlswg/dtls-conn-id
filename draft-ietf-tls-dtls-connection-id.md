@@ -101,7 +101,7 @@ extension.
 {::boilerplate bcp14}
 
 This document assumes familiarity with DTLS 1.2 {{RFC6347}}. The presentation language 
-used in this document is described in Section 4 of {{RFC8446}}.
+used in this document is described in Section 3 of {{RFC8446}}.
 
 # The "connection_id" Extension
 
