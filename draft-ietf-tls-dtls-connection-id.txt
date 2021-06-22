@@ -6,10 +6,10 @@ TLS                                                     E. Rescorla, Ed.
 Internet-Draft                                                RTFM, Inc.
 Updates: 6347 (if approved)                           H. Tschofenig, Ed.
 Intended status: Standards Track                              T. Fossati
-Expires: 11 December 2021                                    Arm Limited
+Expires: 24 December 2021                                    Arm Limited
                                                                 A. Kraus
                                                            Bosch.IO GmbH
-                                                             9 June 2021
+                                                            22 June 2021
 
 
                   Connection Identifiers for DTLS 1.2
@@ -28,6 +28,9 @@ Abstract
    during the lifetime of an ongoing DTLS session then the receiver will
    be unable to locate the correct security context.
 
+   The new ciphertext record format with CID also provides content type
+   encryption and record-layer padding.
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -43,20 +46,22 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 December 2021.
+   This Internet-Draft will expire on 24 December 2021.
+
+
+
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 1]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
 
 Copyright Notice
 
    Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 1]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -83,12 +88,12 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Conventions and Terminology . . . . . . . . . . . . . . . . .   3
-   3.  The "connection_id" Extension . . . . . . . . . . . . . . . .   3
+   3.  The "connection_id" Extension . . . . . . . . . . . . . . . .   4
    4.  Record Layer Extensions . . . . . . . . . . . . . . . . . . .   5
    5.  Record Payload Protection . . . . . . . . . . . . . . . . . .   7
-     5.1.  Block Ciphers . . . . . . . . . . . . . . . . . . . . . .   7
+     5.1.  Block Ciphers . . . . . . . . . . . . . . . . . . . . . .   8
      5.2.  Block Ciphers with Encrypt-then-MAC processing  . . . . .   8
-     5.3.  AEAD Ciphers  . . . . . . . . . . . . . . . . . . . . . .   8
+     5.3.  AEAD Ciphers  . . . . . . . . . . . . . . . . . . . . . .   9
    6.  Peer Address Update . . . . . . . . . . . . . . . . . . . . .   9
    7.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  10
    8.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  12
@@ -101,18 +106,18 @@ Table of Contents
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  14
      11.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Appendix A.  History  . . . . . . . . . . . . . . . . . . . . . .  15
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 2]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
    Appendix B.  Working Group Information  . . . . . . . . . . . . .  17
    Appendix C.  Contributors . . . . . . . . . . . . . . . . . . . .  17
    Appendix D.  Acknowledgements . . . . . . . . . . . . . . . . . .  18
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 2]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
 1.  Introduction
 
@@ -140,6 +145,12 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    (CID) to the DTLS record layer.  The presence of the CID is
    negotiated via a DTLS extension.
 
+   Adding a CID to the ciphertext record format presents an opportunity
+   to make other changes to the record format.  In keeping with the best
+   practices established by TLS 1.3, the type of the record is
+   encrypted, and a mechanism provided for adding padding to obfuscate
+   the plaintext length.
+
 2.  Conventions and Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -152,6 +163,13 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    presentation language used in this document is described in Section 3
    of [RFC8446].
 
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 3]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
 3.  The "connection_id" Extension
 
    This document defines the "connection_id" extension, which is used in
@@ -162,13 +180,6 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
      enum {
         connection_id(TBD1), (65535)
      } ExtensionType;
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 3]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
    The extension_data field of this extension, when included in the
    ClientHello, MUST contain the ConnectionId structure.  This structure
@@ -206,6 +217,15 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    themselves begin other handshakes.  When a DTLS session is resumed or
    renegotiated, the "connection_id" extension is negotiated afresh.
 
+
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 4]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
    If DTLS peers have not negotiated the use of CIDs, or a zero-length
    CID has been advertised for a given direction, then the RFC
    6347-defined record format and content type MUST be used to send in
@@ -216,15 +236,6 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    the record format defined in Figure 3 with the new MAC computation
    defined in Section 5 and the content type tls12_cid.  Plaintext
    payloads never use the new record format or the CID content type.
-
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 4]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
    When receiving, if the tls12_cid content type is set, then the CID is
    used to look up the connection and the security association.  If the
@@ -261,6 +272,16 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    format of the DTLSPlaintext structure is left unchanged, as shown in
    Figure 1.
 
+
+
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 5]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
         struct {
             ContentType type;
             ProtocolVersion version;
@@ -271,16 +292,6 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
         } DTLSPlaintext;
 
                 Figure 1: DTLS 1.2 Plaintext Record Payload.
-
-
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 5]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
    When CIDs are being used, the content to be sent is first wrapped
    along with its content type and optional padding into a
@@ -319,6 +330,14 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
             opaque enc_content[DTLSCiphertext.length];
         } DTLSCiphertext;
 
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 6]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
              Figure 3: DTLS 1.2 CID-enhanced Ciphertext Record.
 
    outer_type  The outer content type of a DTLSCiphertext record
@@ -330,14 +349,6 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
       extension has been negotiated.  Recall that (as discussed
       previously) each peer chooses the CID value it will receive and
       use to identify the connection, so an implementation can choose to
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 6]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
-
       always receive CIDs of a fixed length.  If, however, an
       implementation chooses to receive different lengths of CID, the
       assigned CID values must be self-delineating since there is no
@@ -376,23 +387,17 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
    Note "+" denotes concatenation.
 
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 7]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
 5.1.  Block Ciphers
 
    The following MAC algorithm applies to block ciphers that do not use
    the Encrypt-then-MAC processing described in [RFC7366].
-
-
-
-
-
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 7]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
        MAC(MAC_write_key,
            seq_num_placeholder +
@@ -437,18 +442,19 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
            IV +
            ENC(content + padding + padding_length));
 
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 8]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
 5.3.  AEAD Ciphers
 
    For ciphers utilizing authenticated encryption with additional data
    the following modification is made to the additional data
    calculation.
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 8]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
        additional_data = seq_num_placeholder +
                          tls12_cid +
@@ -485,6 +491,21 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
       to receive and process DTLS records.  No strategy is mandated by
       this specification but see note (*) below.
 
+
+
+
+
+
+
+
+
+
+
+Rescorla, et al.        Expires 24 December 2021                [Page 9]
+
+Internet-Draft           DTLS 1.2 Connection ID                June 2021
+
+
    The conditions above are necessary to protect against attacks that
    use datagrams with spoofed addresses or replayed datagrams to trigger
    attacks.  Note that there is no requirement for use of the anti-
@@ -497,14 +518,6 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
    Note that datagrams that pass the DTLS cryptographic verification
    procedures but do not trigger a change of peer address are still
    valid DTLS records and are still to be passed to the application.
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021                [Page 9]
-
-Internet-Draft           DTLS 1.2 Connection ID                June 2021
-
 
    (*) Note: Application protocols that implement protection against
    spoofed addresses depend on being aware of changes in peer addresses
@@ -544,20 +557,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla, et al.        Expires 11 December 2021               [Page 10]
+Rescorla, et al.        Expires 24 December 2021               [Page 10]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -613,7 +613,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 11]
+Rescorla, et al.        Expires 24 December 2021               [Page 11]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -669,7 +669,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 12]
+Rescorla, et al.        Expires 24 December 2021               [Page 12]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -725,7 +725,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 13]
+Rescorla, et al.        Expires 24 December 2021               [Page 13]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -781,7 +781,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 14]
+Rescorla, et al.        Expires 24 December 2021               [Page 14]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -837,7 +837,7 @@ Appendix A.  History
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 15]
+Rescorla, et al.        Expires 24 December 2021               [Page 15]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -893,7 +893,7 @@ Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 16]
+Rescorla, et al.        Expires 24 December 2021               [Page 16]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -949,7 +949,7 @@ Appendix C.  Contributors
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 17]
+Rescorla, et al.        Expires 24 December 2021               [Page 17]
 
 Internet-Draft           DTLS 1.2 Connection ID                June 2021
 
@@ -1005,4 +1005,4 @@ Authors' Addresses
 
 
 
-Rescorla, et al.        Expires 11 December 2021               [Page 18]
+Rescorla, et al.        Expires 24 December 2021               [Page 18]
