@@ -69,6 +69,9 @@ is accomplished with the help of the 5-tuple. If the source IP address and/or
 source port changes during the lifetime of an ongoing DTLS session then the
 receiver will be unable to locate the correct security context.
 
+The new ciphertext record format with CID also provides content type encryption
+and record-layer padding.
+
 --- middle
 
 
@@ -95,6 +98,11 @@ NAT rebinding leads to connection failure, with the resulting cost of a new hand
 This document defines an extension to DTLS 1.2 to add a Connection ID (CID) to the
 DTLS record layer. The presence of the CID is negotiated via a DTLS
 extension.
+
+Adding a CID to the ciphertext record format presents an opportunity to make
+other changes to the record format.  In keeping with the best practices
+established by TLS 1.3, the type of the record is encrypted, and
+a mechanism provided for adding padding to obfuscate the plaintext length.
 
 # Conventions and Terminology
 
