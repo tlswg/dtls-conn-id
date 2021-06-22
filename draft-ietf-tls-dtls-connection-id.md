@@ -55,7 +55,7 @@ normative:
 informative:
   RFC6973:
   I-D.ietf-tls-dtls13:
-  I-D.tschofenig-tls-dtls-rrc:
+  I-D.ietf-tls-dtls-rrc:
 
 --- abstract
 
@@ -425,7 +425,7 @@ mechanisms. When delivered such an event, an application layer-specific
 address validation mechanism can be triggered, for example one that is based on
 successful exchange of a minimal amount of ping-pong traffic with the peer.
 Alternatively, an DTLS-specific mechanism may be used, as described in
-{{I-D.tschofenig-tls-dtls-rrc}}.
+{{I-D.ietf-tls-dtls-rrc}}.
 
 DTLS implementations MUST silently discard records with bad MACs or that are
 otherwise invalid.
