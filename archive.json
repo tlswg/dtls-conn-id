@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-10T00:16:13.524040+00:00",
+  "timestamp": "2021-06-24T00:12:19.016583+00:00",
   "repo": "tlswg/dtls-conn-id",
   "labels": [
     {
@@ -2310,26 +2310,26 @@
       "id": "MDU6SXNzdWU4NjEwMzM3MjM=",
       "title": "\u00c9ric Vyncke's IESG review",
       "url": "https://github.com/tlswg/dtls-conn-id/issues/103",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/tls/R4Sh7CkbadK9bLCHzmfyGHKthqg/\r\n\r\n```\r\n-- Abstract --\r\nAs an important part of this document is the padding, should it be mentioned\r\nalso in the abstract ?\r\n\r\n-- Section 3 --\r\nWhile I am not a DTLS expert, I find this section quite difficult to understand\r\nthe reasoning behind the specification as little explanations are given about,\r\ne.g, what is the motivation of \"A zero-length value indicates that the server\r\nwill send with the client's CID but does not wish the client to include a CID.\"\r\n\r\n-- Section 6 --\r\nI am puzzled by the text:\r\n     \"There is a strategy for ensuring that the new peer address is able\r\n      to receive and process DTLS records.  No such strategy is defined\r\n      in this specification.\"\r\nDoes this mean that there is no way to update the peer IP address ?\r\n\r\n== NITS ==\r\n\r\n-- Section 1 --\r\nPlease expand CID on first use outside of the abstract.\r\n\r\n-- Section 4 --\r\nSuggest to add a short paragraph as a preamble to figure 3. Currently, it looks\r\nlike figure 3 belongs to the 'zeros' field description.\r\n```\r\n\r\n**Update from \u00c9ric re: Section 6**\r\n```\r\nRe-reading the end of the section 6 gives indeed some insights on the\r\noverall process, which I failed to understand at first reading. May I\r\nsuggest to complement the last bullet as \"defined in this specification\r\nbut relies on the application using DTLS\" ?\r\n```\r\n\r\n",
       "createdAt": "2021-04-19T08:13:02Z",
-      "updatedAt": "2021-06-08T18:36:39Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-22T21:10:40Z",
+      "closedAt": "2021-06-22T21:10:40Z",
       "comments": [
         {
           "author": "boaks",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "About \"-- Section 3 --, DTLS / zero-length CID\"\r\n\r\n[RFC5246 - 7.4.1.4.  Hello Extensions](https://tools.ietf.org/html/rfc5246#section-7.4.1.4)\r\n\r\n\"An extension type MUST NOT appear in the ServerHello unless the same\r\n extension type appeared in the corresponding ClientHello.\"\r\n\r\nThe \"zero-length CID\" therefore is mainly used for the very common cases, where only the clients are required to send such a CID, but not the server. \r\n\r\nMaybe adding a hint to RFC5246 7.4.1.4 will help?\r\n",
           "createdAt": "2021-04-19T08:56:48Z",
           "updatedAt": "2021-04-19T08:56:48Z"
         },
         {
           "author": "boaks",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "About \"-- Section 6 --\"\r\n\r\nYes, that's still very complex:\r\n\r\nFirst, processing the record seems to be easier (less restricted), than use a changed source address for sending data back.\r\n\r\nUsing a changed source address for sending data back to, is not generally solved. \r\n\r\nThere are some special case, e.g., if the data sent back is very small, there is no risk (at least, none has explained one). There may also be some upper-layer mechanisms, which helps out (e.g. [draft-ietf-core-echo-request-tag](https://tools.ietf.org/wg/core/draft-ietf-core-echo-request-tag) for coap).\r\n \r\nAnd there is a idea of a general solution [dtls-rrc](https://datatracker.ietf.org/doc/draft-tschofenig-tls-dtls-rrc), but that will require more time. Because of the required time, the idea was to release this spec without RRC and postpone that general work (see also issue #80).",
           "createdAt": "2021-04-19T09:08:10Z",
           "updatedAt": "2021-04-19T09:08:10Z"
@@ -2412,15 +2412,15 @@
       "id": "MDU6SXNzdWU4NjMyNTU0NzI=",
       "title": "John Scudder's IESG review",
       "url": "https://github.com/tlswg/dtls-conn-id/issues/109",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "thomas-fossati",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/tls/urqyTwgp7sP7w40bFUhpCVPma-Y/\r\n\r\n```\r\n----------------------------------------------------------------------\r\nCOMMENT:\r\n----------------------------------------------------------------------\r\n\r\nI found this document heavy sledding but once I was through it, it all came\r\ntogether, with the exception of my #3, below. The \u201cheavy sledding\u201d part I think\r\nwould be largely fixed by addressing my #1, below.\r\n\r\n1. Section 3:\r\n\r\nThis pseudocode is a little too pseudo for me:\r\n\r\n     struct {\r\n         opaque cid<0..2^8-1>;\r\n     } ConnectionId;\r\n\r\nWhat does the content of the angle brackets mean? At first I took it to mean\r\n\u201cthis can take on a value from 0 to 255\u201d [*] but parts of the spec that go on\r\nabout variable lengths made me think that couldn\u2019t be right. Eventually, by\r\npaging through RFC 5246, I found some explanations of what this stuff is\r\nsupposed to mean; in \u00a74.3 of that RFC I found out that\r\n\r\n   Variable-length vectors are defined by specifying a subrange of legal\r\n   lengths, inclusively, using the notation <floor..ceiling>.  When\r\n   these are encoded, the actual length precedes the vector's contents\r\n   in the byte stream.  The length will be in the form of a number\r\n   consuming as many bytes as required to hold the vector's specified\r\n   maximum (ceiling) length.\r\n\r\nI assume this is what\u2019s going on in DTLS as well. This cleared up my main\r\nsource of confusion, which was regarding just how you were encoding these\r\nvariable-length CIDs anyway. (And oh by the way, that definition doesn\u2019t say\r\nwhat the units of length are. Bytes seems implied but isn\u2019t explicit.)\r\n\r\nWhile I don\u2019t expect you to supply these definitions again, it would be\r\ncourteous to your readers to have a sentence or two explaining that pseudo-code\r\nconventions are found in RFC 5246, special extra credit for section references\r\nas well. And yes, I did notice \"This document assumes familiarity with DTLS 1.2\r\n[RFC6347].\u201d That\u2019s well and good, but I don\u2019t think \u201cfamiliarity\u201d is the same\r\nas \u201cwe have adopted the same notational conventions\u201d.\r\n\r\n[*] By the way, why not just use \u201c255\u201d in the text instead of \u201c2^8-1\u201d? Eschew\r\nobfuscation!\r\n\r\n2. Section 3:\r\n\r\n   If DTLS peers have negotiated the use of a non-zero-length CID for a\r\n   given direction, then once encryption is enabled they MUST send with\r\n   the record format defined in {{dtls-ciphertext} with the new MAC\r\n   computation defined in Section 5 and the content type tls12_cid.\r\n   Plaintext payloads never use the new record type and the CID content\r\n   type.\r\n\r\nWhat\u2019s \u201c{{dtls-ciphertext}\u201d? I\u2019m guessing just a botched xref?\r\n\r\nAlso, the first sentence seems to have no object. (What MUST they send?)\r\n\r\n3. Section 6:\r\n\r\n   *  There is a strategy for ensuring that the new peer address is able\r\n      to receive and process DTLS records.  No such strategy is defined\r\n      in this specification.\r\n\r\nThis is a little mind-boggling to me. I understand this to mean I can\u2019t send\r\nthe new address a DTLS record unless I\u2019ve already ensured it can receive and\r\nprocess that record, right? This seems almost like a classic Catch-22. I feel\r\nlike I must be missing something.\r\n```",
       "createdAt": "2021-04-20T21:25:47Z",
-      "updatedAt": "2021-06-08T18:37:48Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-22T21:15:20Z",
+      "closedAt": "2021-06-22T21:15:20Z",
       "comments": [
         {
           "author": "kaduk",
@@ -9541,28 +9541,28 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY1MDc2NDcz",
       "title": "clarify \"replace the address\"",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/119",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "kaduk",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "[just something I was thinking about in looking at John's ballot comment.  I'm not 100% sure whether this is actually needed or helpful.]\r\n\r\nThis refers to the default address to send stuff to, but should not\r\nexclude one-offs that go elsewhere as deliberate probes.",
       "createdAt": "2021-06-08T16:34:15Z",
-      "updatedAt": "2021-06-09T04:16:17Z",
+      "updatedAt": "2021-06-22T21:15:00Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "daa8598677956043ebecc3aab3c75d2fefe22a37",
       "headRepository": "kaduk/dtls-conn-id-1",
       "headRefName": "probes",
       "headRefOid": "324873e2a669b272b16a15cf48993fdc4b278830",
-      "closedAt": null,
+      "closedAt": "2021-06-22T21:15:00Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [
         {
           "author": "boaks",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "FMPOV, that may be amended \"somehow\" to the third \"unless condition\", though I consider the \"probes\" are part of that strategy.\r\n\r\n> There is a strategy for ensuring that the new peer address is able to receive and process DTLS records. ",
           "createdAt": "2021-06-08T16:40:57Z",
           "updatedAt": "2021-06-08T16:40:57Z"
@@ -9576,7 +9576,7 @@
         },
         {
           "author": "boaks",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think the current wording was somehow based on the \"implementation idea\", that there is something as a  \"verified address\". That will only be replaced by a new one, only if that new one gets verified. Therefore my remark, that I would move the disclaimer somehow to that \"strategy\".\r\n\r\ne.g.\r\nunless ...\r\n\r\n> There is a strategy for ensuring that the new peer address is able to receive and process DTLS records. No strategy is mandated by this specification but see note (*) below. (That strategy may use the different source address to send specific probing packets to.)\r\n ",
           "createdAt": "2021-06-08T16:55:39Z",
           "updatedAt": "2021-06-08T16:55:39Z"
@@ -9601,6 +9601,13 @@
           "body": "> I'm kind of negative on this one. I tend to think we've said too much already, given we decided to punt this.\r\n\r\nThat's fair.  This started out as an internal thought \"how can you probe a new address if you can't replace the address you send to?\", but as Achim pointed out, we don't require that you have already completed a verification (before you send to the new address), just that you have a strategy for the verification, which is a weaker requirement.\r\nThanks for taking a look.",
           "createdAt": "2021-06-09T04:16:17Z",
           "updatedAt": "2021-06-09T04:16:17Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We seem to think Section 6 is good as-is.  Since we have established that [dtls-rrc](https://github.com/tlswg/dtls-rrc) is the place where to deal with this matter, we agreed to close this PR",
+          "createdAt": "2021-06-22T21:15:00Z",
+          "updatedAt": "2021-06-22T21:15:00Z"
         }
       ],
       "reviews": []
@@ -9610,24 +9617,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY1MTY4NDcw",
       "title": "Mention padding and ContentType encryption",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/120",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kaduk",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "As suggested by \u00c9ric Vyncke, mention that the new ciphertext record\r\nformat provides ContentType encryption and per-record padding in both\r\nabstract and introduction.",
       "createdAt": "2021-06-08T18:36:08Z",
-      "updatedAt": "2021-06-09T04:11:31Z",
+      "updatedAt": "2021-06-22T21:09:19Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "daa8598677956043ebecc3aab3c75d2fefe22a37",
       "headRepository": "kaduk/dtls-conn-id-1",
       "headRefName": "padding",
       "headRefOid": "fbe329d5fc2882a3369086ffcd49b47119f0996d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-22T21:09:19Z",
+      "mergedAt": "2021-06-22T21:09:19Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "9ab43353042c15fb8335b96f662ce2fcc73fafc4"
+      },
       "comments": [],
       "reviews": [
         {
@@ -9636,7 +9645,7 @@
             "abbreviatedOid": "fbe329d"
           },
           "author": "thomas-fossati",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2021-06-08T19:27:08Z",
@@ -9655,6 +9664,66 @@
           "createdAt": "2021-06-09T04:11:31Z",
           "updatedAt": "2021-06-09T04:11:31Z",
           "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg5MzA4NTcy",
+          "commit": {
+            "abbreviatedOid": "fbe329d"
+          },
+          "author": "boaks",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-22T10:02:31Z",
+          "updatedAt": "2021-06-22T10:02:31Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "Being not a native english speaker, I feel, a \"is\" is missing? \r\n\r\n> and a mechanism is provided for adding padding to obfuscate the plaintext length.",
+              "createdAt": "2021-06-22T10:02:31Z",
+              "updatedAt": "2021-06-22T10:02:31Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg5MzQ2MjA0",
+          "commit": {
+            "abbreviatedOid": "fbe329d"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-22T10:43:46Z",
+          "updatedAt": "2021-06-22T10:43:47Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "Looks like a construction that in Italian grammar is called (literal translation) \"elliptical proposition\".  You can omit subject or predicate in a sentence if they are unambiguously implied by the context.",
+              "createdAt": "2021-06-22T10:43:46Z",
+              "updatedAt": "2021-06-22T10:43:47Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg5MzY0Njcw",
+          "commit": {
+            "abbreviatedOid": "fbe329d"
+          },
+          "author": "boaks",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-22T11:05:25Z",
+          "updatedAt": "2021-06-22T11:05:25Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "Thanks :-)",
+              "createdAt": "2021-06-22T11:05:25Z",
+              "updatedAt": "2021-06-22T11:05:25Z"
+            }
+          ]
         }
       ]
     },
@@ -9663,24 +9732,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY1OTI2NTk0",
       "title": "update RRC ref",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/121",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "thomas-fossati",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Update reference to the adopted RRC draft",
       "createdAt": "2021-06-09T13:47:34Z",
-      "updatedAt": "2021-06-09T13:47:34Z",
+      "updatedAt": "2021-06-22T21:16:20Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "aacb419d24b44f312a1256e2c6bda440f4a9135c",
       "headRepository": "thomas-fossati/dtls-conn-id",
       "headRefName": "patch-6",
       "headRefOid": "78dd23fc5d557f2cd47611e806b1fbaf193e53ee",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-22T21:16:15Z",
+      "mergedAt": "2021-06-22T21:16:15Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "40f193f97fec9fdee44dde7ea089baab96c4400b"
+      },
       "comments": [],
       "reviews": []
     }
