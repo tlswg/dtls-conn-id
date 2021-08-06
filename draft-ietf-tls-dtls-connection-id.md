@@ -301,7 +301,7 @@ cid
 : Value of the negotiated CID (variable length).
 
 cid_length
-: 1 byte field indicating the length of the negotiated CID.
+: The length (in bytes) of the negotiated CID (one-byte integer).
 
 length_of_DTLSInnerPlaintext
 : The length (in bytes) of the serialized DTLSInnerPlaintext (two-byte integer).
