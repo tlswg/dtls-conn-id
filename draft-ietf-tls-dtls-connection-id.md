@@ -363,7 +363,8 @@ described in {{RFC7366}}.
         cid +
         DTLSCiphertext.length +
         IV +
-        ENC(content + padding + padding_length));
+        ENC(content + padding + padding_length)
+    );
 ~~~
 
 ## AEAD Ciphers
