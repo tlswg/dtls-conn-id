@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-08-08T00:16:38.695397+00:00",
+  "timestamp": "2021-08-29T00:17:23.740890+00:00",
   "repo": "tlswg/dtls-conn-id",
   "labels": [
     {
@@ -9760,25 +9760,33 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NzA1NDI5NTgy",
       "title": "Use wording similar to other length field.",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/122",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boaks",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix question 5 rfced.\r\n\r\nSigned-off-by: Achim Kraus <achim.kraus@bosch.io>",
       "createdAt": "2021-08-06T12:02:11Z",
-      "updatedAt": "2021-08-06T12:09:17Z",
+      "updatedAt": "2021-08-28T15:33:13Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "40f193f97fec9fdee44dde7ea089baab96c4400b",
       "headRepository": "boaks/dtls-conn-id",
       "headRefName": "rfced_5",
       "headRefOid": "9c810e40b2ee242bc0624f0f2e2fd65b27dd75ed",
-      "closedAt": null,
+      "closedAt": "2021-08-28T15:33:13Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "boaks",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Already integrated.",
+          "createdAt": "2021-08-28T15:33:13Z",
+          "updatedAt": "2021-08-28T15:33:13Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -9786,25 +9794,33 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NzA1NDMxNjg4",
       "title": "Use same trailing ) position.",
       "url": "https://github.com/tlswg/dtls-conn-id/pull/123",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boaks",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fix question 6 rfced.\r\n\r\nSigned-off-by: Achim Kraus <achim.kraus@bosch.io>",
       "createdAt": "2021-08-06T12:05:23Z",
-      "updatedAt": "2021-08-06T12:05:23Z",
+      "updatedAt": "2021-08-28T15:33:04Z",
       "baseRepository": "tlswg/dtls-conn-id",
       "baseRefName": "master",
       "baseRefOid": "40f193f97fec9fdee44dde7ea089baab96c4400b",
       "headRepository": "boaks/dtls-conn-id",
       "headRefName": "rfced_6",
       "headRefOid": "76d158e8f646d0f32cd8dec7b488b5f6a7ce7f63",
-      "closedAt": null,
+      "closedAt": "2021-08-28T15:33:03Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "boaks",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Already integrated.",
+          "createdAt": "2021-08-28T15:33:03Z",
+          "updatedAt": "2021-08-28T15:33:03Z"
+        }
+      ],
       "reviews": []
     }
   ]
