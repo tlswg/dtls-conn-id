@@ -78,7 +78,7 @@ and record-layer padding.
 #  Introduction
 
 The Datagram Transport Layer Security (DTLS) {{RFC6347}} protocol was designed for
-securing connection-less transports, like UDP. DTLS, like TLS, starts
+securing application data sent over datagram protocols, like UDP. DTLS, like TLS, starts
 with a handshake, which can be computationally demanding (particularly
 when public key cryptography is used). After a successful handshake,
 symmetric key cryptography is used to apply data origin
